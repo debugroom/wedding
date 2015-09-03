@@ -1,1 +1,1 @@
-# wedding
+# app for wedding
