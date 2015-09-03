@@ -5,10 +5,9 @@
 
     <persistence-unit name="wedding">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-<!--  
-        <class>org.debugroom.wedding.domain.model.entity.User</class>
         <class>org.debugroom.wedding.domain.model.entity.Credential</class>
--->
+        <class>org.debugroom.wedding.domain.model.entity.Menu</class>
+        <class>org.debugroom.wedding.domain.model.entity.User</class>
         <properties>
 <!--  
             <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect" />

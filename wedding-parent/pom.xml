@@ -21,6 +21,8 @@
     <org.springframework.batch_spring-batch-infrastructure_version>2.2.6.RELEASE</org.springframework.batch_spring-batch-infrastructure_version>
     <org.springframework.batch_spring-batch-test_version>2.2.6.RELEASE</org.springframework.batch_spring-batch-test_version>
     <org.springframework.data_spring-data-rest-core_version>2.2.2.RELEASE</org.springframework.data_spring-data-rest-core_version>
+    <org.springframework.data_spring-data-commons_version>1.6.4.RELEASE</org.springframework.data_spring-data-commons_version>
+    <org.springframework.data_spring-data-jpa_version>1.4.3.RELEASE</org.springframework.data_spring-data-jpa_version>
     <org.aspectj_aspectjrt_version>1.6.11</org.aspectj_aspectjrt_version>
     <org.aspectj_aspectjweaver_version>1.6.11</org.aspectj_aspectjweaver_version>
     <cglib_cglib_version>2.2</cglib_cglib_version>
@@ -92,6 +94,44 @@
         <groupId>org.springframework.batch</groupId>
         <artifactId>spring-batch-infrastructure</artifactId>
         <version>${org.springframework.batch_spring-batch-infrastructure_version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-commons</artifactId>
+        <version>${org.springframework.data_spring-data-commons_version}</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>spring-beans</artifactId>
+            <groupId>org.springframework</groupId>
+          </exclusion>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-jpa</artifactId>
+        <version>${org.springframework.data_spring-data-jpa_version}</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>spring-orm</artifactId>
+            <groupId>org.springframework</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>spring-tx</artifactId>
+            <groupId>org.springframework</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>spring-core</artifactId>
+            <groupId>org.springframework</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>spring-beans</artifactId>
+            <groupId>org.springframework</groupId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.springframework.data</groupId>
