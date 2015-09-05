@@ -10,6 +10,8 @@
  <properties>
     <java-version>1.8</java-version>
     <encoding>UTF-8</encoding>
+    <org.debugroom_framework-common_version>1.0-SNAPSHOT</org.debugroom_framework-common_version>
+    <org.debugroom_framework-test_version>1.0-SNAPSHOT</org.debugroom_framework-test_version>
     <org.springframework-version>3.2.11.RELEASE</org.springframework-version>
     <org.springframework_spring-context_version>3.2.11.RELEASE</org.springframework_spring-context_version>
     <org.springframework_spring-jdbc_version>3.2.11.RELEASE</org.springframework_spring-jdbc_version>
@@ -48,6 +50,7 @@
     <org.apache.tomcat_tomcat-servlet-api_version>7.0.59</org.apache.tomcat_tomcat-servlet-api_version>
     <org.apache.tomcat_tomcat-jsp-api_version>7.0.59</org.apache.tomcat_tomcat-jsp-api_version>
     <org.postgresql_postgresql_version>9.3-1102-jdbc41</org.postgresql_postgresql_version>
+    <org.projectlombok_lombok_version>1.16.6</org.projectlombok_lombok_version>
   </properties> 
 
   <dependencyManagement>
@@ -232,6 +235,16 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.debugroom</groupId>
+        <artifactId>framework-common</artifactId>
+        <version>${org.debugroom_framework-common_version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.debugroom</groupId>
+        <artifactId>framework-test</artifactId>
+        <version>${org.debugroom_framework-test_version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.tomcat</groupId>
         <artifactId>tomcat-servlet-api</artifactId>
         <version>${org.apache.tomcat_tomcat-servlet-api_version}</version>
@@ -252,6 +265,12 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>${org.postgresql_postgresql_version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${org.projectlombok_lombok_version}</version>
+      <scope>provided</scope>
     </dependency>
     </dependencies>
   </dependencyManagement>
