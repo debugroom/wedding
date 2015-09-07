@@ -4,11 +4,15 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 /**
  * The persistent class for the menu database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
 @NamedQuery(name="Menu.findAll", query="SELECT m FROM Menu m")
 public class Menu implements Serializable {

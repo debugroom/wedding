@@ -5,11 +5,15 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 /**
  * The persistent class for the usr database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name="usr")
 @NamedQuery(name="User.findAll", query="SELECT u FROM User u")

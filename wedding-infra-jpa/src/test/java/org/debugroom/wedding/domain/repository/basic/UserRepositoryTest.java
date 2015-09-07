@@ -3,6 +3,8 @@ package org.debugroom.wedding.domain.repository.basic;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -39,7 +41,6 @@ public class UserRepositoryTest {
 	     public static class WhiteBoxTest{
 			 
 			 @Inject
-			 @Named("userRepository")
 			 UserRepository userRepository;
 			 
 	         @Before
@@ -47,13 +48,35 @@ public class UserRepositoryTest {
 	        	 new TestContextManager(getClass()).prepareTestInstance(this);
 	         }
 	         
+	         @DataPoints
+	         public static FindUserFixture[] findUserFixture = {
+	        	 new FindUserFixture()
+	        	 		.userId("00000000")
+	        	 		.expected((User.builder())
+	        	 							.userId("00000000")
+	        	 							.loginId("org.debugroom")
+	        	 							.userName("(ΦωΦ)")
+	        	 							.lastLoginDate(new Calendar.Builder()
+	        	 													.setDate(2015, 1, 1)
+	        	 													.setTimeOfDay(0, 0, 0)
+	        	 													.build()
+	        	 													.getTime()
+	        	 									)
+	        	 							.build()
+	        	 					)
+	        	 
+	         };
+	         
 	         @Theory
 	         @Category(TestsWithDatabaseAccess.class)
 	         public void normalTestCase1_findOneForUser(FindUserFixture fixture){
 	        	 
 	        	 User user = userRepository.findOne(fixture.userId);
 	        	 
-	        	 assertThat(fixture.toString(), user.getUserName(), is(fixture.expected.getUserName()));
+	        	 assertThat(fixture.toString(), user.getUserName(), 
+	        			 is(fixture.expected.getUserName()));
+	        	 assertThat(fixture.toString(), user.getLoginId(), 
+	        			 is(fixture.expected.getLoginId()));
 
 	         }
 

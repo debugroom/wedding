@@ -4,11 +4,15 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 /**
  * The persistent class for the credential database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
 @NamedQuery(name="Credential.findAll", query="SELECT c FROM Credential c")
 public class Credential implements Serializable {
