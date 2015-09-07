@@ -2,16 +2,24 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <tx:annotation-driven transaction-manager="transactionManager" />
 
+    <jpa:repositories base-package="org.debugroom.wedding.domain.repository"
+        entity-manager-factory-ref="entityManagerFactory"
+        transaction-manager-ref="transactionManager" />
+        
     <bean id="dataSource" 
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName">
@@ -29,8 +37,35 @@
     </bean>
 
     <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="packagesToScan" value="org.debugroom.wedding.domain.model" />
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+        <property name="jpaPropertyMap">
+            <util:map>
+                <entry key="hibernate.hbm2ddl.auto" value="none" />
+                <entry key="hibernate.ejb.naming_strategy"
+                    value="org.hibernate.cfg.ImprovedNamingStrategy" />
+                <entry key="hibernate.connection.charSet" value="UTF-8" />
+                <entry key="hibernate.show_sql" value="true" />
+                <entry key="hibernate.format_sql" value="false" />
+                <entry key="hibernate.use_sql_comments" value="true" />
+                <entry key="hibernate.jdbc.batch_size" value="30" />
+                <entry key="hibernate.jdbc.fetch_size" value="100" />
+            </util:map>
+        </property>
+    </bean>
+    
+    <bean id="jpaVendorAdapter"
+    class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="showSql" value="true" />
+        <property name="database" value="POSTGRESQL" />
+    </bean>
+<!--
+    <bean id="entityManagerFactory"
         class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"
         p:persistenceUnitName="wedding" />
+-->
         
     <!-- Transaction Manager Definition -->
     <bean id="transactionManager" 
