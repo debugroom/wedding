@@ -15,7 +15,7 @@
 
     <context:component-scan base-package="org.debugroom.wedding.app.web" />
 
-    <mvc:resources location="/resource/" mapping="/resource/**" cache-period="#{60 * 60}"/>
+    <mvc:resources location="/resources/" mapping="/resources/**" cache-period="#{60 * 60}"/>
 
     <mvc:annotation-driven>
         <mvc:argument-resolvers>

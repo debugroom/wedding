@@ -24,4 +24,8 @@ public class PortalController {
         return "basic/portal";
     }
 
+    @RequestMapping(method = RequestMethod.GET, value="/sample")
+    public String sample(){
+        return "basic/sample";
+    }
 }
