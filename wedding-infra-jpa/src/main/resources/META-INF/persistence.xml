@@ -8,6 +8,17 @@
         <class>org.debugroom.wedding.domain.model.entity.Credential</class>
         <class>org.debugroom.wedding.domain.model.entity.Menu</class>
         <class>org.debugroom.wedding.domain.model.entity.User</class>
+        <class>org.debugroom.wedding.domain.model.entity.Address</class>
+        <class>org.debugroom.wedding.domain.model.entity.Affiliation</class>
+        <class>org.debugroom.wedding.domain.model.entity.Email</class>
+        <class>org.debugroom.wedding.domain.model.entity.Function</class>
+        <class>org.debugroom.wedding.domain.model.entity.Group</class>
+        <class>org.debugroom.wedding.domain.model.entity.Infomation</class>
+        <class>org.debugroom.wedding.domain.model.entity.Message</class>
+        <class>org.debugroom.wedding.domain.model.entity.MessageBoard</class>
+        <class>org.debugroom.wedding.domain.model.entity.Movie</class>
+        <class>org.debugroom.wedding.domain.model.entity.Notification</class>
+        <class>org.debugroom.wedding.domain.model.entity.Photo</class>
         <properties>
 <!--  
             <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect" />
