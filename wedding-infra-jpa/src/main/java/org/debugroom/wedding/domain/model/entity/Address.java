@@ -3,25 +3,45 @@ package org.debugroom.wedding.domain.model.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 /**
  * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
+@Table(name="address")
 @NamedQuery(name="Address.findAll", query="SELECT a FROM Address a")
 public class Address implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String address;
-
-	@Column(name="post_cd")
-	private String postCd;
-
-	@Column(name="user_id")
+	@Id
+	@Column(name="user_id", unique=true, nullable=false, length=8)
 	private String userId;
 
+	@Column(length=255)
+	private String address;
+
+	@Column(name="post_cd", length=8)
+	private String postCd;
+
+	//bi-directional one-to-one association to User
+	@OneToOne
+	@JoinColumn(name="user_id", nullable=false, insertable=false, updatable=false)
+	private User usr;
+
 	public Address() {
+	}
+
+	public String getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getAddress() {
@@ -40,12 +60,12 @@ public class Address implements Serializable {
 		this.postCd = postCd;
 	}
 
-	public String getUserId() {
-		return this.userId;
+	public User getUsr() {
+		return this.usr;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUsr(User usr) {
+		this.usr = usr;
 	}
 
 }

@@ -6,19 +6,26 @@ import java.util.Date;
 import java.util.Set;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 /**
- * The persistent class for the infomation database table.
+ * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
+@Table(name="infomation")
 @NamedQuery(name="Infomation.findAll", query="SELECT i FROM Infomation i")
 public class Infomation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="info_id")
+	@Column(name="info_id", unique=true, nullable=false, length=8)
 	private String infoId;
 
+	@Column(length=2147483647)
 	private String info;
 
 	@Temporal(TemporalType.DATE)
@@ -29,6 +36,7 @@ public class Infomation implements Serializable {
 	@Column(name="release_date")
 	private Date releaseDate;
 
+	@Column(length=256)
 	private String title;
 
 	//bi-directional many-to-many association to Group
@@ -36,17 +44,17 @@ public class Infomation implements Serializable {
 	@JoinTable(
 		name="group_notification"
 		, joinColumns={
-			@JoinColumn(name="info_id")
+			@JoinColumn(name="info_id", nullable=false)
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="group_id")
+			@JoinColumn(name="group_id", nullable=false)
 			}
 		)
 	private Set<Group> grps;
 
-	//bi-directional many-to-one association to Notification
-	@OneToMany(mappedBy="infomation")
-	private Set<Notification> notifications;
+	//bi-directional many-to-many association to User
+	@ManyToMany(mappedBy="infomations")
+	private Set<User> usrs;
 
 	public Infomation() {
 	}
@@ -99,26 +107,12 @@ public class Infomation implements Serializable {
 		this.grps = grps;
 	}
 
-	public Set<Notification> getNotifications() {
-		return this.notifications;
+	public Set<User> getUsrs() {
+		return this.usrs;
 	}
 
-	public void setNotifications(Set<Notification> notifications) {
-		this.notifications = notifications;
-	}
-
-	public Notification addNotification(Notification notification) {
-		getNotifications().add(notification);
-		notification.setInfomation(this);
-
-		return notification;
-	}
-
-	public Notification removeNotification(Notification notification) {
-		getNotifications().remove(notification);
-		notification.setInfomation(null);
-
-		return notification;
+	public void setUsrs(Set<User> usrs) {
+		this.usrs = usrs;
 	}
 
 }

@@ -3,41 +3,33 @@ package org.debugroom.wedding.domain.model.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 /**
- * The persistent class for the notification database table.
+ * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
+@Table(name="notification")
 @NamedQuery(name="Notification.findAll", query="SELECT n FROM Notification n")
 public class Notification implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="user_id")
-	private String userId;
-
-	//bi-directional many-to-one association to Infomation
-	@ManyToOne
-	@JoinColumn(name="info_id")
-	private Infomation infomation;
+	@EmbeddedId
+	private NotificationPK id;
 
 	public Notification() {
 	}
 
-	public String getUserId() {
-		return this.userId;
+	public NotificationPK getId() {
+		return this.id;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public Infomation getInfomation() {
-		return this.infomation;
-	}
-
-	public void setInfomation(Infomation infomation) {
-		this.infomation = infomation;
+	public void setId(NotificationPK id) {
+		this.id = id;
 	}
 
 }

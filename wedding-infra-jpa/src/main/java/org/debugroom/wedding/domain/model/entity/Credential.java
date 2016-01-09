@@ -8,21 +8,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 /**
- * The persistent class for the credential database table.
+ * The persistent class for the address database table.
  * 
  */
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name="credential")
 @NamedQuery(name="Credential.findAll", query="SELECT c FROM Credential c")
 public class Credential implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="credential_type")
-	private String credentialType;
+	@EmbeddedId
+	private CredentialPK id;
 
-	@Column(name="credential_key")
+	@Column(name="credential_key", length=2147483647)
 	private String credentialKey;
 
 	@Temporal(TemporalType.DATE)
@@ -31,18 +31,18 @@ public class Credential implements Serializable {
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name="user_id", nullable=false, insertable=false, updatable=false)
 	private User usr;
 
 	public Credential() {
 	}
 
-	public String getCredentialType() {
-		return this.credentialType;
+	public CredentialPK getId() {
+		return this.id;
 	}
 
-	public void setCredentialType(String credentialType) {
-		this.credentialType = credentialType;
+	public void setId(CredentialPK id) {
+		this.id = id;
 	}
 
 	public String getCredentialKey() {

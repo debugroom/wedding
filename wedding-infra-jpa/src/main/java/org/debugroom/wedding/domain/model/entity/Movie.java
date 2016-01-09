@@ -5,40 +5,46 @@ import javax.persistence.*;
 import java.util.Set;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 /**
- * The persistent class for the movie database table.
+ * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
+@Table(name="movie")
 @NamedQuery(name="Movie.findAll", query="SELECT m FROM Movie m")
 public class Movie implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="movie_id")
+	@Column(name="movie_id", unique=true, nullable=false, length=10)
 	private String movieId;
 
-	@Column(name="file_path")
+	@Column(name="file_path", length=2147483647)
 	private String filePath;
 
 	private Boolean iscontrolled;
+
+	//bi-directional many-to-one association to Message
+	@OneToMany(mappedBy="movie")
+	private Set<Message> messages;
 
 	//bi-directional many-to-many association to Group
 	@ManyToMany
 	@JoinTable(
 		name="group_visible_movie"
 		, joinColumns={
-			@JoinColumn(name="movie_id")
+			@JoinColumn(name="movie_id", nullable=false)
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="group_id")
+			@JoinColumn(name="group_id", nullable=false)
 			}
 		)
 	private Set<Group> grps;
-
-	//bi-directional many-to-one association to Message
-	@OneToMany(mappedBy="movie")
-	private Set<Message> messages;
 
 	public Movie() {
 	}
@@ -67,14 +73,6 @@ public class Movie implements Serializable {
 		this.iscontrolled = iscontrolled;
 	}
 
-	public Set<Group> getGrps() {
-		return this.grps;
-	}
-
-	public void setGrps(Set<Group> grps) {
-		this.grps = grps;
-	}
-
 	public Set<Message> getMessages() {
 		return this.messages;
 	}
@@ -95,6 +93,14 @@ public class Movie implements Serializable {
 		message.setMovie(null);
 
 		return message;
+	}
+
+	public Set<Group> getGrps() {
+		return this.grps;
+	}
+
+	public void setGrps(Set<Group> grps) {
+		this.grps = grps;
 	}
 
 }

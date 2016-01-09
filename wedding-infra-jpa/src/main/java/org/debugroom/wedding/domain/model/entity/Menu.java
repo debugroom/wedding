@@ -3,29 +3,31 @@ package org.debugroom.wedding.domain.model.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 /**
- * The persistent class for the menu database table.
+ * The persistent class for the address database table.
  * 
  */
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name="menu")
 @NamedQuery(name="Menu.findAll", query="SELECT m FROM Menu m")
 public class Menu implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="menu_id")
+	@Column(name="menu_id", unique=true, nullable=false, length=4)
 	private String menuId;
 
-	@Column(name="function_id")
-	private String functionId;
+	@Column(name="authority_level")
+	private Integer authorityLevel;
 
-	@Column(name="menu_name")
+	@Column(name="menu_name", length=2147483647)
 	private String menuName;
 
 	@Temporal(TemporalType.DATE)
@@ -35,6 +37,10 @@ public class Menu implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="usable_start_date")
 	private Date usableStartDate;
+
+	//bi-directional many-to-one association to Function
+	@OneToMany(mappedBy="menu")
+	private Set<Function> fnctions;
 
 	public Menu() {
 	}
@@ -47,12 +53,12 @@ public class Menu implements Serializable {
 		this.menuId = menuId;
 	}
 
-	public String getFunctionId() {
-		return this.functionId;
+	public Integer getAuthorityLevel() {
+		return this.authorityLevel;
 	}
 
-	public void setFunctionId(String functionId) {
-		this.functionId = functionId;
+	public void setAuthorityLevel(Integer authorityLevel) {
+		this.authorityLevel = authorityLevel;
 	}
 
 	public String getMenuName() {
@@ -77,6 +83,28 @@ public class Menu implements Serializable {
 
 	public void setUsableStartDate(Date usableStartDate) {
 		this.usableStartDate = usableStartDate;
+	}
+
+	public Set<Function> getFnctions() {
+		return this.fnctions;
+	}
+
+	public void setFnctions(Set<Function> fnctions) {
+		this.fnctions = fnctions;
+	}
+
+	public Function addFnction(Function fnction) {
+		getFnctions().add(fnction);
+		fnction.setMenu(this);
+
+		return fnction;
+	}
+
+	public Function removeFnction(Function fnction) {
+		getFnctions().remove(fnction);
+		fnction.setMenu(null);
+
+		return fnction;
 	}
 
 }

@@ -10,35 +10,36 @@ import java.util.Set;
  * 
  */
 @Entity
+@Table(name="photo")
 @NamedQuery(name="Photo.findAll", query="SELECT p FROM Photo p")
 public class Photo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="photo_id")
+	@Column(name="photo_id", unique=true, nullable=false, length=10)
 	private String photoId;
 
-	@Column(name="file_path")
+	@Column(name="file_path", length=2147483647)
 	private String filePath;
 
 	private Boolean iscontroled;
+
+	//bi-directional many-to-one association to Message
+	@OneToMany(mappedBy="photo")
+	private Set<Message> messages;
 
 	//bi-directional many-to-many association to Group
 	@ManyToMany
 	@JoinTable(
 		name="group_visible_photo"
 		, joinColumns={
-			@JoinColumn(name="photo_id")
+			@JoinColumn(name="photo_id", nullable=false)
 			}
 		, inverseJoinColumns={
-			@JoinColumn(name="group_id")
+			@JoinColumn(name="group_id", nullable=false)
 			}
 		)
 	private Set<Group> grps;
-
-	//bi-directional many-to-one association to Message
-	@OneToMany(mappedBy="photo")
-	private Set<Message> messages;
 
 	public Photo() {
 	}
@@ -67,14 +68,6 @@ public class Photo implements Serializable {
 		this.iscontroled = iscontroled;
 	}
 
-	public Set<Group> getGrps() {
-		return this.grps;
-	}
-
-	public void setGrps(Set<Group> grps) {
-		this.grps = grps;
-	}
-
 	public Set<Message> getMessages() {
 		return this.messages;
 	}
@@ -95,6 +88,14 @@ public class Photo implements Serializable {
 		message.setPhoto(null);
 
 		return message;
+	}
+
+	public Set<Group> getGrps() {
+		return this.grps;
+	}
+
+	public void setGrps(Set<Group> grps) {
+		this.grps = grps;
 	}
 
 }

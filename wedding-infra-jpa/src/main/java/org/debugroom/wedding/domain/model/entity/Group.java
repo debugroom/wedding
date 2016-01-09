@@ -5,10 +5,15 @@ import javax.persistence.*;
 import java.util.Set;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 /**
- * The persistent class for the grp database table.
+ * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name="grp")
 @NamedQuery(name="Group.findAll", query="SELECT g FROM Group g")
@@ -16,15 +21,11 @@ public class Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="group_id")
+	@Column(name="group_id", unique=true, nullable=false, length=10)
 	private String groupId;
 
-	@Column(name="group_name")
+	@Column(name="group_name", length=256)
 	private String groupName;
-
-	//bi-directional many-to-one association to Affiliation
-	@OneToMany(mappedBy="grp")
-	private Set<Affiliation> affiliations;
 
 	//bi-directional many-to-many association to Infomation
 	@ManyToMany(mappedBy="grps")
@@ -37,6 +38,10 @@ public class Group implements Serializable {
 	//bi-directional many-to-many association to Photo
 	@ManyToMany(mappedBy="grps")
 	private Set<Photo> photos;
+
+	//bi-directional many-to-many association to User
+	@ManyToMany(mappedBy="grps")
+	private Set<User> usrs;
 
 	public Group() {
 	}
@@ -55,28 +60,6 @@ public class Group implements Serializable {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
-	}
-
-	public Set<Affiliation> getAffiliations() {
-		return this.affiliations;
-	}
-
-	public void setAffiliations(Set<Affiliation> affiliations) {
-		this.affiliations = affiliations;
-	}
-
-	public Affiliation addAffiliation(Affiliation affiliation) {
-		getAffiliations().add(affiliation);
-		affiliation.setGrp(this);
-
-		return affiliation;
-	}
-
-	public Affiliation removeAffiliation(Affiliation affiliation) {
-		getAffiliations().remove(affiliation);
-		affiliation.setGrp(null);
-
-		return affiliation;
 	}
 
 	public Set<Infomation> getInfomations() {
@@ -101,6 +84,14 @@ public class Group implements Serializable {
 
 	public void setPhotos(Set<Photo> photos) {
 		this.photos = photos;
+	}
+
+	public Set<User> getUsrs() {
+		return this.usrs;
+	}
+
+	public void setUsrs(Set<User> usrs) {
+		this.usrs = usrs;
 	}
 
 }

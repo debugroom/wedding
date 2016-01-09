@@ -5,10 +5,15 @@ import javax.persistence.*;
 import java.util.Set;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 /**
- * The persistent class for the message_board database table.
+ * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name="message_board")
 @NamedQuery(name="MessageBoard.findAll", query="SELECT m FROM MessageBoard m")
@@ -16,9 +21,10 @@ public class MessageBoard implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="message_board_id")
+	@Column(name="message_board_id", unique=true, nullable=false, length=8)
 	private String messageBoardId;
 
+	@Column(length=512)
 	private String title;
 
 	//bi-directional many-to-one association to Message

@@ -3,25 +3,30 @@ package org.debugroom.wedding.domain.model.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 /**
- * The persistent class for the message database table.
+ * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
+@Table(name="message")
 @NamedQuery(name="Message.findAll", query="SELECT m FROM Message m")
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="message_no")
-	private Integer messageNo;
+	@EmbeddedId
+	private MessagePK id;
 
+	@Column(length=2147483647)
 	private String message;
 
 	//bi-directional many-to-one association to MessageBoard
 	@ManyToOne
-	@JoinColumn(name="message_board_id")
+	@JoinColumn(name="message_board_id", nullable=false, insertable=false, updatable=false)
 	private MessageBoard messageBoard;
 
 	//bi-directional many-to-one association to Movie
@@ -37,12 +42,12 @@ public class Message implements Serializable {
 	public Message() {
 	}
 
-	public Integer getMessageNo() {
-		return this.messageNo;
+	public MessagePK getId() {
+		return this.id;
 	}
 
-	public void setMessageNo(Integer messageNo) {
-		this.messageNo = messageNo;
+	public void setId(MessagePK id) {
+		this.id = id;
 	}
 
 	public String getMessage() {

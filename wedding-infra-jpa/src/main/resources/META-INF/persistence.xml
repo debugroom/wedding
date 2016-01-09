@@ -19,6 +19,11 @@
         <class>org.debugroom.wedding.domain.model.entity.Movie</class>
         <class>org.debugroom.wedding.domain.model.entity.Notification</class>
         <class>org.debugroom.wedding.domain.model.entity.Photo</class>
+        <class>org.debugroom.wedding.domain.model.entity.AffiliationPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.NotificationPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.CredentialPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.EmailPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.MessagePK</class>
         <properties>
 <!--  
             <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect" />

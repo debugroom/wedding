@@ -4,33 +4,41 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 /**
- * The persistent class for the email database table.
+ * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
+@Table(name="email")
 @NamedQuery(name="Email.findAll", query="SELECT e FROM Email e")
 public class Email implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="email_id")
-	private Integer emailId;
+	@EmbeddedId
+	private EmailPK id;
 
+	@Column(length=100)
 	private String email;
 
-	@Column(name="user_id")
-	private String userId;
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="user_id", nullable=false, insertable=false, updatable=false)
+	private User usr;
 
 	public Email() {
 	}
 
-	public Integer getEmailId() {
-		return this.emailId;
+	public EmailPK getId() {
+		return this.id;
 	}
 
-	public void setEmailId(Integer emailId) {
-		this.emailId = emailId;
+	public void setId(EmailPK id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -41,12 +49,12 @@ public class Email implements Serializable {
 		this.email = email;
 	}
 
-	public String getUserId() {
-		return this.userId;
+	public User getUsr() {
+		return this.usr;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUsr(User usr) {
+		this.usr = usr;
 	}
 
 }

@@ -1,0 +1,13 @@
+#flex-container {
+	display : -webkit-flex;
+	display : -moz-flex;
+	display : flex;
+}
+
+#flex-container .flex-item{
+	           width : 300px;
+	    -webkit-flex : 1 0 300px;
+	       -moz-flex : 1 0 300px;
+	            flex : 1 0 300px;
+	background-color : orange;
+}
