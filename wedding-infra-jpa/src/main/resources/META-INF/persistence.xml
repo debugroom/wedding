@@ -24,6 +24,10 @@
         <class>org.debugroom.wedding.domain.model.entity.CredentialPK</class>
         <class>org.debugroom.wedding.domain.model.entity.EmailPK</class>
         <class>org.debugroom.wedding.domain.model.entity.MessagePK</class>
+        <class>org.debugroom.wedding.domain.model.entity.FunctionPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Request</class>
+        <class>org.debugroom.wedding.domain.model.entity.RequestStatus</class>
+        <class>org.debugroom.wedding.domain.model.entity.RequestStatusPK</class>
         <properties>
 <!--  
             <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect" />

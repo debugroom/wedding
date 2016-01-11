@@ -4,11 +4,15 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Set;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 /**
- * The persistent class for the photo database table.
+ * The persistent class for the address database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name="photo")
 @NamedQuery(name="Photo.findAll", query="SELECT p FROM Photo p")

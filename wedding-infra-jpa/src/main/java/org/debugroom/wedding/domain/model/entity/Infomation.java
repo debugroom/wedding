@@ -5,7 +5,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -25,8 +24,8 @@ public class Infomation implements Serializable {
 	@Column(name="info_id", unique=true, nullable=false, length=8)
 	private String infoId;
 
-	@Column(length=2147483647)
-	private String info;
+	@Column(name="info_page_path", length=2147483647)
+	private String infoPagePath;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="registrated_date")
@@ -52,9 +51,9 @@ public class Infomation implements Serializable {
 		)
 	private Set<Group> grps;
 
-	//bi-directional many-to-many association to User
-	@ManyToMany(mappedBy="infomations")
-	private Set<User> usrs;
+	//bi-directional many-to-one association to Notification
+	@OneToMany(mappedBy="infomation")
+	private Set<Notification> notifications;
 
 	public Infomation() {
 	}
@@ -67,12 +66,12 @@ public class Infomation implements Serializable {
 		this.infoId = infoId;
 	}
 
-	public String getInfo() {
-		return this.info;
+	public String getInfoPagePath() {
+		return this.infoPagePath;
 	}
 
-	public void setInfo(String info) {
-		this.info = info;
+	public void setInfoPagePath(String infoPagePath) {
+		this.infoPagePath = infoPagePath;
 	}
 
 	public Date getRegistratedDate() {
@@ -107,12 +106,26 @@ public class Infomation implements Serializable {
 		this.grps = grps;
 	}
 
-	public Set<User> getUsrs() {
-		return this.usrs;
+	public Set<Notification> getNotifications() {
+		return this.notifications;
 	}
 
-	public void setUsrs(Set<User> usrs) {
-		this.usrs = usrs;
+	public void setNotifications(Set<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
+	public Notification addNotification(Notification notification) {
+		getNotifications().add(notification);
+		notification.setInfomation(this);
+
+		return notification;
+	}
+
+	public Notification removeNotification(Notification notification) {
+		getNotifications().remove(notification);
+		notification.setInfomation(null);
+
+		return notification;
 	}
 
 }

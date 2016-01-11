@@ -21,6 +21,19 @@ public class Notification implements Serializable {
 	@EmbeddedId
 	private NotificationPK id;
 
+	@Column(name="is_accessed")
+	private Boolean isAccessed;
+
+	//bi-directional many-to-one association to Infomation
+	@ManyToOne
+	@JoinColumn(name="info_id", nullable=false, insertable=false, updatable=false)
+	private Infomation infomation;
+
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="user_id", nullable=false, insertable=false, updatable=false)
+	private User usr;
+
 	public Notification() {
 	}
 
@@ -30,6 +43,30 @@ public class Notification implements Serializable {
 
 	public void setId(NotificationPK id) {
 		this.id = id;
+	}
+
+	public Boolean getIsAccessed() {
+		return this.isAccessed;
+	}
+
+	public void setIsAccessed(Boolean isAccessed) {
+		this.isAccessed = isAccessed;
+	}
+
+	public Infomation getInfomation() {
+		return this.infomation;
+	}
+
+	public void setInfomation(Infomation infomation) {
+		this.infomation = infomation;
+	}
+
+	public User getUsr() {
+		return this.usr;
+	}
+
+	public void setUsr(User usr) {
+		this.usr = usr;
 	}
 
 }

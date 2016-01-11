@@ -5,7 +5,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -27,6 +26,9 @@ public class User implements Serializable {
 
 	@Column(name="authority_level")
 	private Integer authorityLevel;
+
+	@Column(name="image_file_path", length=2147483647)
+	private String imageFilePath;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="last_login_date")
@@ -50,6 +52,14 @@ public class User implements Serializable {
 	@OneToMany(mappedBy="usr")
 	private Set<Email> emails;
 
+	//bi-directional many-to-one association to Notification
+	@OneToMany(mappedBy="usr")
+	private Set<Notification> notifications;
+
+	//bi-directional many-to-one association to RequestStatus
+	@OneToMany(mappedBy="usr")
+	private Set<RequestStatus> requestStatuses;
+
 	//bi-directional many-to-many association to Group
 	@ManyToMany
 	@JoinTable(
@@ -62,19 +72,6 @@ public class User implements Serializable {
 			}
 		)
 	private Set<Group> grps;
-
-	//bi-directional many-to-many association to Infomation
-	@ManyToMany
-	@JoinTable(
-		name="notification"
-		, joinColumns={
-			@JoinColumn(name="user_id", nullable=false)
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="info_id", nullable=false)
-			}
-		)
-	private Set<Infomation> infomations;
 
 	public User() {
 	}
@@ -93,6 +90,14 @@ public class User implements Serializable {
 
 	public void setAuthorityLevel(Integer authorityLevel) {
 		this.authorityLevel = authorityLevel;
+	}
+
+	public String getImageFilePath() {
+		return this.imageFilePath;
+	}
+
+	public void setImageFilePath(String imageFilePath) {
+		this.imageFilePath = imageFilePath;
 	}
 
 	public Date getLastLoginDate() {
@@ -171,20 +176,56 @@ public class User implements Serializable {
 		return email;
 	}
 
+	public Set<Notification> getNotifications() {
+		return this.notifications;
+	}
+
+	public void setNotifications(Set<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
+	public Notification addNotification(Notification notification) {
+		getNotifications().add(notification);
+		notification.setUsr(this);
+
+		return notification;
+	}
+
+	public Notification removeNotification(Notification notification) {
+		getNotifications().remove(notification);
+		notification.setUsr(null);
+
+		return notification;
+	}
+
+	public Set<RequestStatus> getRequestStatuses() {
+		return this.requestStatuses;
+	}
+
+	public void setRequestStatuses(Set<RequestStatus> requestStatuses) {
+		this.requestStatuses = requestStatuses;
+	}
+
+	public RequestStatus addRequestStatus(RequestStatus requestStatus) {
+		getRequestStatuses().add(requestStatus);
+		requestStatus.setUsr(this);
+
+		return requestStatus;
+	}
+
+	public RequestStatus removeRequestStatus(RequestStatus requestStatus) {
+		getRequestStatuses().remove(requestStatus);
+		requestStatus.setUsr(null);
+
+		return requestStatus;
+	}
+
 	public Set<Group> getGrps() {
 		return this.grps;
 	}
 
 	public void setGrps(Set<Group> grps) {
 		this.grps = grps;
-	}
-
-	public Set<Infomation> getInfomations() {
-		return this.infomations;
-	}
-
-	public void setInfomations(Set<Infomation> infomations) {
-		this.infomations = infomations;
 	}
 
 }

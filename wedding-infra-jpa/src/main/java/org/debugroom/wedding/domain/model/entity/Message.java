@@ -21,6 +21,9 @@ public class Message implements Serializable {
 	@EmbeddedId
 	private MessagePK id;
 
+	@Column(name="like_count")
+	private Integer likeCount;
+
 	@Column(length=2147483647)
 	private String message;
 
@@ -48,6 +51,14 @@ public class Message implements Serializable {
 
 	public void setId(MessagePK id) {
 		this.id = id;
+	}
+
+	public Integer getLikeCount() {
+		return this.likeCount;
+	}
+
+	public void setLikeCount(Integer likeCount) {
+		this.likeCount = likeCount;
 	}
 
 	public String getMessage() {

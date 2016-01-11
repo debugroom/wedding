@@ -4,7 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -20,15 +19,17 @@ import lombok.Builder;
 public class Function implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="function_id", unique=true, nullable=false, length=4)
-	private String functionId;
+	@EmbeddedId
+	private FunctionPK id;
 
 	@Column(name="authority_level")
 	private Integer authorityLevel;
 
 	@Column(name="function_name", length=100)
 	private String functionName;
+
+	@Column(length=2147483647)
+	private String url;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="usable_end_date")
@@ -40,18 +41,18 @@ public class Function implements Serializable {
 
 	//bi-directional many-to-one association to Menu
 	@ManyToOne
-	@JoinColumn(name="menu_id", nullable=false)
+	@JoinColumn(name="menu_id", nullable=false, insertable=false, updatable=false)
 	private Menu menu;
 
 	public Function() {
 	}
 
-	public String getFunctionId() {
-		return this.functionId;
+	public FunctionPK getId() {
+		return this.id;
 	}
 
-	public void setFunctionId(String functionId) {
-		this.functionId = functionId;
+	public void setId(FunctionPK id) {
+		this.id = id;
 	}
 
 	public Integer getAuthorityLevel() {
@@ -68,6 +69,14 @@ public class Function implements Serializable {
 
 	public void setFunctionName(String functionName) {
 		this.functionName = functionName;
+	}
+
+	public String getUrl() {
+		return this.url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public Date getUsableEndDate() {

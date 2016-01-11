@@ -1,13 +1,12 @@
 package org.debugroom.wedding.domain.service.common;
 
-import java.util.List;
-
 import org.debugroom.framework.common.exception.BusinessException;
-import org.debugroom.wedding.domain.model.entity.Menu;
 import org.debugroom.wedding.domain.model.entity.User;
 
-public interface MenuService {
+public interface UserSharedService {
 
-	public List<Menu> getUsableMenu(User user) throws BusinessException;
+	public boolean exists(User user) throws BusinessException;
+	
+	public User getUser(String userId) throws BusinessException;
 	
 }

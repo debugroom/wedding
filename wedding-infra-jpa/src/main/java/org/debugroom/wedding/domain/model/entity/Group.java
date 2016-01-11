@@ -4,7 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Set;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -26,6 +25,10 @@ public class Group implements Serializable {
 
 	@Column(name="group_name", length=256)
 	private String groupName;
+
+	//bi-directional many-to-one association to Affiliation
+	@OneToMany(mappedBy="grp")
+	private Set<Affiliation> affiliations;
 
 	//bi-directional many-to-many association to Infomation
 	@ManyToMany(mappedBy="grps")
@@ -60,6 +63,28 @@ public class Group implements Serializable {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+	public Set<Affiliation> getAffiliations() {
+		return this.affiliations;
+	}
+
+	public void setAffiliations(Set<Affiliation> affiliations) {
+		this.affiliations = affiliations;
+	}
+
+	public Affiliation addAffiliation(Affiliation affiliation) {
+		getAffiliations().add(affiliation);
+		affiliation.setGrp(this);
+
+		return affiliation;
+	}
+
+	public Affiliation removeAffiliation(Affiliation affiliation) {
+		getAffiliations().remove(affiliation);
+		affiliation.setGrp(null);
+
+		return affiliation;
 	}
 
 	public Set<Infomation> getInfomations() {

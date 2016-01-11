@@ -30,6 +30,9 @@ public class Menu implements Serializable {
 	@Column(name="menu_name", length=2147483647)
 	private String menuName;
 
+	@Column(length=2147483647)
+	private String url;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="usable_end_date")
 	private Date usableEndDate;
@@ -67,6 +70,14 @@ public class Menu implements Serializable {
 
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
+	}
+
+	public String getUrl() {
+		return this.url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public Date getUsableEndDate() {

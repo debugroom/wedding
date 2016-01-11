@@ -62,6 +62,8 @@ public class MenuRepositoryTest {
 				case2ExpectedMenuList.add(Menu.builder().menuId("1020").build());
 				case2ExpectedMenuList.add(Menu.builder().menuId("2000").build());
 				case2ExpectedMenuList.add(Menu.builder().menuId("3000").build());
+				case2ExpectedMenuList.add(Menu.builder().menuId("4000").build());
+				case2ExpectedMenuList.add(Menu.builder().menuId("8000").build());
 				findMenuFixture[1].expected.addAll(case2ExpectedMenuList);
 
 				List<Menu> case3ExpectedMenuList = new ArrayList<Menu>();
@@ -70,7 +72,11 @@ public class MenuRepositoryTest {
 				case3ExpectedMenuList.add(Menu.builder().menuId("1020").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("2000").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("3000").build());
+				case3ExpectedMenuList.add(Menu.builder().menuId("4000").build());
+				case3ExpectedMenuList.add(Menu.builder().menuId("8000").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("9000").build());
+				case3ExpectedMenuList.add(Menu.builder().menuId("9010").build());
+				case3ExpectedMenuList.add(Menu.builder().menuId("9020").build());
 				findMenuFixture[2].expected.addAll(case3ExpectedMenuList);
 
 			}
