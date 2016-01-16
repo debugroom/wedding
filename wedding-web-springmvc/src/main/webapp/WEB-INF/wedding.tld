@@ -5,6 +5,7 @@
     version="2.1">
     
     <tlib-version>3.0</tlib-version>
+    <short-name>d</short-name>
     <uri>http://debugroom.org/tags</uri>
     <tag>
         <name>Menu</name>

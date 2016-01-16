@@ -1,4 +1,4 @@
-package org.debugroom.wedding.domain.service.management;
+package org.debugroom.wedding.domain.service.profile;
 
 import javax.inject.Inject;
 
@@ -8,8 +8,8 @@ import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.model.entity.User;
 import org.debugroom.wedding.domain.service.common.UserSharedService;
 
-@Service("userManagementServiceImpl")
-public class UserManagementServiceImpl implements UserManagementService {
+@Service("profileManagementService")
+public class ProfileManagementServiceImpl implements ProfileManagementService{
 
 	@Inject
 	UserSharedService userSharedService;
@@ -19,4 +19,5 @@ public class UserManagementServiceImpl implements UserManagementService {
 		return userSharedService.getUser(userId);
 	}
 
+	
 }

@@ -170,7 +170,7 @@ tbody > tr:nth-child(even) > td{
 	           width   : 650px;
 	           padding : 20px;
 	            border : solid 1px #aaaaaa;
-	     border-radius : 20px;
+	     border-radius : 10px;
 	-webkit-box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
 	       -box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
             background : -webkit-linear-gradient(top, #ffffff 0%, #dddddd 50%, #ffffff 100%); 
@@ -221,4 +221,42 @@ tbody > tr:nth-child(even) > td{
        -moz-box-sizing : border-box;
     -webkit-box-sizing : border-box;
            -box-sizing : border-box;
+}
+
+.formPanel table tr td{
+	border : none;
+	padding : 5px;
+}
+
+.formPanel td:first-child{
+	text-align : right;
+	padding : 0 10px 0 0;
+}
+
+.formPanel button{
+	width : 80px;
+	height : 35px;
+	font-size : 0.9em;
+	margin :  5px 10px 5px;
+	padding : 5px 25px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+.formPanel button:hover {
+	color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+	
 }
