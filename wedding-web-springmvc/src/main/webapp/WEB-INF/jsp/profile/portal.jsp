@@ -6,6 +6,7 @@
 <title>Wedding Portal</title>
 <link rel="stylesheet"
     href="${pageContext.request.contextPath}/resources/app/css/flex.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/profile.js"></script>
 </head>
 <body>
     <header>
@@ -29,12 +30,12 @@
 						<table>
 							<tbody>
 								<tr>
-									<td><form:label path="userName">名前</form:label> : </td>
-									<td>${user.userName}<form:hidden path="userId"/></td>
+									<td><form:label path="userName">ユーザ名</form:label> : </td>
+									<td>${user.userName}<form:hidden path="userName"/></td>
 									<td><form:button name="updateParam" value="userName" >更新</form:button></td>
 								</tr>
 								<tr>
-									<td><form:label path="userId">ピクチャ</form:label> : </td>
+									<td><form:label path="imageFilePath">ピクチャ</form:label> : </td>
 									<td><img src="${pageContext.request.contextPath}${user.imageFilePath}"><form:hidden path="imageFilePath"/></td>
 									<td><form:button name="updateParam" value="imageFile" >更新</form:button></td>
 								</tr>
@@ -49,9 +50,9 @@
 									<td><form:button name="updateParam" value="address.postCd" >更新</form:button></td>
 								</tr>
 								<tr>
-									<td><form:label path="address.address">住所</form:label> : </td>
+									<td><form:label path="address.address">住所</form:label> : </td>
 									<td>${user.address.address}<form:hidden path="address.address"/></td>
-									<td><form:button name="updateParame" value="address.address" >更新</form:button></td>
+									<td><form:button name="updateParam" value="address.address" >更新</form:button></td>
 								</tr>
     	   						<c:forEach items="${user.emails}" var="email" varStatus="status">
 								<tr>
