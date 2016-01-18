@@ -235,8 +235,8 @@ tbody > tr:nth-child(even) > td{
 
 .formPanel button{
 	width : 80px;
-	height : 35px;
-	font-size : 0.9em;
+	height : 40px;
+	font-size : 0.8em;
 	margin :  5px 10px 5px;
 	padding : 5px 25px 5px;
     background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
@@ -259,4 +259,44 @@ tbody > tr:nth-child(even) > td{
     background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
     background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
 	
+}
+
+.editPanel {
+	    margin : 10px 0px 0px 0px;
+	 font-size : 0.9em;
+	    height : 140px;
+	     width : 300px;
+    background : -webkit-linear-gradient(top, #ffdddd 0%, #ffffff 100%); 
+    background :    -moz-linear-gradient(top, #ffdddd 0%, #ffffff 100%); 
+    background :      -o-linear-gradient(top, #ffdddd 0%, #ffffff 100%); 
+    background :     -ms-linear-gradient(top, #ffdddd 0%, #ffffff 100%); 
+    background :         linear-gradient(top, #ffdddd 0%, #ffffff 100%); 
+}
+
+.editPanel input {
+    font-size : 0.9em;
+	margin : 10px 0px 10px 5px;
+	width  : 300px;
+    height : 40px;
+    text-align : left;
+}
+
+.editPanel button {
+	 font-size : 0.7em;
+	 width : 90px;
+	 height : 40px;
+	 margin :  5px 10px 5px;
+	 padding : 5px 25px 5px;
+}
+
+.warningMessage {
+	background : red;
+	color : #ff00000;
+}
+
+.formPanel .main-button {
+	margin : 20px 260px 50px 240px; 
+	font-size : 1.2em;
+	width : 200px;
+	height : 60px;
 }
