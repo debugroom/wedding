@@ -32,7 +32,9 @@
 							<tbody>
 								<tr>
 									<td><form:label path="userName">ユーザ名</form:label> : </td>
-									<td>${user.userName}<form:hidden path="userName"/></td>
+									<td>${user.userName}<form:hidden path="userName"/>
+									<form:errors path="userName" />
+									</td>
 									<td><button id="userName-button" name="userName-button" type="button" value="userName" >変更</button></td>
 								</tr>
 								<tr>
@@ -42,7 +44,9 @@
 								</tr>
 								<tr>
 									<td><form:label path="loginId">ログインID</form:label> : </td>
-									<td>${user.loginId}<form:hidden path="loginId"/></td>
+									<td>${user.loginId}<form:hidden path="loginId"/>
+									<form:errors path="loginId" />
+									</td>
 									<td><button id="loginId-button" name="loginId-button" type="button" value="loginId" >変更</button></td>
 								</tr>
 								<tr>

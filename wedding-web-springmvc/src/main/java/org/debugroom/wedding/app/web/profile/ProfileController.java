@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,7 +42,10 @@ public class ProfileController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/profile/edit")
-	public String editProfile(EditProfileForm editProfileForm){
+	public String editProfile(@Validated EditProfileForm editProfileForm, Errors errors){
+		if(errors.hasErrors()){
+			return "profile";
+		}
 		editProfileForm.toString();
 		return "profile/edit";
 	}
