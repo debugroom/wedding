@@ -23,4 +23,9 @@
         </property>
     </bean>
     
+    <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+        <property name="mappingFiles" value=
+        "classpath*:/META-INF/dozer/**/*-mapping.xml" />
+    </bean>
+
 </beans>

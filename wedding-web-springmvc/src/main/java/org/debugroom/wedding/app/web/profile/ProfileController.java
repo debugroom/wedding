@@ -2,6 +2,8 @@ package org.debugroom.wedding.app.web.profile;
 
 import javax.inject.Inject;
 
+import org.dozer.Mapper;
+import org.dozer.MappingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.model.entity.User;
 import org.debugroom.wedding.domain.service.profile.ProfileManagementService;
@@ -28,6 +31,9 @@ public class ProfileController {
 		return EditProfileForm.builder().build();
 	}
 	@Inject
+	Mapper mapper;
+	
+	@Inject
 	ProfileManagementService profileManagementService;
 	
 	@RequestMapping(method = RequestMethod.GET, value="/profile")
@@ -42,11 +48,19 @@ public class ProfileController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/profile/edit")
-	public String editProfile(@Validated EditProfileForm editProfileForm, Errors errors){
+	public String editProfile(@Validated EditProfileForm editProfileForm,
+				Errors errors, Model model){
 		if(errors.hasErrors()){
 			return "profile";
 		}
-		editProfileForm.toString();
+		try {
+			model.addAttribute(profileManagementService.updateUserProfile(
+					mapper.map(editProfileForm, User.class)));
+		} catch (MappingException e) {
+			e.printStackTrace();
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
 		return "profile/edit";
 	}
 

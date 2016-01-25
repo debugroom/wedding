@@ -9,6 +9,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileMaxSize;
+import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileNotEmpty;
+import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileRequired;
+
 import org.debugroom.wedding.app.web.common.model.Address;
 import org.debugroom.wedding.app.web.common.model.Email;
 
@@ -19,15 +25,22 @@ import lombok.Builder;
 @Data
 @AllArgsConstructor
 @Builder
-public class EditProfileForm {
+public class EditProfileForm implements Serializable{
 
 	@NotNull
 	@Size(min=8, max=8)
-	@Pattern(regexp = "[0-9]")
+	@Pattern(regexp = "[0-9]*")
 	private String userId;
 	@NotNull
 	@Size(min=1, max=50)
 	private String userName;
+	@NotNull
+	@Size(min=1, max=256)
+	@Pattern(regexp = "[a-zA-Z0-9¥.¥-¥/]*")
+	private String imageFilePath;
+	@UploadFileNotEmpty
+	@UploadFileMaxSize(10000000)
+	private MultipartFile newImageFile;
 	@NotNull
 	@Size(min=1, max=32)
 	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*")

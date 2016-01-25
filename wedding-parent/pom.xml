@@ -12,6 +12,7 @@
     <encoding>UTF-8</encoding>
     <org.debugroom_framework-common_version>1.0-SNAPSHOT</org.debugroom_framework-common_version>
     <org.debugroom_framework-test_version>1.0-SNAPSHOT</org.debugroom_framework-test_version>
+    <org.debugroom_framework-spring_version>1.0-SNAPSHOT</org.debugroom_framework-spring_version>
     <org.springframework-version>3.2.11.RELEASE</org.springframework-version>
     <org.springframework_spring-context_version>3.2.11.RELEASE</org.springframework_spring-context_version>
     <org.springframework_spring-jdbc_version>3.2.11.RELEASE</org.springframework_spring-jdbc_version>
@@ -27,6 +28,8 @@
     <org.springframework.data_spring-data-jpa_version>1.4.3.RELEASE</org.springframework.data_spring-data-jpa_version>
     <org.aspectj_aspectjrt_version>1.6.11</org.aspectj_aspectjrt_version>
     <org.aspectj_aspectjweaver_version>1.6.11</org.aspectj_aspectjweaver_version>
+    <net.sf.dozer_dozer_version>5.5.1</net.sf.dozer_dozer_version>
+    <net.sf.dozer_dozer-spring_version>5.5.1</net.sf.dozer_dozer-spring_version>
     <cglib_cglib_version>2.2</cglib_cglib_version>
     <org.hibernate_hibernate-entitymanager_version>4.1.0.Final</org.hibernate_hibernate-entitymanager_version>
     <org.hibernate_hibernate-validator_version>4.1.0.Final</org.hibernate_hibernate-validator_version>
@@ -180,7 +183,18 @@
         <artifactId>commons-lang3</artifactId>
         <version>${org.apache.commons_commons-lang3_version}</version>
       </dependency>
-            
+
+      <dependency>
+        <groupId>net.sf.dozer</groupId>
+        <artifactId>dozer</artifactId>
+        <version>${net.sf.dozer_dozer_version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.dozer</groupId>
+        <artifactId>dozer-spring</artifactId>
+        <version>${net.sf.dozer_dozer-spring_version}</version>
+      </dependency>
+
       <!-- @Inject -->
       <dependency>
         <groupId>javax.inject</groupId>
@@ -243,6 +257,11 @@
         <groupId>org.debugroom</groupId>
         <artifactId>framework-test</artifactId>
         <version>${org.debugroom_framework-test_version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.debugroom</groupId>
+        <artifactId>framework-spring</artifactId>
+        <version>${org.debugroom_framework-spring_version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.tomcat</groupId>

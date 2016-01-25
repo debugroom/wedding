@@ -33,8 +33,8 @@ function showUpdateDialog(event){
 		case "userName" : 
 			inputElement.setAttribute("type", "text");
 			break;
-		case "imageFile" : 
-			inputElement.setAttribute("type", "text");
+		case "imageFilePath" : 
+			inputElement.setAttribute("type", "file");
 			break;
 		case "loginId" : 
 			inputElement.setAttribute("type", "text");
@@ -49,8 +49,11 @@ function showUpdateDialog(event){
 			inputElement.setAttribute("type", "email");
 			break;
 	}
-	//現在入力されているパラメータをhiddenから取得してフォームに設定する。
-	inputElement.setAttribute("value", document.getElementById(value).value);
+	//Formのtype属性がfile以外の場合は、現在入力されているパラメータをhiddenから取得してフォームに設定する。
+	if(!inputElement.getAttribute("type") == "file"){
+		inputElement.setAttribute("value", document.getElementById(value).value);
+	}
+
 	panelElement.appendChild(inputElement);
 
 	//キャンセルボタンを作成する。
@@ -68,6 +71,7 @@ function showUpdateDialog(event){
 	var submitButtonElement = document.createElement("button");
 	var submitButtonTitle = document.createTextNode("変更"); 
 	submitButtonElement.setAttribute("id", "updateParam");
+	submitButtonElement.setAttribute("name", value);
 	submitButtonElement.setAttribute("type", "button");
 	submitButtonElement.addEventListener("click", function(event){
 		updateParam(event);},
@@ -107,9 +111,28 @@ function updateParam(event){
 		event.currentTarget.parentNode.parentNode.appendChild(warningFragment); 
 	}
 
-	//Hidden項目の変更
-	event.currentTarget.parentNode.parentNode.firstElementChild.value = 
-		event.currentTarget.parentNode.firstElementChild.value;
+	//ファイルアップロード時にform属性にenctype属性を付与し、Hiddenを追加
+	if(event.currentTarget.parentNode.firstChild.type == "file"){
+		// Form要素を取得し、enctypeを付与。
+		var formElement = document.getElementById("user");
+		formElement.setAttribute("enctype", "multipart/form-data");
+		//<input type="file">項目を取得し、hidden直下に追加。
+		var fileInputFormFragment = event.currentTarget.parentNode.firstElementChild;
+		//既に設定されているHiddenイメージファイルがないか確認
+		if(null == document.getElementById("newImageFile")){
+			event.currentTarget.parentNode.parentNode.appendChild(fileInputFormFragment); 
+		}else{
+			existingFileInputFormFragment = document.getElementById("newImageFile");
+			event.currentTarget.parentNode.parentNode.replaceChild(fileInputFormFragment, fileInputFormFragment); 
+		}
+		fileInputFormFragment.setAttribute("id", "newImageFile");
+		fileInputFormFragment.setAttribute("name", "newImageFile");
+	}else{
+	//ファイルアップロード以外には、Hidden項目の変更
+		document.getElementById(event.currentTarget.name).value 
+			= event.currentTarget.parentNode.firstElementChild.value;
+	}
+	
 	//編集パネルを削除
 	event.currentTarget.parentNode.parentNode.removeChild(
 			event.currentTarget.parentNode);

@@ -300,3 +300,13 @@ tbody > tr:nth-child(even) > td{
 	width : 200px;
 	height : 60px;
 }
+
+.resultPanel table {
+	 width : 700px;
+}
+.resultPanel tr {
+	 width : 600px;
+}
+.resultPanel th td {
+	 width : 300px;
+}

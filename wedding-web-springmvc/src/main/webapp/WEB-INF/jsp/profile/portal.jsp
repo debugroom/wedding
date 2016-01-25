@@ -40,7 +40,7 @@
 								<tr>
 									<td><form:label path="imageFilePath">ピクチャ</form:label> : </td>
 									<td><img src="${pageContext.request.contextPath}${user.imageFilePath}"><form:hidden path="imageFilePath"/></td>
-									<td><button id="imageFile-button" name="imageFile-button" type="button" value="imageFile" >変更</button></td>
+									<td><button id="imageFile-button" name="imageFile-button" type="button" value="imageFilePath" >変更</button></td>
 								</tr>
 								<tr>
 									<td><form:label path="loginId">ログインID</form:label> : </td>
@@ -62,7 +62,10 @@
     	   						<c:forEach items="${user.emails}" var="email" varStatus="status">
 								<tr>
 									<td><label for="emails[${status.index}].email">Email</label>${status.index+1} : </td>
-									<td>${email.email}<input id="emails[${status.index}].email" name="emails[${status.index}].email" type="hidden" value="${email.email}">
+									<td>${email.email}
+									<input id="emails[${status.index}].id.emailId" name="emails[${status.index}].id.emailId" type="hidden" value="${email.id.emailId}">
+									<input id="emails[${status.index}].email" name="emails[${status.index}].email" type="hidden" value="${email.email}">
+									</td>
 									<td><button id="emails[${status.index}].email-button" name="emails[${status.index}].email-button" type="button" value="emails[${status.index}].email" >変更</button></td>
 								</tr>
     							</c:forEach>

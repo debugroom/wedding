@@ -18,6 +18,8 @@ public class Address implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
+	public Address(){}
+
 	@NotNull
 	@Size(min = 7, max=7)
 	@Pattern(regexp = "[0-9]*")
