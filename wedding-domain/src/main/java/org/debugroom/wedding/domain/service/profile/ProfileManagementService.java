@@ -8,6 +8,6 @@ public interface ProfileManagementService {
 
 	public User getUserProfile(String userId) throws BusinessException;
 
-	public UpdateResult updateUserProfile(User user) throws BusinessException;
+	public UpdateResult<User> updateUserProfile(User user) throws BusinessException;
 
 }

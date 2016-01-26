@@ -39,7 +39,7 @@
 								</tr>
 								<tr>
 									<td><form:label path="imageFilePath">ピクチャ</form:label> : </td>
-									<td><img src="${pageContext.request.contextPath}${user.imageFilePath}"><form:hidden path="imageFilePath"/></td>
+									<td><img src="${pageContext.request.contextPath}/${user.imageFilePath}"><form:hidden path="imageFilePath"/></td>
 									<td><button id="imageFile-button" name="imageFile-button" type="button" value="imageFilePath" >変更</button></td>
 								</tr>
 								<tr>

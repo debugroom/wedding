@@ -35,8 +35,8 @@ public class EditProfileForm implements Serializable{
 	@Size(min=1, max=50)
 	private String userName;
 	@NotNull
-	@Size(min=1, max=256)
-	@Pattern(regexp = "[a-zA-Z0-9¥.¥-¥/]*")
+	@Size(min=1, max=1024)
+	@Pattern(regexp = "[-¥.¥/a-zA-Z0-9]*")
 	private String imageFilePath;
 	@UploadFileNotEmpty
 	@UploadFileMaxSize(10000000)

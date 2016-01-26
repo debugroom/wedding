@@ -1,6 +1,7 @@
 package org.debugroom.wedding.app.web.profile;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.dozer.Mapper;
 import org.dozer.MappingException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 import org.debugroom.wedding.domain.model.entity.User;
 import org.debugroom.wedding.domain.service.profile.ProfileManagementService;
 
@@ -32,6 +34,10 @@ public class ProfileController {
 	}
 	@Inject
 	Mapper mapper;
+	
+	@Inject
+	@Named("profileImageUploadHelper")
+	FileUploadHelper fileUploadHelper;
 	
 	@Inject
 	ProfileManagementService profileManagementService;
@@ -54,8 +60,12 @@ public class ProfileController {
 			return "profile";
 		}
 		try {
-			model.addAttribute(profileManagementService.updateUserProfile(
-					mapper.map(editProfileForm, User.class)));
+			User user = mapper.map(editProfileForm, User.class);
+			if(null != editProfileForm.getNewImageFile()){
+				user.setImageFilePath(fileUploadHelper.saveFile(
+					editProfileForm.getNewImageFile(), editProfileForm.getUserId()));
+			}
+			model.addAttribute(profileManagementService.updateUserProfile(user));
 		} catch (MappingException e) {
 			e.printStackTrace();
 		} catch (BusinessException e) {

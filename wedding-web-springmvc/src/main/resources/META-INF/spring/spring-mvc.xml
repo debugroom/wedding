@@ -11,7 +11,7 @@
     http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <context:property-placeholder location="classpath*:/META-INF/spring/*.properties" />
+    <context:property-placeholder location="classpath*:/META-INF/*.properties, classpath*:/META-INF/spring/*.properties" />
 
     <context:component-scan base-package="org.debugroom.wedding.app.web" />
 

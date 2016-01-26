@@ -45,6 +45,7 @@
     <org.apache.maven.plugins_maven-javadoc-plugin_version>2.10.1</org.apache.maven.plugins_maven-javadoc-plugin_version>
     <org.apache.maven.plugins_maven-jar-plugin_version>2.5</org.apache.maven.plugins_maven-jar-plugin_version>
     <org.apache.maven.plugins_maven-war-plugin_version>2.5</org.apache.maven.plugins_maven-war-plugin_version>
+    <commons-io_commons-io_version>2.4</commons-io_commons-io_version>
     <com.google.code.maven-license-plugin_maven-license-plugin_version>1.4.0</com.google.code.maven-license-plugin_maven-license-plugin_version>
     <junit_junit_version>4.11</junit_junit_version>
     <org.dbunit_dbunit_version>2.4.8</org.dbunit_dbunit_version>
@@ -182,6 +183,12 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${org.apache.commons_commons-lang3_version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io_commons-io_version}</version>
       </dependency>
 
       <dependency>

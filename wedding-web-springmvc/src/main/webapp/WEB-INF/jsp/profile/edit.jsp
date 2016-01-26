@@ -77,12 +77,16 @@
     	           <tr>
                 	       <td>
     	                       <spring:nestedPath path="updateResult.beforeEntity" >
-    	                           <spring:bind path="imageFilePath">${status.value}</spring:bind>
+    	                           <spring:bind path="imageFilePath">
+        	                           <img src="${pageContext.request.contextPath}/${status.value}">
+    	                           </spring:bind>
     	                       </spring:nestedPath>
     	                   </td>
                 	       <td>
     	                       <spring:nestedPath path="updateResult.afterEntity" >
-    	                           <spring:bind path="imageFilePath">${status.value}</spring:bind>
+    	                           <spring:bind path="imageFilePath">
+        	                           <img src="${pageContext.request.contextPath}/${status.value}">
+    	                           </spring:bind>
     	                       </spring:nestedPath>
     	                   </td>
     	               </c:when>

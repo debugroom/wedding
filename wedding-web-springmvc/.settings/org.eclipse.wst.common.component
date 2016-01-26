@@ -7,6 +7,12 @@
         <dependent-module archiveName="framework-spring-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-spring/framework-spring">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="framework-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-common/framework-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="framework-test-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-test/framework-test">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="wedding-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-common/wedding-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -14,12 +20,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="wedding-infra-jpa-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-infra-jpa/wedding-infra-jpa">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="framework-test-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-test/framework-test">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="framework-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-common/framework-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="wedding-env-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-env/wedding-env">
