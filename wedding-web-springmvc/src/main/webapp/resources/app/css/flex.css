@@ -53,13 +53,13 @@ td{
 	padding : 0px, 30px, 0px, 8px;
 }
 
-tr :nth-child(1){
+.infomationPanel tr :nth-child(1){
 	width : 200px;
 	text-align : center;
 }
 
-tr :nth-child(2){
-	width : 400px;
+.infomationPanel tr :nth-child(2){
+	width : 600px;
 }
 
 tbody > tr:nth-child(even) > td{
@@ -80,10 +80,10 @@ tbody > tr:nth-child(even) > td{
 }
 
 #flex-container .flex-item-1{
-	           width : 300px;
+	           width : 30%;
 }
 #flex-container .flex-item-2{
-	           width : 500px;
+	           width : 70%;
 	    -webkit-flex : 1 0 500px;
 	       -moz-flex : 1 0 500px;
 	            flex : 1 0 500px;
@@ -167,7 +167,7 @@ tbody > tr:nth-child(even) > td{
 }
 
 .panel {
-	           width   : 650px;
+	           width   : 100%;
 	           padding : 20px;
 	            border : solid 1px #aaaaaa;
 	     border-radius : 10px;

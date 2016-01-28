@@ -28,7 +28,7 @@
     	           <c:choose>
     	               <c:when test="${updateParam == 'userName'}">
     	       <tr>
-    	           <th colspan="2">ユーザ名</th>
+    	           <th colspan="2">ユーザ名</th>
     	       </tr>
     	       <tr>
     	           <th>更新前</th>
@@ -112,7 +112,7 @@
     	               </c:when>
     	               <c:when test="${updateParam == 'address.address'}">
     	       <tr>
-    	           <th colspan="2">住所</th>
+    	           <th colspan="2">住所</th>
     	       </tr>
     	       <tr>
     	           <th>更新前</th>

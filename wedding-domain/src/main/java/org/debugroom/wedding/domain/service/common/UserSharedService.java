@@ -1,8 +1,12 @@
 package org.debugroom.wedding.domain.service.common;
 
+import java.util.List;
+
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.model.entity.User;
 import org.debugroom.wedding.domain.service.common.UpdateResult;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserSharedService {
 
@@ -12,4 +16,8 @@ public interface UserSharedService {
 	
 	public UpdateResult<User> updateUser(User user) throws BusinessException;
 	
+	public List<User> getUsers();
+	
+	public Page<User> getUsersUsingPageable(Pageable pageable);
+
 }

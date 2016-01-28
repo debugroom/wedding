@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import org.dozer.Mapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,6 +101,16 @@ public class UserSharedServiceImpl implements UserSharedService{
 		
 		return updateResult;
 		
+	}
+
+	@Override
+	public List<User> getUsers() {
+		return userRepository.findAll();
+	}
+
+	@Override
+	public Page<User> getUsersUsingPageable(Pageable pageable) {
+		return userRepository.findAll(pageable);
 	}
 
 }

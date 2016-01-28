@@ -12,4 +12,14 @@
         <tag-class>org.debugroom.wedding.app.web.common.tag.MenuTag</tag-class>
         <body-content>empty</body-content>
     </tag>
+    <tag>
+        <name>Page</name>
+        <tag-class>org.debugroom.wedding.app.web.common.tag.PagenationTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>page</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>
