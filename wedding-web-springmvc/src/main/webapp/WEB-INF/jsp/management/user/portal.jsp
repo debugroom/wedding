@@ -16,6 +16,7 @@
     <div class="flex-item-2">
       <div class="panel">
         <div class="formPanel">
+          <d:Page page="${page}" />
           <table>
             <tbody>
               <tr>
@@ -27,21 +28,22 @@
                 <th>アクション</th>
               </tr>
               <c:forEach items="${page.content}" var="user" varStatus="status">
-              <form id="user_${user.userId}" action="${pageContext.request.contextPath}/management/user/${user.userId}}/edit">
-              <input id="userId" name="userId" type="hidden" value="${user.userId}">
               <tr>
               	<td>${status.index + 1}</td>
               	<td>${user.userId}</td>
               	<td>${user.loginId}</td>
               	<td>${user.userName}</td>
               	<td><fmt:formatDate value="${user.lastLoginDate}" pattern="yyyy-MM-dd hh:mm:ss" /></td>
-              	<td><button id="edit-button-${user.userId}" name="edit-button-${user.userId}" type="button">変更</button></td>
+              	<td>
+                    <form id="user_${user.userId}" action="${pageContext.request.contextPath}/management/user/${user.userId}/edit">
+                        <input id="userId" name="userId" type="hidden" value="${user.userId}" />
+              	     <button id="edit-button-${user.userId}" name="edit-button-${user.userId}" type="button">変更</button>
+                    </form>
+              	</td>
               </tr>
-              </form>
               </c:forEach>
             </tbody>
           </table>
-          <d:Page page="${page}" />
         </div>
      </div>
    </div>
