@@ -13,19 +13,7 @@
     <org.debugroom_framework-common_version>1.0-SNAPSHOT</org.debugroom_framework-common_version>
     <org.debugroom_framework-test_version>1.0-SNAPSHOT</org.debugroom_framework-test_version>
     <org.debugroom_framework-spring_version>1.0-SNAPSHOT</org.debugroom_framework-spring_version>
-    <org.springframework-version>3.2.11.RELEASE</org.springframework-version>
-    <org.springframework_spring-context_version>3.2.11.RELEASE</org.springframework_spring-context_version>
-    <org.springframework_spring-jdbc_version>3.2.11.RELEASE</org.springframework_spring-jdbc_version>
-    <org.springframework_spring-orm_version>3.2.11.RELEASE</org.springframework_spring-orm_version>
-    <org.springframework_spring-tx_version>3.2.11.RELEASE</org.springframework_spring-tx_version>
-    <org.springframework_spring-test_version>3.2.11.RELEASE</org.springframework_spring-test_version>
-    <org.springframework_spring-webmvc_version>3.2.11.RELEASE</org.springframework_spring-webmvc_version>
-    <org.springframework.batch_spring-batch-core_version>2.2.6.RELEASE</org.springframework.batch_spring-batch-core_version>
-    <org.springframework.batch_spring-batch-infrastructure_version>2.2.6.RELEASE</org.springframework.batch_spring-batch-infrastructure_version>
-    <org.springframework.batch_spring-batch-test_version>2.2.6.RELEASE</org.springframework.batch_spring-batch-test_version>
-    <org.springframework.data_spring-data-rest-core_version>2.2.2.RELEASE</org.springframework.data_spring-data-rest-core_version>
-    <org.springframework.data_spring-data-commons_version>1.6.4.RELEASE</org.springframework.data_spring-data-commons_version>
-    <org.springframework.data_spring-data-jpa_version>1.4.3.RELEASE</org.springframework.data_spring-data-jpa_version>
+    <io.spring.platform_platform-bom_version>2.0.1.RELEASE</io.spring.platform_platform-bom_version>
     <org.aspectj_aspectjrt_version>1.6.11</org.aspectj_aspectjrt_version>
     <org.aspectj_aspectjweaver_version>1.6.11</org.aspectj_aspectjweaver_version>
     <net.sf.dozer_dozer_version>5.5.1</net.sf.dozer_dozer_version>
@@ -61,89 +49,11 @@
     <dependencies>
       <!-- Spring -->
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>${org.springframework_spring-context_version}</version>
-        <exclusions>
-        <!-- Exclude Commons Logging in favor of SLF4j -->
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${org.springframework_spring-webmvc_version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
-        <version>${org.springframework_spring-jdbc_version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-tx</artifactId>
-        <version>${org.springframework_spring-tx_version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
-        <version>${org.springframework_spring-orm_version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.batch</groupId>
-        <artifactId>spring-batch-core</artifactId>
-        <version>${org.springframework.batch_spring-batch-core_version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.batch</groupId>
-        <artifactId>spring-batch-infrastructure</artifactId>
-        <version>${org.springframework.batch_spring-batch-infrastructure_version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.data</groupId>
-        <artifactId>spring-data-commons</artifactId>
-        <version>${org.springframework.data_spring-data-commons_version}</version>
-        <exclusions>
-          <exclusion>
-            <artifactId>spring-beans</artifactId>
-            <groupId>org.springframework</groupId>
-          </exclusion>
-          <exclusion>
-            <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.data</groupId>
-        <artifactId>spring-data-jpa</artifactId>
-        <version>${org.springframework.data_spring-data-jpa_version}</version>
-        <exclusions>
-          <exclusion>
-            <artifactId>spring-orm</artifactId>
-            <groupId>org.springframework</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>spring-tx</artifactId>
-            <groupId>org.springframework</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>spring-core</artifactId>
-            <groupId>org.springframework</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>spring-beans</artifactId>
-            <groupId>org.springframework</groupId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.data</groupId>
-        <artifactId>spring-data-rest-core</artifactId>
-        <version>${org.springframework.data_spring-data-rest-core_version}</version>
+        <groupId>io.spring.platform</groupId>
+        <artifactId>platform-bom</artifactId>
+        <version>${io.spring.platform_platform-bom_version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
         
       <!-- AspectJ -->
@@ -215,17 +125,6 @@
         <artifactId>junit</artifactId>
         <version>${junit_junit_version}</version>
         <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${org.springframework_spring-test_version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.batch</groupId>
-        <artifactId>spring-batch-test</artifactId>
-        <version>${org.springframework.batch_spring-batch-test_version}</version>
       </dependency>
       <dependency>
         <groupId>org.dbunit</groupId>
