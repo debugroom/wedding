@@ -27,6 +27,8 @@ import lombok.Builder;
 @Builder
 public class EditProfileForm implements Serializable{
 
+	private static final long serialVersionUID = 5030915253383688158L;
+
 	@NotNull
 	@Size(min=8, max=8)
 	@Pattern(regexp = "[0-9]*")

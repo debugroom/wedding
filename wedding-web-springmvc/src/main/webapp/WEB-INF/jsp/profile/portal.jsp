@@ -6,7 +6,7 @@
 <title>Wedding Portal</title>
 <link rel="stylesheet"
     href="${pageContext.request.contextPath}/resources/app/css/flex.css">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/profile.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/profile/portal.js"></script>
 </head>
 <body>
     <c:import url="/WEB-INF/jsp/common/header.jsp" />

@@ -32,6 +32,11 @@ import org.debugroom.wedding.domain.service.management.UserManagementService;
 @Controller
 public class UserManagementController {
 
+	@ModelAttribute
+	public EditUserForm setUpForm(){
+		return EditUserForm.builder().build();
+	}
+
 	@Inject
 	UserManagementService userManagementService;
 	
