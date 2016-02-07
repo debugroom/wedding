@@ -19,11 +19,8 @@
     <net.sf.dozer_dozer_version>5.5.1</net.sf.dozer_dozer_version>
     <net.sf.dozer_dozer-spring_version>5.5.1</net.sf.dozer_dozer-spring_version>
     <cglib_cglib_version>2.2</cglib_cglib_version>
-    <org.hibernate_hibernate-entitymanager_version>4.1.0.Final</org.hibernate_hibernate-entitymanager_version>
-    <org.hibernate_hibernate-validator_version>4.1.0.Final</org.hibernate_hibernate-validator_version>
     <javax.inject_javax.inject_version>1</javax.inject_javax.inject_version>
     <javax.servlet_jstl_version>1.2</javax.servlet_jstl_version>
-    <javax.validation_validation-api_version>1.0.0.GA</javax.validation_validation-api_version>
     <org.apache.commons_commons-lang3_version>3.3.2</org.apache.commons_commons-lang3_version>
     <org.apache.maven.plugins_maven-surefire-plugin_version>2.17</org.apache.maven.plugins_maven-surefire-plugin_version>
     <org.apache.maven.plugins_maven-compiler-plugin_version>3.1</org.apache.maven.plugins_maven-compiler-plugin_version>
@@ -73,22 +70,6 @@
         <version>${cglib_cglib_version}</version>
       </dependency>
     
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-entitymanager</artifactId>
-        <version>${org.hibernate_hibernate-entitymanager_version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${org.hibernate_hibernate-validator_version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>${javax.validation_validation-api_version}</version>
-      </dependency>
-        
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
