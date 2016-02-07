@@ -1,15 +1,16 @@
 package org.debugroom.wedding.domain.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 /**
- * The persistent class for the address database table.
+ * The persistent class for the request database table.
  * 
  */
 @AllArgsConstructor
@@ -25,11 +26,17 @@ public class Request implements Serializable {
 	private String requestId;
 
 	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
+	@Temporal(TemporalType.DATE)
 	@Column(name="registrated_date")
 	private Date registratedDate;
 
 	@Column(name="request_contents", length=2147483647)
 	private String requestContents;
+
+	private Integer ver;
 
 	//bi-directional many-to-one association to RequestStatus
 	@OneToMany(mappedBy="request")
@@ -46,6 +53,14 @@ public class Request implements Serializable {
 		this.requestId = requestId;
 	}
 
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
 	public Date getRegistratedDate() {
 		return this.registratedDate;
 	}
@@ -60,6 +75,14 @@ public class Request implements Serializable {
 
 	public void setRequestContents(String requestContents) {
 		this.requestContents = requestContents;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
 	}
 
 	public Set<RequestStatus> getRequestStatuses() {

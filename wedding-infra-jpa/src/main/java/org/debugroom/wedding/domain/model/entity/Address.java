@@ -1,10 +1,12 @@
 package org.debugroom.wedding.domain.model.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+
 
 /**
  * The persistent class for the address database table.
@@ -25,8 +27,14 @@ public class Address implements Serializable {
 	@Column(length=255)
 	private String address;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
 	@Column(name="post_cd", length=8)
 	private String postCd;
+
+	private Integer ver;
 
 	//bi-directional one-to-one association to User
 	@OneToOne
@@ -52,12 +60,28 @@ public class Address implements Serializable {
 		this.address = address;
 	}
 
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
 	public String getPostCd() {
 		return this.postCd;
 	}
 
 	public void setPostCd(String postCd) {
 		this.postCd = postCd;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
 	}
 
 	public User getUsr() {

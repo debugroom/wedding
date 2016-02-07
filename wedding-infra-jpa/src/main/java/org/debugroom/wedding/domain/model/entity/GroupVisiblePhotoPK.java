@@ -7,23 +7,23 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 /**
- * The primary key class for the affiliation database table.
+ * The primary key class for the group_visible_photo database table.
  * 
  */
 @AllArgsConstructor
 @Builder
 @Embeddable
-public class AffiliationPK implements Serializable {
+public class GroupVisiblePhotoPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="group_id", insertable=false, updatable=false, unique=true, nullable=false, length=10)
 	private String groupId;
 
-	@Column(name="user_id", insertable=false, updatable=false, unique=true, nullable=false, length=8)
-	private String userId;
+	@Column(name="photo_id", insertable=false, updatable=false, unique=true, nullable=false, length=10)
+	private String photoId;
 
-	public AffiliationPK() {
+	public GroupVisiblePhotoPK() {
 	}
 	public String getGroupId() {
 		return this.groupId;
@@ -31,31 +31,31 @@ public class AffiliationPK implements Serializable {
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
-	public String getUserId() {
-		return this.userId;
+	public String getPhotoId() {
+		return this.photoId;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setPhotoId(String photoId) {
+		this.photoId = photoId;
 	}
 
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
 		}
-		if (!(other instanceof AffiliationPK)) {
+		if (!(other instanceof GroupVisiblePhotoPK)) {
 			return false;
 		}
-		AffiliationPK castOther = (AffiliationPK)other;
+		GroupVisiblePhotoPK castOther = (GroupVisiblePhotoPK)other;
 		return 
 			this.groupId.equals(castOther.groupId)
-			&& this.userId.equals(castOther.userId);
+			&& this.photoId.equals(castOther.photoId);
 	}
 
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.groupId.hashCode();
-		hash = hash * prime + this.userId.hashCode();
+		hash = hash * prime + this.photoId.hashCode();
 		
 		return hash;
 	}

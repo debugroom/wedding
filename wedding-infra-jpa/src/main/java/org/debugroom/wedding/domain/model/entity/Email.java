@@ -1,13 +1,15 @@
 package org.debugroom.wedding.domain.model.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+
+
 /**
- * The persistent class for the address database table.
+ * The persistent class for the email database table.
  * 
  */
 @AllArgsConstructor
@@ -23,6 +25,12 @@ public class Email implements Serializable {
 
 	@Column(length=100)
 	private String email;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
+	private Integer ver;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
@@ -46,6 +54,22 @@ public class Email implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
 	}
 
 	public User getUsr() {

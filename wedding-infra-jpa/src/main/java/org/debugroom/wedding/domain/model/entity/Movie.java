@@ -1,14 +1,16 @@
 package org.debugroom.wedding.domain.model.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
+
+
 /**
- * The persistent class for the address database table.
+ * The persistent class for the movie database table.
  * 
  */
 @AllArgsConstructor
@@ -26,7 +28,18 @@ public class Movie implements Serializable {
 	@Column(name="file_path", length=2147483647)
 	private String filePath;
 
-	private Boolean iscontrolled;
+	@Column(name="is_controled")
+	private Boolean isControled;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
+	private Integer ver;
+
+	//bi-directional many-to-one association to GroupVisibleMovie
+	@OneToMany(mappedBy="movie")
+	private Set<GroupVisibleMovie> groupVisibleMovies;
 
 	//bi-directional many-to-one association to Message
 	@OneToMany(mappedBy="movie")
@@ -64,12 +77,50 @@ public class Movie implements Serializable {
 		this.filePath = filePath;
 	}
 
-	public Boolean getIscontrolled() {
-		return this.iscontrolled;
+	public Boolean getIsControled() {
+		return this.isControled;
 	}
 
-	public void setIscontrolled(Boolean iscontrolled) {
-		this.iscontrolled = iscontrolled;
+	public void setIsControled(Boolean isControled) {
+		this.isControled = isControled;
+	}
+
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
+	}
+
+	public Set<GroupVisibleMovie> getGroupVisibleMovies() {
+		return this.groupVisibleMovies;
+	}
+
+	public void setGroupVisibleMovies(Set<GroupVisibleMovie> groupVisibleMovies) {
+		this.groupVisibleMovies = groupVisibleMovies;
+	}
+
+	public GroupVisibleMovie addGroupVisibleMovy(GroupVisibleMovie groupVisibleMovy) {
+		getGroupVisibleMovies().add(groupVisibleMovy);
+		groupVisibleMovy.setMovie(this);
+
+		return groupVisibleMovy;
+	}
+
+	public GroupVisibleMovie removeGroupVisibleMovy(GroupVisibleMovie groupVisibleMovy) {
+		getGroupVisibleMovies().remove(groupVisibleMovy);
+		groupVisibleMovy.setMovie(null);
+
+		return groupVisibleMovy;
 	}
 
 	public Set<Message> getMessages() {

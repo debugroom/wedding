@@ -1,15 +1,16 @@
 package org.debugroom.wedding.domain.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 /**
- * The persistent class for the address database table.
+ * The persistent class for the infomation database table.
  * 
  */
 @AllArgsConstructor
@@ -28,6 +29,10 @@ public class Infomation implements Serializable {
 	private String infoPagePath;
 
 	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
+	@Temporal(TemporalType.DATE)
 	@Column(name="registrated_date")
 	private Date registratedDate;
 
@@ -37,6 +42,12 @@ public class Infomation implements Serializable {
 
 	@Column(length=256)
 	private String title;
+
+	private Integer ver;
+
+	//bi-directional many-to-one association to GroupNotification
+	@OneToMany(mappedBy="infomation")
+	private Set<GroupNotification> groupNotifications;
 
 	//bi-directional many-to-many association to Group
 	@ManyToMany
@@ -74,6 +85,14 @@ public class Infomation implements Serializable {
 		this.infoPagePath = infoPagePath;
 	}
 
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
 	public Date getRegistratedDate() {
 		return this.registratedDate;
 	}
@@ -96,6 +115,36 @@ public class Infomation implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
+	}
+
+	public Set<GroupNotification> getGroupNotifications() {
+		return this.groupNotifications;
+	}
+
+	public void setGroupNotifications(Set<GroupNotification> groupNotifications) {
+		this.groupNotifications = groupNotifications;
+	}
+
+	public GroupNotification addGroupNotification(GroupNotification groupNotification) {
+		getGroupNotifications().add(groupNotification);
+		groupNotification.setInfomation(this);
+
+		return groupNotification;
+	}
+
+	public GroupNotification removeGroupNotification(GroupNotification groupNotification) {
+		getGroupNotifications().remove(groupNotification);
+		groupNotification.setInfomation(null);
+
+		return groupNotification;
 	}
 
 	public Set<Group> getGrps() {

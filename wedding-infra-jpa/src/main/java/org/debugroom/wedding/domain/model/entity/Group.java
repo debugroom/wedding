@@ -1,14 +1,16 @@
 package org.debugroom.wedding.domain.model.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
+
+
 /**
- * The persistent class for the address database table.
+ * The persistent class for the grp database table.
  * 
  */
 @AllArgsConstructor
@@ -26,9 +28,27 @@ public class Group implements Serializable {
 	@Column(name="group_name", length=256)
 	private String groupName;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
+	private Integer ver;
+
 	//bi-directional many-to-one association to Affiliation
 	@OneToMany(mappedBy="grp")
 	private Set<Affiliation> affiliations;
+
+	//bi-directional many-to-one association to GroupNotification
+	@OneToMany(mappedBy="grp")
+	private Set<GroupNotification> groupNotifications;
+
+	//bi-directional many-to-one association to GroupVisibleMovie
+	@OneToMany(mappedBy="grp")
+	private Set<GroupVisibleMovie> groupVisibleMovies;
+
+	//bi-directional many-to-one association to GroupVisiblePhoto
+	@OneToMany(mappedBy="grp")
+	private Set<GroupVisiblePhoto> groupVisiblePhotos;
 
 	//bi-directional many-to-many association to Infomation
 	@ManyToMany(mappedBy="grps")
@@ -65,6 +85,22 @@ public class Group implements Serializable {
 		this.groupName = groupName;
 	}
 
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
+	}
+
 	public Set<Affiliation> getAffiliations() {
 		return this.affiliations;
 	}
@@ -85,6 +121,72 @@ public class Group implements Serializable {
 		affiliation.setGrp(null);
 
 		return affiliation;
+	}
+
+	public Set<GroupNotification> getGroupNotifications() {
+		return this.groupNotifications;
+	}
+
+	public void setGroupNotifications(Set<GroupNotification> groupNotifications) {
+		this.groupNotifications = groupNotifications;
+	}
+
+	public GroupNotification addGroupNotification(GroupNotification groupNotification) {
+		getGroupNotifications().add(groupNotification);
+		groupNotification.setGrp(this);
+
+		return groupNotification;
+	}
+
+	public GroupNotification removeGroupNotification(GroupNotification groupNotification) {
+		getGroupNotifications().remove(groupNotification);
+		groupNotification.setGrp(null);
+
+		return groupNotification;
+	}
+
+	public Set<GroupVisibleMovie> getGroupVisibleMovies() {
+		return this.groupVisibleMovies;
+	}
+
+	public void setGroupVisibleMovies(Set<GroupVisibleMovie> groupVisibleMovies) {
+		this.groupVisibleMovies = groupVisibleMovies;
+	}
+
+	public GroupVisibleMovie addGroupVisibleMovy(GroupVisibleMovie groupVisibleMovy) {
+		getGroupVisibleMovies().add(groupVisibleMovy);
+		groupVisibleMovy.setGrp(this);
+
+		return groupVisibleMovy;
+	}
+
+	public GroupVisibleMovie removeGroupVisibleMovy(GroupVisibleMovie groupVisibleMovy) {
+		getGroupVisibleMovies().remove(groupVisibleMovy);
+		groupVisibleMovy.setGrp(null);
+
+		return groupVisibleMovy;
+	}
+
+	public Set<GroupVisiblePhoto> getGroupVisiblePhotos() {
+		return this.groupVisiblePhotos;
+	}
+
+	public void setGroupVisiblePhotos(Set<GroupVisiblePhoto> groupVisiblePhotos) {
+		this.groupVisiblePhotos = groupVisiblePhotos;
+	}
+
+	public GroupVisiblePhoto addGroupVisiblePhoto(GroupVisiblePhoto groupVisiblePhoto) {
+		getGroupVisiblePhotos().add(groupVisiblePhoto);
+		groupVisiblePhoto.setGrp(this);
+
+		return groupVisiblePhoto;
+	}
+
+	public GroupVisiblePhoto removeGroupVisiblePhoto(GroupVisiblePhoto groupVisiblePhoto) {
+		getGroupVisiblePhotos().remove(groupVisiblePhoto);
+		groupVisiblePhoto.setGrp(null);
+
+		return groupVisiblePhoto;
 	}
 
 	public Set<Infomation> getInfomations() {

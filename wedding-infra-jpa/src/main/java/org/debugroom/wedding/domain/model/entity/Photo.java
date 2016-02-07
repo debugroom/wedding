@@ -1,14 +1,16 @@
 package org.debugroom.wedding.domain.model.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
+
+
 /**
- * The persistent class for the address database table.
+ * The persistent class for the photo database table.
  * 
  */
 @AllArgsConstructor
@@ -26,7 +28,18 @@ public class Photo implements Serializable {
 	@Column(name="file_path", length=2147483647)
 	private String filePath;
 
-	private Boolean iscontroled;
+	@Column(name="is_controled")
+	private Boolean isControled;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
+	private Integer ver;
+
+	//bi-directional many-to-one association to GroupVisiblePhoto
+	@OneToMany(mappedBy="photo")
+	private Set<GroupVisiblePhoto> groupVisiblePhotos;
 
 	//bi-directional many-to-one association to Message
 	@OneToMany(mappedBy="photo")
@@ -64,12 +77,50 @@ public class Photo implements Serializable {
 		this.filePath = filePath;
 	}
 
-	public Boolean getIscontroled() {
-		return this.iscontroled;
+	public Boolean getIsControled() {
+		return this.isControled;
 	}
 
-	public void setIscontroled(Boolean iscontroled) {
-		this.iscontroled = iscontroled;
+	public void setIsControled(Boolean isControled) {
+		this.isControled = isControled;
+	}
+
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
+	}
+
+	public Set<GroupVisiblePhoto> getGroupVisiblePhotos() {
+		return this.groupVisiblePhotos;
+	}
+
+	public void setGroupVisiblePhotos(Set<GroupVisiblePhoto> groupVisiblePhotos) {
+		this.groupVisiblePhotos = groupVisiblePhotos;
+	}
+
+	public GroupVisiblePhoto addGroupVisiblePhoto(GroupVisiblePhoto groupVisiblePhoto) {
+		getGroupVisiblePhotos().add(groupVisiblePhoto);
+		groupVisiblePhoto.setPhoto(this);
+
+		return groupVisiblePhoto;
+	}
+
+	public GroupVisiblePhoto removeGroupVisiblePhoto(GroupVisiblePhoto groupVisiblePhoto) {
+		getGroupVisiblePhotos().remove(groupVisiblePhoto);
+		groupVisiblePhoto.setPhoto(null);
+
+		return groupVisiblePhoto;
 	}
 
 	public Set<Message> getMessages() {

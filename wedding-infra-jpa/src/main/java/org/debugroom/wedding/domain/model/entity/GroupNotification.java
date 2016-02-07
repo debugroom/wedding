@@ -9,19 +9,19 @@ import java.util.Date;
 
 
 /**
- * The persistent class for the affiliation database table.
+ * The persistent class for the group_notification database table.
  * 
  */
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="affiliation")
-@NamedQuery(name="Affiliation.findAll", query="SELECT a FROM Affiliation a")
-public class Affiliation implements Serializable {
+@Table(name="group_notification")
+@NamedQuery(name="GroupNotification.findAll", query="SELECT g FROM GroupNotification g")
+public class GroupNotification implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private AffiliationPK id;
+	private GroupNotificationPK id;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
@@ -34,19 +34,19 @@ public class Affiliation implements Serializable {
 	@JoinColumn(name="group_id", nullable=false, insertable=false, updatable=false)
 	private Group grp;
 
-	//bi-directional many-to-one association to User
+	//bi-directional many-to-one association to Infomation
 	@ManyToOne
-	@JoinColumn(name="user_id", nullable=false, insertable=false, updatable=false)
-	private User usr;
+	@JoinColumn(name="info_id", nullable=false, insertable=false, updatable=false)
+	private Infomation infomation;
 
-	public Affiliation() {
+	public GroupNotification() {
 	}
 
-	public AffiliationPK getId() {
+	public GroupNotificationPK getId() {
 		return this.id;
 	}
 
-	public void setId(AffiliationPK id) {
+	public void setId(GroupNotificationPK id) {
 		this.id = id;
 	}
 
@@ -74,12 +74,12 @@ public class Affiliation implements Serializable {
 		this.grp = grp;
 	}
 
-	public User getUsr() {
-		return this.usr;
+	public Infomation getInfomation() {
+		return this.infomation;
 	}
 
-	public void setUsr(User usr) {
-		this.usr = usr;
+	public void setInfomation(Infomation infomation) {
+		this.infomation = infomation;
 	}
 
 }

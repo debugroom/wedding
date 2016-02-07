@@ -1,15 +1,16 @@
 package org.debugroom.wedding.domain.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 /**
- * The persistent class for the address database table.
+ * The persistent class for the usr database table.
  * 
  */
 @AllArgsConstructor
@@ -34,15 +35,25 @@ public class User implements Serializable {
 	@Column(name="last_login_date")
 	private Date lastLoginDate;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
 	@Column(name="login_id", length=2147483647)
 	private String loginId;
 
 	@Column(name="user_name", length=2147483647)
 	private String userName;
 
+	private Integer ver;
+
 	//bi-directional one-to-one association to Address
 	@OneToOne(mappedBy="usr")
 	private Address address;
+
+	//bi-directional many-to-one association to Affiliation
+	@OneToMany(mappedBy="usr")
+	private Set<Affiliation> affiliations;
 
 	//bi-directional many-to-one association to Credential
 	@OneToMany(mappedBy="usr")
@@ -108,6 +119,14 @@ public class User implements Serializable {
 		this.lastLoginDate = lastLoginDate;
 	}
 
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
 	public String getLoginId() {
 		return this.loginId;
 	}
@@ -124,12 +143,42 @@ public class User implements Serializable {
 		this.userName = userName;
 	}
 
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
+	}
+
 	public Address getAddress() {
 		return this.address;
 	}
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public Set<Affiliation> getAffiliations() {
+		return this.affiliations;
+	}
+
+	public void setAffiliations(Set<Affiliation> affiliations) {
+		this.affiliations = affiliations;
+	}
+
+	public Affiliation addAffiliation(Affiliation affiliation) {
+		getAffiliations().add(affiliation);
+		affiliation.setUsr(this);
+
+		return affiliation;
+	}
+
+	public Affiliation removeAffiliation(Affiliation affiliation) {
+		getAffiliations().remove(affiliation);
+		affiliation.setUsr(null);
+
+		return affiliation;
 	}
 
 	public Set<Credential> getCredentials() {

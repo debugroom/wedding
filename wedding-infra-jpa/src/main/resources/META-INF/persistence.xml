@@ -28,6 +28,12 @@
         <class>org.debugroom.wedding.domain.model.entity.Request</class>
         <class>org.debugroom.wedding.domain.model.entity.RequestStatus</class>
         <class>org.debugroom.wedding.domain.model.entity.RequestStatusPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.GroupNotification</class>
+        <class>org.debugroom.wedding.domain.model.entity.GroupNotificationPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.GroupVisibleMovie</class>
+        <class>org.debugroom.wedding.domain.model.entity.GroupVisibleMoviePK</class>
+        <class>org.debugroom.wedding.domain.model.entity.GroupVisiblePhoto</class>
+        <class>org.debugroom.wedding.domain.model.entity.GroupVisiblePhotoPK</class>
         <properties>
 <!--  
             <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect" />

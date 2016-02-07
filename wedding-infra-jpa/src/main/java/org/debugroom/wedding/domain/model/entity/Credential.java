@@ -1,14 +1,15 @@
 package org.debugroom.wedding.domain.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 /**
- * The persistent class for the address database table.
+ * The persistent class for the credential database table.
  * 
  */
 @AllArgsConstructor
@@ -26,8 +27,14 @@ public class Credential implements Serializable {
 	private String credentialKey;
 
 	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
+	@Temporal(TemporalType.DATE)
 	@Column(name="valid_date")
 	private Date validDate;
+
+	private Integer ver;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
@@ -53,12 +60,28 @@ public class Credential implements Serializable {
 		this.credentialKey = credentialKey;
 	}
 
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
 	public Date getValidDate() {
 		return this.validDate;
 	}
 
 	public void setValidDate(Date validDate) {
 		this.validDate = validDate;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
 	}
 
 	public User getUsr() {

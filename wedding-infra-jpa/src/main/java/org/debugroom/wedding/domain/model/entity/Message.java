@@ -1,13 +1,15 @@
 package org.debugroom.wedding.domain.model.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+
+
 /**
- * The persistent class for the address database table.
+ * The persistent class for the message database table.
  * 
  */
 @AllArgsConstructor
@@ -21,11 +23,17 @@ public class Message implements Serializable {
 	@EmbeddedId
 	private MessagePK id;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
 	@Column(name="like_count")
 	private Integer likeCount;
 
 	@Column(length=2147483647)
 	private String message;
+
+	private Integer ver;
 
 	//bi-directional many-to-one association to MessageBoard
 	@ManyToOne
@@ -53,6 +61,14 @@ public class Message implements Serializable {
 		this.id = id;
 	}
 
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
 	public Integer getLikeCount() {
 		return this.likeCount;
 	}
@@ -67,6 +83,14 @@ public class Message implements Serializable {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
 	}
 
 	public MessageBoard getMessageBoard() {

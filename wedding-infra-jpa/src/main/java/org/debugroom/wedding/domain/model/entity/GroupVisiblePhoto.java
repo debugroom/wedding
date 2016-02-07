@@ -9,19 +9,19 @@ import java.util.Date;
 
 
 /**
- * The persistent class for the affiliation database table.
+ * The persistent class for the group_visible_photo database table.
  * 
  */
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="affiliation")
-@NamedQuery(name="Affiliation.findAll", query="SELECT a FROM Affiliation a")
-public class Affiliation implements Serializable {
+@Table(name="group_visible_photo")
+@NamedQuery(name="GroupVisiblePhoto.findAll", query="SELECT g FROM GroupVisiblePhoto g")
+public class GroupVisiblePhoto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private AffiliationPK id;
+	private GroupVisiblePhotoPK id;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
@@ -34,19 +34,19 @@ public class Affiliation implements Serializable {
 	@JoinColumn(name="group_id", nullable=false, insertable=false, updatable=false)
 	private Group grp;
 
-	//bi-directional many-to-one association to User
+	//bi-directional many-to-one association to Photo
 	@ManyToOne
-	@JoinColumn(name="user_id", nullable=false, insertable=false, updatable=false)
-	private User usr;
+	@JoinColumn(name="photo_id", nullable=false, insertable=false, updatable=false)
+	private Photo photo;
 
-	public Affiliation() {
+	public GroupVisiblePhoto() {
 	}
 
-	public AffiliationPK getId() {
+	public GroupVisiblePhotoPK getId() {
 		return this.id;
 	}
 
-	public void setId(AffiliationPK id) {
+	public void setId(GroupVisiblePhotoPK id) {
 		this.id = id;
 	}
 
@@ -74,12 +74,12 @@ public class Affiliation implements Serializable {
 		this.grp = grp;
 	}
 
-	public User getUsr() {
-		return this.usr;
+	public Photo getPhoto() {
+		return this.photo;
 	}
 
-	public void setUsr(User usr) {
-		this.usr = usr;
+	public void setPhoto(Photo photo) {
+		this.photo = photo;
 	}
 
 }

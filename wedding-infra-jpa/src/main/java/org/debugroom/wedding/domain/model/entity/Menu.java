@@ -1,15 +1,16 @@
 package org.debugroom.wedding.domain.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 /**
- * The persistent class for the address database table.
+ * The persistent class for the menu database table.
  * 
  */
 @AllArgsConstructor
@@ -27,6 +28,10 @@ public class Menu implements Serializable {
 	@Column(name="authority_level")
 	private Integer authorityLevel;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
 	@Column(name="menu_name", length=2147483647)
 	private String menuName;
 
@@ -40,6 +45,8 @@ public class Menu implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="usable_start_date")
 	private Date usableStartDate;
+
+	private Integer ver;
 
 	//bi-directional many-to-one association to Function
 	@OneToMany(mappedBy="menu")
@@ -62,6 +69,14 @@ public class Menu implements Serializable {
 
 	public void setAuthorityLevel(Integer authorityLevel) {
 		this.authorityLevel = authorityLevel;
+	}
+
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
 	}
 
 	public String getMenuName() {
@@ -94,6 +109,14 @@ public class Menu implements Serializable {
 
 	public void setUsableStartDate(Date usableStartDate) {
 		this.usableStartDate = usableStartDate;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
 	}
 
 	public Set<Function> getFnctions() {

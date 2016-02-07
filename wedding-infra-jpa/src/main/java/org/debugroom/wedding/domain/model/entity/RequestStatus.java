@@ -1,13 +1,15 @@
 package org.debugroom.wedding.domain.model.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+
+
 /**
- * The persistent class for the address database table.
+ * The persistent class for the request_status database table.
  * 
  */
 @AllArgsConstructor
@@ -24,8 +26,14 @@ public class RequestStatus implements Serializable {
 	@Column(name="is_answered")
 	private Boolean isAnswered;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name="last_updated_date")
+	private Date lastUpdatedDate;
+
 	@Column(length=2147483647)
 	private String response;
+
+	private Integer ver;
 
 	//bi-directional many-to-one association to Request
 	@ManyToOne
@@ -56,12 +64,28 @@ public class RequestStatus implements Serializable {
 		this.isAnswered = isAnswered;
 	}
 
+	public Date getLastUpdatedDate() {
+		return this.lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
 	public String getResponse() {
 		return this.response;
 	}
 
 	public void setResponse(String response) {
 		this.response = response;
+	}
+
+	public Integer getVer() {
+		return this.ver;
+	}
+
+	public void setVer(Integer ver) {
+		this.ver = ver;
 	}
 
 	public Request getRequest() {

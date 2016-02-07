@@ -1,13 +1,13 @@
 package org.debugroom.wedding.domain.model.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.io.Serializable;
+import javax.persistence.*;
+
 /**
- * The persistent class for the address database table.
+ * The primary key class for the email database table.
  * 
  */
 @AllArgsConstructor
