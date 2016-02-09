@@ -14,9 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileMaxSize;
 import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileNotEmpty;
 import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileRequired;
-
-import org.debugroom.wedding.app.web.common.model.Address;
-import org.debugroom.wedding.app.web.common.model.Email;
+import org.debugroom.wedding.app.web.model.Address;
+import org.debugroom.wedding.app.web.model.Email;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;

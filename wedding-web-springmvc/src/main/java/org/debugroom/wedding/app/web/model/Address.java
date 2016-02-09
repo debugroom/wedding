@@ -1,4 +1,4 @@
-package org.debugroom.wedding.app.web.common.model;
+package org.debugroom.wedding.app.web.model;
 
 import java.io.Serializable;
 

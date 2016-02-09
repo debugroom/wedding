@@ -36,7 +36,7 @@
                   <tr>
                     <td><form:label path="imageFilePath">ピクチャ</form:label></td>
                     <td><img src="${pageContext.request.contextPath}/${user.imageFilePath}"><form:hidden path="imageFilePath" /></td>
-                    <td><button id="imageFile-button" name="imageFile-button" type="button" value="imageFile">変更</button></td>
+                    <td><button id="imageFilePath-button" name="imageFilePath-button" type="button" value="imageFilePath">変更</button></td>
                   </tr>
                   <tr>
                     <td><form:label path="loginId">ログインID</form:label></td>
@@ -50,7 +50,11 @@
                   </tr>
                   <tr>
                     <td><label for="credentials[0].credentialKey">パスワード</label></td>
-                    <td><div id="credentials[0].credentialKey">**********</div></td>
+                    <td>
+                      **********
+                      <input id="credentials[0].credentialKey" type="hidden" value=""/>
+                      <input id="credentials[1].credentialKey" type="hidden" value=""/>
+                    </td>
                     <td><button id="password-button" name="password-button" type="button" value="credentials[0].credentialKey">初期化</button></td>
                   </tr>
                   <tr>
@@ -61,7 +65,7 @@
                   <tr>
                     <td><form:label path="address.address">住所</form:label></td>
                     <td>${user.address.address}<form:hidden path="address.address" /></td>
-                    <td><button id="address.address-button" name="address.address-button" type="button" value="address.postCd">変更</button></td>
+                    <td><button id="address.address-button" name="address.address-button" type="button" value="address.address">変更</button></td>
                   </tr>
                   <c:forEach items="${user.emails}" var="email" varStatus="status">
                     <tr>
@@ -87,6 +91,7 @@
                   </c:forEach>
                 </tbody>
               </table>
+              <form:button class="main-button" name="updateParam" >更新を確定する</form:button>
             </form:form>
           </div>
         </div>

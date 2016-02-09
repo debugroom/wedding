@@ -41,14 +41,22 @@ function showUpdateDialog(event){
 		inputElement.setAttribute("value", document.getElementById(value).value);
 	}
 	
+	panelElement.appendChild(inputElement);
+	inputElement.setAttribute("id", value + "-edit");
+	inputElement.setAttribute("name", value + "-edit");
+	
 	if(inputElement.getAttribute("type") == "password"){
+		var additionalTextElement = document.createElement("p");
 		var additionalText = document.createTextNode("確認のため、再入力してください。");
 		var additionalInputElement = document.createElement("input");
-		
+		additionalInputElement.setAttribute("type", "password");
+		additionalInputElement.setAttribute("id", "credentials[1].credentialKey-edit");
+		additionalInputElement.setAttribute("name", "credentials[1].credentialKey-edit");
+		additionalTextElement.appendChild(additionalText);
+		panelElement.appendChild(additionalTextElement);
+		panelElement.appendChild(additionalInputElement);
 	}
-	
-	panelElement.appendChild(inputElement);
-	
+
 	var cancelButtonElement = document.createElement("button");
 	var cancelButtonTitle = document.createTextNode("閉じる");
 	cancelButtonElement.setAttribute("id", "close");
@@ -79,6 +87,18 @@ function showUpdateDialog(event){
 function closeUpdateDialog(){
 	event.currentTarget.parentNode.parentNode.removeChild(
 			event.currentTarget.parentNode);
+}
+
+function addWarningMessage(event, target){
+	if(null == document.getElementById(event.currentTarget.name + "-message")){
+		var warningFragment = document.createDocumentFragment();
+		var warningPanel = document.createElement("div");
+		warningPanel.setAttribute("id", event.currentTarget.name + "-message");
+		warningPanel.setAttribute("class", "warningMessage");
+		warningPanel.appendChild(document.createTextNode("!下のボタンを押して、更新を確定してください。"));
+		warningFragment.appendChild(warningPanel);
+		target.appendChild(warningFragment); 
+	}
 }
 
 function replaceArrayExpression(value){

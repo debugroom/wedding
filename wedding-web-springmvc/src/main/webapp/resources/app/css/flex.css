@@ -28,10 +28,6 @@ h3 {
 	border-bottom  : solid 1px #888888;
 }
 
-p {
-	float : right;
-	margin-bottom : 30px;
-}
 table{
 	border : solid 1px #aaaaaa;
 	border-collapse: collapse;
@@ -264,7 +260,7 @@ tbody > tr:nth-child(even) > td{
 .editPanel {
 	    margin : 10px 0px 0px 0px;
 	 font-size : 0.9em;
-	    height : 140px;
+	    height : auto;
 	     width : 300px;
     background : -webkit-linear-gradient(top, #ffdddd 0%, #ffffff 100%); 
     background :    -moz-linear-gradient(top, #ffdddd 0%, #ffffff 100%); 
@@ -276,7 +272,7 @@ tbody > tr:nth-child(even) > td{
 .editPanel input {
     font-size : 0.9em;
 	margin : 10px 0px 10px 5px;
-	width  : 300px;
+	width  : 250px;
     height : 40px;
     text-align : left;
 }

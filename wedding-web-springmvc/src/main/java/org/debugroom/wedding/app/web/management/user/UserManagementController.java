@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.app.web.management.user.EditUserForm.GetUser;
+import org.debugroom.wedding.app.web.management.user.EditUserForm.UpdateUser;
 import org.debugroom.wedding.domain.model.entity.User;
 import org.debugroom.wedding.domain.service.management.UserManagementService;
 
@@ -54,8 +56,8 @@ public class UserManagementController {
 		return "management/user/portal";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/management/user/{userId}/edit")
-	public String editUser(@Validated EditUserForm editUserForm, 
+	@RequestMapping(method = RequestMethod.GET, value="/management/user/{userId}")
+	public String getUser(@Validated(GetUser.class) EditUserForm editUserForm, 
 								Errors errors, Model model){
 
 		if(errors.hasErrors()){
@@ -71,4 +73,13 @@ public class UserManagementController {
 		return "management/user/edit";
 	}
 
+	@RequestMapping(method = RequestMethod.PUT, value="/management/user/{userId}")
+	public String updateUser(@Validated(UpdateUser.class) EditUserForm editUserForm,
+								Errors errors, Model model){
+		if(errors.hasErrors()){
+			return "management/user/edit";
+		}
+		
+		return "management/user/result";
+	}
 }
