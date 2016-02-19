@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.model.entity.User;
+import org.debugroom.wedding.domain.service.common.UpdateResult;
 import org.debugroom.wedding.domain.service.common.UserSharedService;
 
 @Service("userManagementService")
@@ -31,6 +32,17 @@ public class UserManagementServiceImpl implements UserManagementService {
 	@Override
 	public Page<User> getUsersUsingPage(Pageable pageable) {
 		return userSharedService.getUsersUsingPageable(pageable);
+	}
+
+	@Override
+	public UpdateResult<User> updateUser(User user) throws BusinessException {
+		UpdateResult<User> updateResult = null;
+		if(userSharedService.exists(user)){
+			updateResult = userSharedService.updateUser(user);
+		}else{
+			throw new BusinessException("UserManagementService.error.0001");
+		}
+		return updateResult;
 	}
 
 	

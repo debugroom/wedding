@@ -8,16 +8,10 @@
     href="${pageContext.request.contextPath}/resources/app/css/flex.css">
 </head>
 <body>
-    <header>
-        <h1>
-            <img src="${pageContext.request.contextPath}/resources/app/img/icon_6m_96.png">
-            Web site for wedding
-            <img src="${pageContext.request.contextPath}/resources/app/img/icon_6m_96.png">
-        </h1>
-    </header>
+  <c:import url="/WEB-INF/jsp/common/header.jsp" />
     <div id="flex-container">
     	<div class="flex-item-1">
-            <d:Menu/>
+          <c:import url="/WEB-INF/jsp/common/menu.jsp" />
     	</div>
     	<div class="flex-item-2">
     	以下の通り、更新されました。

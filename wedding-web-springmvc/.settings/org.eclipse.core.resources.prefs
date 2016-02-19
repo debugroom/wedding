@@ -4,5 +4,6 @@ encoding//src/main/resources=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/basic/portal.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/common/fileUploadError.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/user/edit.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/management/user/result.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/profile/edit.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/profile/portal.jsp=UTF-8

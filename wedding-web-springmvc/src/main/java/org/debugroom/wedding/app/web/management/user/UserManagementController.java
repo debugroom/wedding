@@ -73,7 +73,7 @@ public class UserManagementController {
 		return "management/user/edit";
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value="/management/user/{userId}")
+	@RequestMapping(method = RequestMethod.POST, value="/management/user/{userId}")
 	public String updateUser(@Validated(UpdateUser.class) EditUserForm editUserForm,
 								Errors errors, Model model){
 		if(errors.hasErrors()){

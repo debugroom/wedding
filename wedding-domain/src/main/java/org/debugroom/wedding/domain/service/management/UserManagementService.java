@@ -2,11 +2,12 @@ package org.debugroom.wedding.domain.service.management;
 
 import java.util.List;
 
-import org.debugroom.framework.common.exception.BusinessException;
-
-import org.debugroom.wedding.domain.model.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.domain.model.entity.User;
+import org.debugroom.wedding.domain.service.common.UpdateResult;
 
 public interface UserManagementService {
 
@@ -15,5 +16,7 @@ public interface UserManagementService {
 	public User getUserProfile(String userId) throws BusinessException;
 	
 	public Page<User> getUsersUsingPage(Pageable pageable);
+
+	public UpdateResult<User> updateUser(User user) throws BusinessException;
 
 }

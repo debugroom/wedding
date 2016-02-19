@@ -52,8 +52,8 @@
                     <td><label for="credentials[0].credentialKey">パスワード</label></td>
                     <td>
                       **********
-                      <input id="credentials[0].credentialKey" type="hidden" value=""/>
-                      <input id="credentials[1].credentialKey" type="hidden" value=""/>
+                      <input id="credentials[0].credentialKey" name="credentials[0].credentialKey" type="hidden" value=""/>
+                      <input id="credentials[1].credentialKey" name="credentials[1].credentialKey" type="hidden" value=""/>
                     </td>
                     <td><button id="password-button" name="password-button" type="button" value="credentials[0].credentialKey">初期化</button></td>
                   </tr>
