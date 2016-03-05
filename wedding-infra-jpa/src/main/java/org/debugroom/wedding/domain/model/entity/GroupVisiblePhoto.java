@@ -27,6 +27,7 @@ public class GroupVisiblePhoto implements Serializable {
 	@Column(name="last_updated_date")
 	private Date lastUpdatedDate;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to Group

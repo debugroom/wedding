@@ -43,6 +43,7 @@ public class Infomation implements Serializable {
 	@Column(length=256)
 	private String title;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to GroupNotification

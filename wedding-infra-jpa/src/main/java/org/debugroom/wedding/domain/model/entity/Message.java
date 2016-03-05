@@ -33,6 +33,7 @@ public class Message implements Serializable {
 	@Column(length=2147483647)
 	private String message;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to MessageBoard

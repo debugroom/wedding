@@ -67,7 +67,7 @@ public class UserManagementController {
 			model.addAttribute(userManagementService.getUserProfile(
 					editUserForm.getUserId()));
 		} catch (BusinessException e) {
-			e.printStackTrace();
+			model.addAttribute("errorCode", e.getCode());
 		}
 
 		return "management/user/edit";
@@ -76,10 +76,17 @@ public class UserManagementController {
 	@RequestMapping(method = RequestMethod.POST, value="/management/user/{userId}")
 	public String updateUser(@Validated(UpdateUser.class) EditUserForm editUserForm,
 								Errors errors, Model model){
+
+		User user = mapper.map(editUserForm, User.class);
 		if(errors.hasErrors()){
+			model.addAttribute(user);
 			return "management/user/edit";
 		}
-		
+		try {
+			model.addAttribute(userManagementService.updateUser(user));
+		} catch (BusinessException e) {
+			model.addAttribute("errorCode", e.getCode());
+		}
 		return "management/user/result";
 	}
 }

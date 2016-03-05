@@ -36,6 +36,7 @@ public class Request implements Serializable {
 	@Column(name="request_contents", length=2147483647)
 	private String requestContents;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to RequestStatus

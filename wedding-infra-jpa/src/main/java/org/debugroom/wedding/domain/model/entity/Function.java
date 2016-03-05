@@ -44,6 +44,7 @@ public class Function implements Serializable {
 	@Column(name="usable_start_date")
 	private Date usableStartDate;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to Menu

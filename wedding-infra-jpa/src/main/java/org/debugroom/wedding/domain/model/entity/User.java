@@ -45,6 +45,7 @@ public class User implements Serializable {
 	@Column(name="user_name", length=2147483647)
 	private String userName;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional one-to-one association to Address

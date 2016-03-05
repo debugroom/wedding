@@ -3,16 +3,16 @@ package org.debugroom.wedding.app.web.management.user;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
+import javax.validation.Valid;
 
 import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileMaxSize;
 import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileNotEmpty;
-import org.debugroom.wedding.app.web.model.Address;
-import org.debugroom.wedding.app.web.model.Credential;
-import org.debugroom.wedding.app.web.model.Email;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
@@ -48,10 +48,14 @@ public class EditUserForm implements Serializable{
 	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*", groups = {UpdateUser.class})
 	private String loginId;
 	@NotNull(groups = {UpdateUser.class})
+	@Min(value = 0, groups = UpdateUser.class)
+	@Max(value = 9, groups = UpdateUser.class)
+	private Integer authorityLevel;
+	@Valid
 	private Address address;
-	@NotNull(groups = {UpdateUser.class})
+	@Valid
 	private List<Email> emails;
-	@NotNull(groups = {UpdateUser.class})
+	@Valid
 	private List<Credential> credentials;
 	
 }

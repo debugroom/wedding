@@ -34,6 +34,7 @@ public class Address implements Serializable {
 	@Column(name="post_cd", length=8)
 	private String postCd;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional one-to-one association to User

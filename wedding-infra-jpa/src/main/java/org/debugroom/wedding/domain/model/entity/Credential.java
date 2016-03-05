@@ -34,6 +34,7 @@ public class Credential implements Serializable {
 	@Column(name="valid_date")
 	private Date validDate;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to User
