@@ -7,6 +7,7 @@ import org.dozer.Mapper;
 import org.dozer.MappingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -55,12 +56,15 @@ public class ProfileController {
 	
 	@RequestMapping(method = RequestMethod.POST, value="/profile/edit")
 	public String editProfile(@Validated EditProfileForm editProfileForm,
-				Errors errors, Model model){
-		if(errors.hasErrors()){
-			return "profile";
+				BindingResult bindingResult, Model model){
+
+		User user = mapper.map(editProfileForm, User.class);
+		if(bindingResult.hasErrors()){
+			model.addAttribute(user);
+			model.addAttribute(BindingResult.class.getName() + ".user", bindingResult);
+			return "profile/portal";
 		}
 		try {
-			User user = mapper.map(editProfileForm, User.class);
 			if(null != editProfileForm.getNewImageFile()){
 				user.setImageFilePath(fileUploadHelper.saveFile(
 					editProfileForm.getNewImageFile(), editProfileForm.getUserId()));
@@ -71,7 +75,7 @@ public class ProfileController {
 		} catch (BusinessException e) {
 			e.printStackTrace();
 		}
-		return "profile/edit";
+		return "profile/result";
 	}
 
 }

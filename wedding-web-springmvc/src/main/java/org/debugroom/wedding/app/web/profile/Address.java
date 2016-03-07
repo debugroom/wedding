@@ -1,4 +1,4 @@
-package org.debugroom.wedding.app.web.model;
+package org.debugroom.wedding.app.web.profile;
 
 import java.io.Serializable;
 
@@ -21,8 +21,8 @@ public class Address implements Serializable{
 	public Address(){}
 
 	@NotNull
-	@Size(min = 7, max=7)
-	@Pattern(regexp = "[0-9]*")
+	@Size(min = 8, max=8)
+	@Pattern(regexp = "[-¥ 0-9]*")
 	private String postCd;
 	@NotNull
 	@Size(min = 0, max=256)

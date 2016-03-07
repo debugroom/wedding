@@ -1,10 +1,11 @@
-package org.debugroom.wedding.app.web.model;
+package org.debugroom.wedding.app.web.profile;
 
 import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import javax.validation.Valid;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class Email implements Serializable{
 	public Email(){
 		this.id = new EmailPK();
 	}
+	@Valid
 	private EmailPK id;
 	@NotNull
 	@org.hibernate.validator.constraints.Email

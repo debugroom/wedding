@@ -2,6 +2,7 @@ package org.debugroom.wedding.domain.service.common;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -67,28 +68,33 @@ public class UserSharedServiceImpl implements UserSharedService{
 		
 		if(!updateTargetUser.getUserName().equals(user.getUserName())){
 			updateTargetUser.setUserName(user.getUserName());
+			updateTargetUser.setLastUpdatedDate(new Date());
 			updateParamList.add("userName");
 		}
 		
 		if(!updateTargetUser.getLoginId().equals(user.getLoginId())){
 			updateTargetUser.setLoginId(user.getLoginId());
+			updateTargetUser.setLastUpdatedDate(new Date());
 			updateParamList.add("loginId");
 		}
 
 		if(!updateTargetUser.getImageFilePath().equals(user.getImageFilePath())){
 			updateTargetUser.setImageFilePath(user.getImageFilePath());
+			updateTargetUser.setLastUpdatedDate(new Date());
 			updateParamList.add("imageFile");
 		}
 
 		if(!updateTargetUser.getAddress().getPostCd().equals(
 				user.getAddress().getPostCd())){
 			updateTargetUser.getAddress().setPostCd(user.getAddress().getPostCd());
+			updateTargetUser.getAddress().setLastUpdatedDate(new Date());
 			updateParamList.add("address.postCd");
 		}
 		
 		if(!updateTargetUser.getAddress().getAddress().equals(
 				user.getAddress().getAddress())){
 			updateTargetUser.getAddress().setAddress(user.getAddress().getAddress());
+			updateTargetUser.getAddress().setLastUpdatedDate(new Date());
 			updateParamList.add("address.address");
 		}
 
@@ -96,7 +102,8 @@ public class UserSharedServiceImpl implements UserSharedService{
 			// If credentialType equals "PASSWORD" and CredentialKey is not blank , null.
 			if(domainProperties.getCredentialTypePassword().equals(
 					credential.getId().getCredentialType()) 
-					&& (!"".equals(credential.getCredentialKey()) || credential.getCredentialKey() != null)){
+					&& (!"".equals(credential.getCredentialKey()) 
+							&& credential.getCredentialKey() != null)){
 				for(Credential targetCredential : updateTargetUser.getCredentials()){
 					// If update target credentialType equals "PASSWORD"
 					if(domainProperties.getCredentialTypePassword().equals(
@@ -104,6 +111,7 @@ public class UserSharedServiceImpl implements UserSharedService{
 						// Set encode password. 
 						targetCredential.setCredentialKey(passwordEncoder.encode(
 								credential.getCredentialKey()));
+						targetCredential.setLastUpdatedDate(new Date());
 						updateParamList.add(new StringBuilder()
 													.append("credentials#")
 													.append(targetCredential.getId().getCredentialType())
@@ -118,6 +126,7 @@ public class UserSharedServiceImpl implements UserSharedService{
 				if(paramEmail.getId().getEmailId() == targetEmail.getId().getEmailId()
 						&& !paramEmail.getEmail().equals(targetEmail.getEmail())){
 					targetEmail.setEmail(paramEmail.getEmail());
+					targetEmail.setLastUpdatedDate(new Date());
 					updateParamList.add(new StringBuilder()
 												.append("emails#")
 												.append(targetEmail.getId().getEmailId())

@@ -1,12 +1,18 @@
 function showUpdateDialog(event){
 	
+	//UPDATE対象のパラメータを取得する。
 	var value = event.currentTarget.value;
+	//配列を含む場合のパラメータ表現を変更する。
 	var target = replaceArrayExpression(value); 
 	
+	//パラメータを変更するためのパネルを作る。
 	var panelElement = document.createElement("div");
+	//パラメータを変更するためのパネルの属性をmodelPanelとする。
 	panelElement.setAttribute("class", "editPanel");
+	//インプットフォームを作成する。
 	var inputElement = document.createElement("input");
 	
+	//インプットフォームを作成する。
 	switch (target){
 		case "userName" :
 			inputElement.setAttribute("type", "text");
@@ -37,6 +43,7 @@ function showUpdateDialog(event){
 			break;
 	}
 	
+	//Formのtype属性がfile以外の場合は、現在入力されているパラメータをhiddenから取得してフォームに設定する。
 	if(!inputElement.getAttribute("type") == "file"){
 		inputElement.setAttribute("value", document.getElementById(value).value);
 	}
@@ -45,6 +52,7 @@ function showUpdateDialog(event){
 	inputElement.setAttribute("id", value + "-edit");
 	inputElement.setAttribute("name", value + "-edit");
 	
+	//パスワード入力の場合は２つ入力させる。
 	if(inputElement.getAttribute("type") == "password"){
 		var additionalTextElement = document.createElement("p");
 		var additionalText = document.createTextNode("確認のため、再入力してください。");
@@ -57,6 +65,7 @@ function showUpdateDialog(event){
 		panelElement.appendChild(additionalInputElement);
 	}
 
+	//キャンセルボタンを作成する。
 	var cancelButtonElement = document.createElement("button");
 	var cancelButtonTitle = document.createTextNode("閉じる");
 	cancelButtonElement.setAttribute("id", "close");
@@ -65,6 +74,7 @@ function showUpdateDialog(event){
 		false
 	);
 
+	//更新ボタンを作成する。
 	cancelButtonElement.appendChild(cancelButtonTitle);
 	panelElement.appendChild(cancelButtonElement);
 	

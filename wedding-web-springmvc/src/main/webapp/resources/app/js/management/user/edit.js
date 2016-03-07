@@ -20,9 +20,13 @@ function updateParam(event){
 
 	addWarningMessage(event, updateRootNode);
 
+	//ファイルアップロード時にform属性にenctype属性を付与し、Hiddenを追加
 	if(inputItem.type == "file"){
+		// Form要素を取得し、enctypeを付与。
 		var formElement = document.getElementById("user");
 		formElement.setAttribute("enctype", "multipart/form-data");
+		//<input type="file">項目を取得し、hidden直下に追加。
+		//既に設定されているHiddenイメージファイルがないか確認
 		if(null == document.getElementById("newImageFile")){
 			updateRootNode.appendChild(inputItem);
 		}else{
@@ -40,6 +44,7 @@ function updateParam(event){
 		document.getElementById("credentials[1].credentialKey").value = 
 			inputItem2.value;
 	}else{
+        //ファイルアップロード以外には、Hidden項目の変更
 		document.getElementById(event.currentTarget.name).value
 			= inputItem.value;
 		displayValue.textContent = inputItem.value;

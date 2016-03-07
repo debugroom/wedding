@@ -9,10 +9,10 @@
 </head>
 <body>
   <c:import url="/WEB-INF/jsp/common/header.jsp" />
-  <div id="flex-container">
-    <div class="flex-item-1">
-      <c:import url="/WEB-INF/jsp/common/menu.jsp" />
-    </div>
+    <div id="flex-container">
+      <div class="flex-item-1">
+        <c:import url="/WEB-INF/jsp/common/menu.jsp" />
+      </div>
     <div class="flex-item-2">
       <c:import url="/WEB-INF/jsp/common/userUpdateResult.jsp" />
     </div>

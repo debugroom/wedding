@@ -1,4 +1,4 @@
-package org.debugroom.wedding.app.web.model;
+package org.debugroom.wedding.app.web.profile;
 
 import java.io.Serializable;
 
@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import javax.validation.Valid;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,8 @@ public class Credential implements Serializable{
 	}
 
 	private CredentialPK id;
-	@Size(min = 1, max = 32)
-	@Pattern(regexp = "[-¥.a-zA-Z0-9]*")
+	@Size(min = 0, max = 32)
+	@Pattern(regexp = "[¥ -¥.a-zA-Z0-9]*")
 	private String credentialKey;
 	
 	@AllArgsConstructor

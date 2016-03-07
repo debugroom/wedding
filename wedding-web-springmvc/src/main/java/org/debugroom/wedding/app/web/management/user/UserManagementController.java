@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -75,11 +76,12 @@ public class UserManagementController {
 
 	@RequestMapping(method = RequestMethod.POST, value="/management/user/{userId}")
 	public String updateUser(@Validated(UpdateUser.class) EditUserForm editUserForm,
-								Errors errors, Model model){
+								BindingResult bindingResult, Model model){
 
 		User user = mapper.map(editUserForm, User.class);
-		if(errors.hasErrors()){
+		if(bindingResult.hasErrors()){
 			model.addAttribute(user);
+			model.addAttribute(BindingResult.class.getName() + ".user", bindingResult);
 			return "management/user/edit";
 		}
 		try {

@@ -57,5 +57,7 @@ public class EditUserForm implements Serializable{
 	private List<Email> emails;
 	@Valid
 	private List<Credential> credentials;
+	@Valid
+	private List<Group> grps; 
 	
 }

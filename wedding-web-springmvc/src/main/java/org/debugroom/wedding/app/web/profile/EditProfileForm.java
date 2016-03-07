@@ -8,14 +8,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.validation.Valid;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileMaxSize;
 import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileNotEmpty;
 import org.debugroom.framework.spring.webmvc.fileupload.validation.annotation.UploadFileRequired;
-import org.debugroom.wedding.app.web.model.Address;
-import org.debugroom.wedding.app.web.model.Email;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -46,9 +45,11 @@ public class EditProfileForm implements Serializable{
 	@Size(min=1, max=32)
 	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*")
 	private String loginId;
-	@NotNull
+	@Valid
 	private Address address;
-	@NotNull
+	@Valid
+	private List<Credential> credentials;
+	@Valid
 	private List<Email> emails;
 	
 
