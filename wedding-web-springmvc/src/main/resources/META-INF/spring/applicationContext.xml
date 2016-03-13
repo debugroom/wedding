@@ -11,12 +11,15 @@
     
     <context:component-scan base-package="org.debugroom.wedding" />
     
+    <import resource="classpath*:/META-INF/spring/wedding-common.xml"/>
     <import resource="classpath*:/META-INF/spring/wedding-domain.xml"/>
     
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basenames">
             <list>
                 <value>i18n/application-messages</value>
+                <value>i18n/common-messages</value>
+                <value>i18n/domain-messages</value>
                 <value>i18n/screenItem</value>
             </list>
         </property>

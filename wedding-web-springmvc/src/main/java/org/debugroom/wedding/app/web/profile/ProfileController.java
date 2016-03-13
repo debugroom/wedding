@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,8 +42,17 @@ public class ProfileController {
 	FileUploadHelper fileUploadHelper;
 	
 	@Inject
+	@Named("profile.passwordEqualsValidator")
+	PasswordEqualsValidator passwordEqualsValidator;
+	
+	@Inject
 	ProfileManagementService profileManagementService;
 	
+	@InitBinder(value = {"editProfileForm"})
+	public void initBinder(WebDataBinder binder){
+		binder.addValidators(passwordEqualsValidator);
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value="/profile")
 	public String profilePortal(Model model){
 		

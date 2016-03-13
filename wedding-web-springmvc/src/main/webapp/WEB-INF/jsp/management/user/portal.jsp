@@ -30,19 +30,22 @@
               <c:forEach items="${page.content}" var="user" varStatus="status">
               <tr>
               	<td>${status.index + 1}</td>
-              	<td>${user.userId}</td>
-              	<td>${user.loginId}</td>
-              	<td>${user.userName}</td>
+              	<td><c:out value="${user.userId}" /></td>
+              	<td><c:out value="${user.loginId}" /></td>
+              	<td><c:out value="${user.userName}" /></td>
               	<td><fmt:formatDate value="${user.lastLoginDate}" pattern="yyyy-MM-dd hh:mm:ss" /></td>
               	<td>
-                    <form id="user_${user.userId}" action="${pageContext.request.contextPath}/management/user/${user.userId}">
-              	     <button id="edit-button-${user.userId}" type="submit">変更</button>
+                    <form id="user_${user.userId}" action="${pageContext.request.contextPath}/management/user/${user.userId}" >
+              	      <button id="edit-button-${user.userId}" type="submit">変更</button>
                     </form>
               	</td>
               </tr>
               </c:forEach>
             </tbody>
           </table>
+          <form action="${pageContext.request.contextPath}/management/user/new">
+            <button id="new-user-button" class="main-button" type="submit">ユーザ新規作成</button>
+          </form>
         </div>
      </div>
    </div>

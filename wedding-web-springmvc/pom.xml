@@ -67,12 +67,10 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-rest-webmvc</artifactId>
-      <version>${org.springframework.data_spring-data-rest-webmvc_version}</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-mapper-asl</artifactId>
-      <version>${org.codehaus.jackson_jackson-mapper-asl_version}</version>
     </dependency>
     <dependency>
       <groupId>org.aspectj</groupId>

@@ -33,30 +33,39 @@ public class EditUserForm implements Serializable{
 	@Size(groups = {Default.class, GetUser.class, UpdateUser.class})
 	@Pattern(regexp = "[0-9]*", groups = {Default.class, GetUser.class, UpdateUser.class})
 	private String userId;
+
 	@NotNull(groups = {UpdateUser.class})
 	@Size(min=1, max=50, groups = {UpdateUser.class})
 	private String userName;
+
 	@NotNull(groups = {UpdateUser.class})
 	@Size(min=1, max=1024)
 	@Pattern(regexp = "[-¥.¥/a-zA-Z0-9]*", groups = {UpdateUser.class})
 	private String imageFilePath;
+
 	@UploadFileNotEmpty(groups = {UpdateUser.class})
 	@UploadFileMaxSize(value = 10000000, groups = {UpdateUser.class})
 	private MultipartFile newImageFile;
+
 	@NotNull(groups = {UpdateUser.class})
 	@Size(min=1, max=32, groups = {UpdateUser.class})
 	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*", groups = {UpdateUser.class})
 	private String loginId;
+
 	@NotNull(groups = {UpdateUser.class})
 	@Min(value = 0, groups = UpdateUser.class)
 	@Max(value = 9, groups = UpdateUser.class)
 	private Integer authorityLevel;
+
 	@Valid
 	private Address address;
+
 	@Valid
 	private List<Email> emails;
+
 	@Valid
 	private List<Credential> credentials;
+
 	@Valid
 	private List<Group> grps; 
 	

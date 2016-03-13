@@ -49,7 +49,7 @@ public class User implements Serializable {
 	private Integer ver;
 
 	//bi-directional one-to-one association to Address
-	@OneToOne(mappedBy="usr")
+	@OneToOne(mappedBy="usr", cascade = {CascadeType.ALL})
 	private Address address;
 
 	//bi-directional many-to-one association to Affiliation
@@ -57,11 +57,11 @@ public class User implements Serializable {
 	private Set<Affiliation> affiliations;
 
 	//bi-directional many-to-one association to Credential
-	@OneToMany(mappedBy="usr")
+	@OneToMany(mappedBy="usr", cascade = {CascadeType.ALL})
 	private Set<Credential> credentials;
 
 	//bi-directional many-to-one association to Email
-	@OneToMany(mappedBy="usr")
+	@OneToMany(mappedBy="usr", cascade = {CascadeType.ALL})
 	private Set<Email> emails;
 
 	//bi-directional many-to-one association to Notification

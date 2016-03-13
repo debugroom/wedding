@@ -20,12 +20,18 @@ public class Address implements Serializable{
 
 	public Address(){}
 
-	@NotNull(groups = EditUserForm.UpdateUser.class)
-	@Size(min = 8, max=8, groups = EditUserForm.UpdateUser.class)
-	@Pattern(regexp = "[-¥ 0-9]*", groups = EditUserForm.UpdateUser.class)
+	@NotNull(groups = {EditUserForm.UpdateUser.class, 
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
+	@Size(min = 8, max=8, groups = {EditUserForm.UpdateUser.class,
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
+	@Pattern(regexp = "[-¥ 0-9]*", groups = {EditUserForm.UpdateUser.class,
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
 	private String postCd;
-	@NotNull(groups = EditUserForm.UpdateUser.class)
-	@Size(min = 0, max=256, groups = EditUserForm.UpdateUser.class)
+
+	@NotNull(groups = {EditUserForm.UpdateUser.class,
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
+	@Size(min = 0, max=256, groups = {EditUserForm.UpdateUser.class, 
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
 	private String address;
 
 }

@@ -12,4 +12,7 @@ public class DomainProperties {
 	@Value("${credential.type.password}")
 	private String credentialTypePassword;
 
+	@Value("${password.expired.day.default}")
+	private String passwordExpiredDayDefault;
+
 }

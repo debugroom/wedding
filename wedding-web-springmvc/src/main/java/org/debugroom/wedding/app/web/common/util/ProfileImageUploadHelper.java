@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 
 @Component
@@ -41,7 +42,7 @@ public class ProfileImageUploadHelper implements FileUploadHelper{
 		try {
 			FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), uploadFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			new BusinessException("profileImageUploadHelper.error.0001", null, userId);
 		}
 		return new StringBuilder()
 				.append(uploadDirectoryContextPath)

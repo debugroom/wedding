@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 import org.debugroom.wedding.domain.common.DomainProperties;
 import org.debugroom.wedding.domain.repository.common.UserRepository;
@@ -43,6 +46,15 @@ public class UserSharedServiceImpl implements UserSharedService{
 		long count = userRepository.countByUserId(user.getUserId());
 		if(0 == count){
 			throw new BusinessException("userSharedService.error.0001");
+		}
+		return true;
+	}
+
+	@Override
+	public boolean exists(String loginId){
+		long count = userRepository.countByloginId(loginId);
+		if(0 == count){
+			return false;
 		}
 		return true;
 	}
@@ -151,6 +163,36 @@ public class UserSharedServiceImpl implements UserSharedService{
 	@Override
 	public Page<User> getUsersUsingPageable(Pageable pageable) {
 		return userRepository.findAll(pageable);
+	}
+
+	@Override
+	public String getNewUserId() {
+		String sequence = new StringBuilder()
+								.append("00000000")
+								.append(userRepository.count())
+								.toString();
+		return StringUtils.substring(sequence,
+				sequence.length()-8, sequence.length());
+	}
+
+	@Override
+	public User saveUser(User user) throws BusinessException {
+		for(Credential credential : user.getCredentials()){
+			if(domainProperties.getCredentialTypePassword()
+					.equals(credential.getId().getCredentialType())){
+				credential.setCredentialKey(passwordEncoder
+						.encode(credential.getCredentialKey()));
+			}
+		}
+		try{
+			return userRepository.save(user);
+		}catch(DataIntegrityViolationException e){
+			throw new BusinessException(
+					"userSharedService.error.0002", e, user.getUserId());
+		}catch(OptimisticLockingFailureException e){
+			throw new BusinessException(
+					"userSharedService.error.0003", e, user.getUserId());
+		}
 	}
 
 }

@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 public interface UserSharedService {
 
 	public boolean exists(User user) throws BusinessException;
+
+	public boolean exists(String loginId);
 	
 	public User getUser(String userId) throws BusinessException;
 	
@@ -20,4 +22,8 @@ public interface UserSharedService {
 	
 	public Page<User> getUsersUsingPageable(Pageable pageable);
 
+	public String getNewUserId();
+	
+	public User saveUser(User user) throws BusinessException;
+	
 }

@@ -10,10 +10,10 @@
         <dependent-module archiveName="framework-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-common/framework-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="framework-test-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-test/framework-test">
+        <dependent-module archiveName="wedding-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-common/wedding-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="wedding-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-common/wedding-common">
+        <dependent-module archiveName="framework-test-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-test/framework-test">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="wedding-domain-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-domain/wedding-domain">

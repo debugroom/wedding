@@ -19,4 +19,10 @@ public interface UserManagementService {
 
 	public UpdateResult<User> updateUser(User user) throws BusinessException;
 
+	public User createUserProfile(User user) throws BusinessException;
+	
+	public User saveUser(User user) throws BusinessException;
+	
+	public boolean existsUser(String loginId);
+
 }

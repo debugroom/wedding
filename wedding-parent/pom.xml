@@ -22,6 +22,7 @@
     <javax.inject_javax.inject_version>1</javax.inject_javax.inject_version>
     <javax.servlet_jstl_version>1.2</javax.servlet_jstl_version>
     <org.apache.commons_commons-lang3_version>3.3.2</org.apache.commons_commons-lang3_version>
+    <org.apache.httpcomponents_httpclient_version>4.5.2</org.apache.httpcomponents_httpclient_version>
     <org.apache.maven.plugins_maven-surefire-plugin_version>2.17</org.apache.maven.plugins_maven-surefire-plugin_version>
     <org.apache.maven.plugins_maven-compiler-plugin_version>3.1</org.apache.maven.plugins_maven-compiler-plugin_version>
     <org.apache.maven.plugins_maven-dependency-plugin_version>2.9</org.apache.maven.plugins_maven-dependency-plugin_version>
@@ -38,6 +39,7 @@
     <org.apache.poi_poi_version>3.2-FINAL</org.apache.poi_poi_version>
     <org.apache.tomcat_tomcat-servlet-api_version>7.0.59</org.apache.tomcat_tomcat-servlet-api_version>
     <org.apache.tomcat_tomcat-jsp-api_version>7.0.59</org.apache.tomcat_tomcat-jsp-api_version>
+    <org.apache.commons_commons-lang3_version>3.4</org.apache.commons_commons-lang3_version>
     <org.postgresql_postgresql_version>9.3-1102-jdbc41</org.postgresql_postgresql_version>
     <org.projectlombok_lombok_version>1.16.6</org.projectlombok_lombok_version>
   </properties> 
@@ -82,6 +84,18 @@
         <version>${commons-io_commons-io_version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${org.apache.commons_commons-lang3_version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${org.apache.httpcomponents_httpclient_version}</version>
+      </dependency>
+      
       <dependency>
         <groupId>net.sf.dozer</groupId>
         <artifactId>dozer</artifactId>

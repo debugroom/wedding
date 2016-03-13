@@ -1,14 +1,21 @@
 package org.debugroom.wedding.domain.service.management;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import org.dozer.Mapper;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.domain.common.DomainProperties;
+import org.debugroom.wedding.domain.model.entity.Credential;
+import org.debugroom.wedding.domain.model.entity.Email;
 import org.debugroom.wedding.domain.model.entity.User;
 import org.debugroom.wedding.domain.service.common.UpdateResult;
 import org.debugroom.wedding.domain.service.common.UserSharedService;
@@ -16,6 +23,12 @@ import org.debugroom.wedding.domain.service.common.UserSharedService;
 @Service("userManagementService")
 public class UserManagementServiceImpl implements UserManagementService {
 
+	@Inject
+	Mapper mapper;
+	
+	@Inject
+	DomainProperties domainPorperties;
+	
 	@Inject
 	UserSharedService userSharedService;
 	
@@ -43,6 +56,61 @@ public class UserManagementServiceImpl implements UserManagementService {
 			throw new BusinessException("UserManagementService.error.0001");
 		}
 		return updateResult;
+	}
+
+	@Override
+	public User createUserProfile(User user) throws BusinessException {
+		if(userSharedService.exists(user.getLoginId())){
+			throw new BusinessException("UserManagementService.error.0002", 
+					null, user.getLoginId());
+		}
+		String newUserId = userSharedService.getNewUserId();
+		user.setUserId(newUserId);
+		user.getAddress().setUserId(newUserId);
+		for(Email email : user.getEmails()){
+			if(null != email.getEmail()){
+				email.getId().setUserId(newUserId);
+			}
+		}
+		for(Credential credential : user.getCredentials()){
+			if(null != credential.getCredentialKey() 
+					&& domainPorperties.getCredentialTypePassword().equals(
+							credential.getId().getCredentialType())){
+				credential.getId().setUserId(newUserId);
+			}
+		}
+		return user;
+	}
+
+	@Override
+	public User saveUser(User user) throws BusinessException {
+
+		user.setLastUpdatedDate(new Date());
+
+		user.getAddress().setUserId(user.getUserId());
+		user.getAddress().setLastUpdatedDate(new Date());
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(
+				domainPorperties.getPasswordExpiredDayDefault()));
+		
+		for(Credential credential : user.getCredentials()){
+			credential.getId().setUserId(user.getUserId());;
+			credential.setLastUpdatedDate(new Date());
+			credential.setValidDate(calendar.getTime());
+		}
+
+		for(Email email : user.getEmails()){
+			email.getId().setUserId(user.getUserId());
+			email.setLastUpdatedDate(new Date());
+		}
+
+		return userSharedService.saveUser(user);
+	}
+
+	@Override
+	public boolean existsUser(String loginId){
+		return userSharedService.exists(loginId);
 	}
 
 	

@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import javax.validation.Valid;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -22,17 +23,31 @@ public class Credential implements Serializable{
 		this.id = new CredentialPK();
 	}
 
+	@Valid
 	private CredentialPK id;
-	@Size(min = 0, max = 32, groups = EditUserForm.UpdateUser.class)
-	@Pattern(regexp = "[¥ -¥.a-zA-Z0-9]*", groups = EditUserForm.UpdateUser.class)
+
+	@NotNull(groups = {NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
+	@Size(min = 0, max = 32, groups = {EditUserForm.UpdateUser.class,
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
+	@Pattern(regexp = "[¥ -¥.a-zA-Z0-9]*", groups = {EditUserForm.UpdateUser.class,
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
 	private String credentialKey;
 	
 	@AllArgsConstructor
 	@Data
 	public class CredentialPK{
+
 		public CredentialPK(){}
-		@Size(min = 8, max = 8, groups = EditUserForm.UpdateUser.class)
+
+		@Size(min = 8, max = 8, groups = {NewUserForm.SaveUser.class})
 		private String userId;
+
+		@NotNull(groups = {EditUserForm.UpdateUser.class,
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
+		@Pattern(regexp = "[a-zA-Z]*", groups = {EditUserForm.UpdateUser.class,
+			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
 		private String credentialType;
+
 	}
+
 }

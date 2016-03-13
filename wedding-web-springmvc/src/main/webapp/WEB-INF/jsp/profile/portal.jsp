@@ -26,26 +26,37 @@
                 <tbody>
                   <tr>
                     <td><form:label path="userName">ユーザ名</form:label> : </td>
-                    <td>${user.userName}<form:hidden path="userName"/>
-                      <br><form:errors path="userName" />
+                    <td>
+                      <c:out value="${user.userName}" />
+                      <form:hidden path="userName"/><br>
+                      <form:errors path="userName" />
                     </td>
                     <td><button id="userName-button" name="userName-button" type="button" value="userName" >変更</button></td>
                   </tr>
                   <tr>
                     <td><form:label path="imageFilePath">ピクチャ</form:label> : </td>
-                    <td><img src="${pageContext.request.contextPath}/${user.imageFilePath}"><br><form:hidden path="imageFilePath"/></td>
+                    <td>
+                      <img src="${pageContext.request.contextPath}/${user.imageFilePath}">
+                      <br><form:hidden path="imageFilePath"/>
+                    </td>
                     <td><button id="imageFile-button" name="imageFile-button" type="button" value="imageFilePath" >変更</button></td>
                   </tr>
                   <tr>
                     <td><form:label path="loginId">ログインID</form:label> : </td>
-                    <td>${user.loginId}<form:hidden path="loginId"/>
-                      <br><form:errors path="loginId" />
+                    <td>
+                      <c:out value="${user.loginId}" />
+                      <form:hidden path="loginId"/><br>
+                      <form:errors path="loginId" />
                     </td>
                     <td><button id="loginId-button" name="loginId-button" type="button" value="loginId" >変更</button></td>
                   </tr>
                   <tr>
                     <td><form:label path="address.postCd">郵便番号</form:label> : </td>
-                    <td>${user.address.postCd}<form:hidden path="address.postCd"/><br><form:errors path="address.postCd" cssStyle="color:red" /></td>
+                    <td>
+                      <c:out value="${user.address.postCd}" />
+                      <form:hidden path="address.postCd"/><br>
+                      <form:errors path="address.postCd" cssStyle="color:red" />
+                    </td>
                     <td><button id="address.postCd-button" name="address.postCd-button" type="button" value="address.postCd" >変更</button></td>
                   </tr>
                   <tr>
@@ -61,15 +72,21 @@
                   </tr>
                   <tr>
                     <td><form:label path="address.address">住所</form:label> : </td>
-                    <td>${user.address.address}<form:hidden path="address.address"/><br><form:errors path="address.address" cssStyle="color:red" /></td>
+                    <td>
+                      <c:out value="${user.address.address}" />
+                      <form:hidden path="address.address"/><br>
+                      <form:errors path="address.address" cssStyle="color:red" />
+                    </td>
                     <td><button id="address.address-button" name="address.address-button" type="button" value="address.address" >変更</button></td>
                   </tr>
                   <c:forEach items="${user.emails}" var="email" varStatus="status">
                     <tr>
                       <td><label for="emails[${status.index}].email">Email</label>${status.index+1} : </td>
-                      <td>${email.email}<br><form:errors path="emails[${status.index}].email" cssStyle="color:red" />
-                        <input id="emails[${status.index}].id.emailId" name="emails[${status.index}].id.emailId" type="hidden" value="${email.id.emailId}">
-                        <input id="emails[${status.index}].email" name="emails[${status.index}].email" type="hidden" value="${email.email}">
+                      <td>
+                        <c:out value="${email.email}" /><br>
+                        <form:errors path="emails[${status.index}].email" cssStyle="color:red" />
+                        <input id="emails[${status.index}].id.emailId" name="emails[${status.index}].id.emailId" type="hidden" value='<c:out value="${email.id.emailId}" />' />
+                        <input id="emails[${status.index}].email" name="emails[${status.index}].email" type="hidden" value='<c:out value="${email.email}" />' />
                       </td>
                       <td><button id="emails[${status.index}].email-button" name="emails[${status.index}].email-button" type="button" value="emails[${status.index}].email" >変更</button></td>
                     </tr>

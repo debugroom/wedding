@@ -77,6 +77,7 @@ public class MenuRepositoryTest {
 				case3ExpectedMenuList.add(Menu.builder().menuId("9000").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("9010").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("9020").build());
+				case3ExpectedMenuList.add(Menu.builder().menuId("9030").build());
 				findMenuFixture[2].expected.addAll(case3ExpectedMenuList);
 
 			}

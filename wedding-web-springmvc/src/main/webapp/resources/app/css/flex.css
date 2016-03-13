@@ -225,6 +225,16 @@ tbody > tr:nth-child(even) > td{
 	padding : 5px 20px 5px;
 }
 
+.formPanel table {
+     width : 700px;
+}
+.formPanel tr {
+     width : 600px;
+}
+.formPanel th td {
+     width : 300px;
+}
+
 .formPanel td:first-child{
 	text-align : right;
 }
@@ -286,12 +296,33 @@ tbody > tr:nth-child(even) > td{
 }
 
 .warningMessage {
-	background : red;
-	color : #ff00000;
+	color : #ff0000;
+}
+
+.errorMessage {
+	color : #ff0000;
+}
+
+.successMessage {
+	color : #00ff00;
 }
 
 .formPanel .main-button {
 	margin : 20px 260px 50px 240px; 
+	font-size : 1.2em;
+	width : 200px;
+	height : 60px;
+}
+
+.formPanel .alternative-button:nth-child(1) {
+	margin : 20px 20px 20px 240px; 
+	font-size : 1.2em;
+	width : 200px;
+	height : 60px;
+}
+
+.formPanel .alternative-button:last-child {
+	margin : 20px 240px 20px 20px; 
 	font-size : 1.2em;
 	width : 200px;
 	height : 60px;

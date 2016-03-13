@@ -141,14 +141,14 @@
                     <td>
                       <c:forEach var="email" items="${updateResult.beforeEntity.emails}">
                         <c:if test="${email.id.emailId == fn:substringAfter(updateParam, '#')}">
-                          ${email.email}
+                          <c:out value="${email.email}" />
                         </c:if>
                       </c:forEach>
                     </td>
                     <td>
                       <c:forEach var="email" items="${updateResult.afterEntity.emails}">
                         <c:if test="${email.id.emailId == fn:substringAfter(updateParam, '#')}">
-                          ${email.email}
+                          <c:out value="${email.email}" />
                         </c:if>
                       </c:forEach>
                     </td>
