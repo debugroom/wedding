@@ -195,4 +195,11 @@ public class UserSharedServiceImpl implements UserSharedService{
 		}
 	}
 
+	@Override
+	public User deleteUser(User user) {
+		User deleteUser = userRepository.findOne(user.getUserId());
+		userRepository.delete(deleteUser);
+		return deleteUser;
+	}
+
 }

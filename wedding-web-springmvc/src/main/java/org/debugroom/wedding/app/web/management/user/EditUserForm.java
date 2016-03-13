@@ -30,7 +30,7 @@ public class EditUserForm implements Serializable{
 	public static interface UpdateUser{}
 
 	@NotNull(groups = {Default.class, GetUser.class, UpdateUser.class})
-	@Size(groups = {Default.class, GetUser.class, UpdateUser.class})
+	@Size(min=8, max=8, groups = {Default.class, GetUser.class, UpdateUser.class})
 	@Pattern(regexp = "[0-9]*", groups = {Default.class, GetUser.class, UpdateUser.class})
 	private String userId;
 
@@ -69,4 +69,6 @@ public class EditUserForm implements Serializable{
 	@Valid
 	private List<Group> grps; 
 	
+	@NotNull(groups = {GetUser.class})
+	private String type;
 }

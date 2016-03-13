@@ -23,6 +23,8 @@ public interface UserManagementService {
 	
 	public User saveUser(User user) throws BusinessException;
 	
+	public User deleteUser(String userId);
+
 	public boolean existsUser(String loginId);
 
 }

@@ -113,5 +113,11 @@ public class UserManagementServiceImpl implements UserManagementService {
 		return userSharedService.exists(loginId);
 	}
 
+	@Override
+	public User deleteUser(String userId) {
+		return userSharedService.deleteUser(
+				User.builder().userId(userId).build());
+	}
+
 	
 }

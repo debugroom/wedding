@@ -116,7 +116,11 @@ public class UserManagementController {
 			model.addAttribute("errorCode", e.getCode());
 		}
 
-		return "management/user/edit";
+		if("update".equals(editUserForm.getType())){
+			return "management/user/edit";
+		}else{
+			return "management/user/delete";
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value="/management/user/{userId}")
@@ -222,7 +226,6 @@ public class UserManagementController {
 	@RequestMapping(method = RequestMethod.POST, value="/management/user/new/{userId}")
 	public String saveUser(@Validated(SaveUser.class) NewUserForm newUserForm,
 			BindingResult bindingResult, Model model, 
-			@Validated String type,
 			RedirectAttributes redirectAttributes){
 
 		User user = mapper.map(newUserForm, User.class);
@@ -233,11 +236,10 @@ public class UserManagementController {
 			return "management/user/confirm";
 		}
 
-		if(!"save".equals(type)){
+		if(!"save".equals(newUserForm.getType())){
 			model.addAttribute(user);
 			return "management/user/form";
 		}
-
 		
 		try {
 			redirectAttributes.addFlashAttribute(userManagementService.saveUser(user));
@@ -255,8 +257,39 @@ public class UserManagementController {
 	@RequestMapping(method = RequestMethod.GET, 
 			value = "/management/user/new/{userId}",
 			params = "complete")
-	public String complete(){
-		return "management/user/complete";
+	public String saveComplete(){
+		return "management/user/saveComplete";
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/management/user/delete/{userId}")
+	public String deleteConfirm(@Validated DeleteUserForm deleteUserForm,
+			BindingResult bindingResult, Model model,
+			RedirectAttributes redirectAttributes){
+		
+		if(bindingResult.hasErrors()){
+			return "common/error";
+		}
+		
+		if(!"delete".equals(deleteUserForm.getType())){
+			return "redirect:/management/user/portal";
+		}
+		
+		redirectAttributes.addFlashAttribute(
+				userManagementService.deleteUser(
+						deleteUserForm.getUserId()));
+
+		return new StringBuilder().append("redirect:")
+				.append(deleteUserForm.getUserId())
+				.append("?complete")
+				.toString();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, 
+			value = "/management/user/delete/{userId}",
+			params = "complete")
+	public String deleteComplete(){
+		return "management/user/deleteComplete";
 	}
 
 }
+

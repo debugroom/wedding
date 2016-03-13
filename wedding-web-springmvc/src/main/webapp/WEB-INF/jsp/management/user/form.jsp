@@ -84,6 +84,7 @@
                 <td>
                   <form:input class="middle" path="credentials[0].credentialKey" type="password" />
                   <form:hidden path="credentials[0].id.credentialType" value="PASSWORD" />
+                  <br><form:errors path="credentials[0].credentialKey" cssStyle="color:red" />
                   <br>(半角英数字32文字以内)
                 </td>
               </tr>
@@ -94,7 +95,7 @@
                   確認のため、再入力してください。
                   <br><form:input class="middle" path="credentials[1].credentialKey" type="password" />
                   <form:hidden path="credentials[1].id.credentialType" value="PASSWORD" />
-                  <br><form:errors path="credentials[0].credentialKey" cssStyle="color:red" />
+                  <br><form:errors path="credentials[1].credentialKey" cssStyle="color:red" />
                 </td>
               <tr>
                 <td>

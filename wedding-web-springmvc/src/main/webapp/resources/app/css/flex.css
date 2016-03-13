@@ -314,15 +314,15 @@ tbody > tr:nth-child(even) > td{
 	height : 60px;
 }
 
-.formPanel .alternative-button:nth-child(1) {
-	margin : 20px 20px 20px 240px; 
+.formPanel .alternative-first-button {
+	margin : 20px 20px 20px 100px; 
 	font-size : 1.2em;
 	width : 200px;
 	height : 60px;
 }
 
-.formPanel .alternative-button:last-child {
-	margin : 20px 240px 20px 20px; 
+.formPanel .alternative-last-button {
+	margin : 20px auto 20px 20px; 
 	font-size : 1.2em;
 	width : 200px;
 	height : 60px;

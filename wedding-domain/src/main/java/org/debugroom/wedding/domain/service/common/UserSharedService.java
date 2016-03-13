@@ -26,4 +26,7 @@ public interface UserSharedService {
 	
 	public User saveUser(User user) throws BusinessException;
 	
+	public User deleteUser(User user);
+	
+	
 }

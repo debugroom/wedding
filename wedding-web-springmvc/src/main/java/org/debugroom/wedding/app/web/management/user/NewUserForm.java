@@ -66,4 +66,8 @@ public class NewUserForm implements Serializable{
 	@Valid
 	private List<Credential> credentials;	
 	
+	@NotNull(groups = {SaveUser.class})
+	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*", groups = {SaveUser.class})
+	private String type;
+
 }

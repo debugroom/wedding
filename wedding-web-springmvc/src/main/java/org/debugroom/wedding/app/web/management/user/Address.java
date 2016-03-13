@@ -30,7 +30,7 @@ public class Address implements Serializable{
 
 	@NotNull(groups = {EditUserForm.UpdateUser.class,
 			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
-	@Size(min = 0, max=256, groups = {EditUserForm.UpdateUser.class, 
+	@Size(min = 1, max=256, groups = {EditUserForm.UpdateUser.class, 
 			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
 	private String address;
 
