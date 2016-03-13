@@ -20,6 +20,7 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.ContextConfiguration;
+import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.test.junit.category.TestsWithExternalAccess;
 import org.debugroom.framework.test.junit.category.UnitTests;
 import org.debugroom.wedding.common.external.model.Address;
@@ -59,7 +60,7 @@ public class AddressSearchImplTest {
 			
 			@Theory
 			@Category(TestsWithExternalAccess.class)
-			public void normalTestCase1_getAddress(GetAddressFixture fixture){
+			public void normalTestCase1_getAddress(GetAddressFixture fixture) throws BusinessException{
 				
 				Address address = addressSearch.getAddress(fixture.zipCode);
 				
