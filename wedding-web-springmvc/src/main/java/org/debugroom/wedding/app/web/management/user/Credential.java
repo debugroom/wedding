@@ -27,7 +27,7 @@ public class Credential implements Serializable{
 	private CredentialPK id;
 
 	@NotNull(groups = {NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
-	@Size(min = 1, max = 32, groups = {EditUserForm.UpdateUser.class,
+	@Size(min = 0, max = 32, groups = {EditUserForm.UpdateUser.class,
 			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})
 	@Pattern(regexp = "[¥ -¥.a-zA-Z0-9]*", groups = {EditUserForm.UpdateUser.class,
 			NewUserForm.ConfirmUser.class, NewUserForm.SaveUser.class})

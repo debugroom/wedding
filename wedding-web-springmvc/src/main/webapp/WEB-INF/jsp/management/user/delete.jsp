@@ -6,6 +6,8 @@
 <title>Wedding Portal</title>
 <link rel="stylesheet"
   href="${pageContext.request.contextPath}/resources/app/css/flex.css">
+<link rel="stylesheet"
+  href="${pageContext.request.contextPath}/resources/app/css/management/user/delete-flex.css">
 </head>
 <body>
   <c:import url="/WEB-INF/jsp/common/header.jsp" />
@@ -88,8 +90,10 @@
                   </c:forEach>
                 </tbody>
               </table>
-              <form:button class="alternative-first-button" name="type" value="delete">削除する</form:button>
-              <form:button class="alternative-last-button" name="type" value="return">戻る</form:button>
+              <div class="alternative-button">
+                <form:button class="alternative-first-button" name="type" value="delete">削除する</form:button>
+                <form:button class="alternative-last-button" name="type" value="return">戻る</form:button>
+              </div>
             </form:form>
           </div>
         </div>

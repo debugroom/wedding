@@ -22,8 +22,8 @@
                 <td><c:out value="${user.authorityLevel}" /></td>
               </tr>
               <tr>
-                <td>パスワード(セキュリティのため、非表示としています)</td>
-                <td>*****</td>
+                <td>パスワード</td>
+                <td>*****<br>(セキュリティのため、非表示としています)</td>
               </tr>
               <tr>
                 <td>郵便番号</td>

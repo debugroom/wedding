@@ -94,10 +94,21 @@ public class UserManagementServiceImpl implements UserManagementService {
 		calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(
 				domainPorperties.getPasswordExpiredDayDefault()));
 		
+		int count = 0;
+
 		for(Credential credential : user.getCredentials()){
+
 			credential.getId().setUserId(user.getUserId());;
 			credential.setLastUpdatedDate(new Date());
 			credential.setValidDate(calendar.getTime());
+
+			if(domainPorperties.getCredentialTypePassword().equals(
+					credential.getId().getCredentialType())){
+				count++;
+				if(1 < count){
+					user.getCredentials().remove(credential);
+				}
+			}
 		}
 
 		for(Email email : user.getEmails()){

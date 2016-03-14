@@ -1,3 +1,4 @@
+<div class="panel">
   <div class="resultPanel">
     <p>以下の通り、更新されました。</p>
       <c:forEach items="${updateResult.updateParamList}" var="updateParam" varStatus="status">
@@ -159,3 +160,4 @@
         </table>
       </c:forEach>
     </div>
+</div>

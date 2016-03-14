@@ -5,12 +5,12 @@
 }
 
 .userFormPanel td:first-child{
-	width : 150px;
+    width : 150px;
     text-align : right;
 }
 
 .userFormPanel td:nth-child(2){
-	width : 600px;
+    width : auto;
     text-align : left;
 }
 
@@ -43,7 +43,8 @@
 }
 
 .userFormPanel .main-button {
-    margin : 20px 260px 50px 240px; 
+    display: block;
+    margin : 20px auto 20px;
     font-size : 1.2em;
     width : 200px;
     height : 60px;
@@ -51,30 +52,30 @@
 
 .userFormPanel .micro{
     font-size : 1.1em;
-	height: 25px;
-	width: 30px;
-	margin: 5px;
+    height: 25px;
+    width: 30px;
+    margin: 5px;
 }
 
 .userFormPanel .short{
     font-size : 1.1em;
-	height: 25px;
-	width: 100px;
-	margin: 5px;
+    height: 25px;
+    width: 100px;
+    margin: 5px;
 }
 
 .userFormPanel .middle{
     font-size : 1.1em;
-	height: 25px;
-	width: 200px;
-	margin: 5px;
+    height: 25px;
+    width: 200px;
+    margin: 5px;
 }
 
 .userFormPanel .long{
     font-size : 1.1em;
-	height: 25px;
-	width: 400px;
-	margin: 5px;
+    height: 25px;
+    width: 400px;
+    margin: 5px;
 }
 
 .userFormPanel .middle-button {

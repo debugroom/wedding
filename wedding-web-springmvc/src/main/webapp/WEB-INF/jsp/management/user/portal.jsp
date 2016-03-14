@@ -7,6 +7,9 @@
 <link rel="stylesheet"
   href="${pageContext.request.contextPath}/resources/app/css/flex.css">
 </head>
+<link rel="stylesheet"
+  href="${pageContext.request.contextPath}/resources/app/css/management/user/portal-flex.css">
+</head>
 <body>
   <c:import url="/WEB-INF/jsp/common/header.jsp" />
   <div id="flex-container">
@@ -16,7 +19,7 @@
     <div class="flex-item-2">
       <div class="panel">
         <div class="formPanel">
-          <d:Page page="${page}" />
+          <d:Page page="${page}" requestPath="/management/user/portal"/>
           <table>
             <tbody>
               <tr>

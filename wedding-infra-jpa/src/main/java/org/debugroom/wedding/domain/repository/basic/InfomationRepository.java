@@ -19,5 +19,6 @@ public interface InfomationRepository extends JpaRepository<Infomation, String>{
 			+ "ORDER BY i.infoId")
 	public List<Infomation> findUserByUserIdAndReleaseDateLessThan(
 			@Param("userId") String userId, @Param("releaseDate") Date releaseDate);
+	
 
 }

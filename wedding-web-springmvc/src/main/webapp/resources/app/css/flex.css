@@ -45,7 +45,6 @@ th{
 }
 
 td{
-	border  : solid 1px #aaaaaa;
 	padding : 0px, 30px, 0px, 8px;
 }
 
@@ -76,17 +75,17 @@ tbody > tr:nth-child(even) > td{
 }
 
 #flex-container .flex-item-1{
-	           width : 30%;
+	           width : 300px;
 }
 #flex-container .flex-item-2{
-	           width : 70%;
+	           width : auto;
 	    -webkit-flex : 1 0 500px;
 	       -moz-flex : 1 0 500px;
 	            flex : 1 0 500px;
 }
 
 .menu {
-    width           : 200px;
+    width           : 300px;
     float           : left;
     padding         : 0;
     margin          : 0;
@@ -163,7 +162,7 @@ tbody > tr:nth-child(even) > td{
 }
 
 .panel {
-	            margin : 0 auto 0;
+	            margin : 0 50px 50px 0;
 	           padding : 20px;
 	            border : solid 1px #aaaaaa;
 	     border-radius : 10px;
@@ -219,24 +218,16 @@ tbody > tr:nth-child(even) > td{
            -box-sizing : border-box;
 }
 
-.formPanel table tr td{
-	border : none;
-	margin : 0 auto 0;
-	padding : 5px 20px 5px;
+.formPanel .main-button{
+    display: block;
+    margin : 20px auto 20px;
+    font-size : 1.2em;
+    width : 200px;
+    height : 60px;
 }
 
-.formPanel table {
-     width : 700px;
-}
-.formPanel tr {
-     width : 600px;
-}
-.formPanel th td {
-     width : 300px;
-}
-
-.formPanel td:first-child{
-	text-align : right;
+.panel img{
+	width : 300px;
 }
 
 .formPanel button{
@@ -307,35 +298,6 @@ tbody > tr:nth-child(even) > td{
 	color : #00ff00;
 }
 
-.formPanel .main-button {
-	margin : 20px 260px 50px 240px; 
-	font-size : 1.2em;
-	width : 200px;
-	height : 60px;
-}
-
-.formPanel .alternative-first-button {
-	margin : 20px 20px 20px 100px; 
-	font-size : 1.2em;
-	width : 200px;
-	height : 60px;
-}
-
-.formPanel .alternative-last-button {
-	margin : 20px auto 20px 20px; 
-	font-size : 1.2em;
-	width : 200px;
-	height : 60px;
-}
-
-.resultPanel table {
-	 width : 700px;
-}
-.resultPanel tr {
-	 width : 600px;
-}
-.resultPanel th td {
-	 width : 300px;
 }
 
 .page ul{

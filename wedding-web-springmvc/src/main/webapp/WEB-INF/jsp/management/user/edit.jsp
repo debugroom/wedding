@@ -7,6 +7,8 @@
 <title>Wedding Portal</title>
 <link rel="stylesheet"
   href="${pageContext.request.contextPath}/resources/app/css/flex.css">
+<link rel="stylesheet"
+  href="${pageContext.request.contextPath}/resources/app/css/management/user/edit-flex.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/common/UpdateDialog.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/management/user/edit.js"></script>
 </head>
@@ -24,6 +26,11 @@
                 modelAttribute="user" method="PUT">
               <table>
                 <tbody>
+                  <tr>
+                    <th>変更対象</th>
+                    <th>現在の設定値</th>
+                    <th>アクション</th>
+                  </tr>
                   <tr>
                     <td><form:label path="userId">ユーザID</form:label></td>
                     <td>

@@ -6,6 +6,8 @@
 <title>Wedding Portal</title>
 <link rel="stylesheet"
     href="${pageContext.request.contextPath}/resources/app/css/flex.css">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/resources/app/css/profile/portal-flex.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/common/UpdateDialog.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/profile/portal.js"></script>
 </head>

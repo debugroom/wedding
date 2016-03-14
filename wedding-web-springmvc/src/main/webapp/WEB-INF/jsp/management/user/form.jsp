@@ -7,7 +7,7 @@
 <link rel="stylesheet"
   href="${pageContext.request.contextPath}/resources/app/css/flex.css">
 <link rel="stylesheet"
-  href="${pageContext.request.contextPath}/resources/app/css/management/user/flex.css">
+  href="${pageContext.request.contextPath}/resources/app/css/management/user/form-flex.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/management/user/form.js"></script>
 </head>
 <body>

@@ -22,15 +22,20 @@ public class PagenationTag extends SimpleTagSupport{
 	private static final int DEFAULT_PAGE_SIZE = 5;
 	
 	Page page;
+	String requestPath; 
+	int pageSize;
 	
 	public void doTag() throws JspException{
 		
 		PageContext pageContext = (PageContext)getJspContext();
 
+		if(pageSize == 0){
+			pageSize = DEFAULT_PAGE_SIZE;
+		}
+
 		String contextPath = new StringBuilder().append(
 				pageContext.getRequest().getServletContext().getContextPath())
 				.toString();
-		String requestPath = "/management/user/portal";
 		String pageParamQuery = new StringBuilder().append("?page=").toString();
 		String sizeParamQuery = new StringBuilder().append("&size=").toString();
 
@@ -56,7 +61,7 @@ public class PagenationTag extends SimpleTagSupport{
 														.append(pageParamQuery)
 														.append(0)
 														.append(sizeParamQuery)
-														.append(DEFAULT_PAGE_SIZE)
+														.append(pageSize)
 														.toString());
 		}else{
 			tagWriter.writeAttribute(HREF_ATTRIBUTE, "#");
@@ -81,7 +86,7 @@ public class PagenationTag extends SimpleTagSupport{
 														.append(pageParamQuery)
 														.append(page.getNumber()-1)
 														.append(sizeParamQuery)
-														.append(DEFAULT_PAGE_SIZE)
+														.append(pageSize)
 														.toString());
 		}else{
 			tagWriter.writeAttribute(HREF_ATTRIBUTE, "#");
@@ -107,7 +112,7 @@ public class PagenationTag extends SimpleTagSupport{
 															.append(pageParamQuery)
 															.append(i)
 															.append(sizeParamQuery)
-															.append(DEFAULT_PAGE_SIZE)
+															.append(pageSize)
 															.toString());
 			//add anchor
 			tagWriter.appendValue(String.valueOf(i+1));
@@ -130,7 +135,7 @@ public class PagenationTag extends SimpleTagSupport{
 														.append(pageParamQuery)
 														.append(page.getNumber()+1)
 														.append(sizeParamQuery)
-														.append(DEFAULT_PAGE_SIZE)
+														.append(pageSize)
 														.toString());
 		}else{
 			tagWriter.writeAttribute(HREF_ATTRIBUTE, "#");
@@ -155,7 +160,7 @@ public class PagenationTag extends SimpleTagSupport{
 														.append(pageParamQuery)
 														.append(page.getTotalPages()-1)
 														.append(sizeParamQuery)
-														.append(DEFAULT_PAGE_SIZE)
+														.append(pageSize)
 														.toString());
 		}else{
 			tagWriter.writeAttribute(HREF_ATTRIBUTE, "#");
@@ -181,6 +186,14 @@ public class PagenationTag extends SimpleTagSupport{
 	
 	public void setPage(Page page){
 		this.page = page;
-		
 	}
+	
+	public void setRequestPath(String requestPath){
+		this.requestPath = requestPath;
+	}
+	
+	public void setPageSize(int pageSize){
+		this.pageSize = pageSize;
+	}
+
 }

@@ -3,6 +3,8 @@ package org.debugroom.wedding.domain.repository.common;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.inject.Inject;
@@ -26,6 +28,7 @@ import org.debugroom.wedding.domain.repository.common.UserRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 
 /**
  * 
@@ -85,21 +88,21 @@ public class UserRepositoryTest {
 			}
 
 		}
-		 @RunWith(Theories.class)
-	     @ContextConfiguration("classpath:META-INF/spring/wedding-test.xml")
-	     public static class FindUserTest{
+		@RunWith(Theories.class)
+		@ContextConfiguration("classpath:META-INF/spring/wedding-test.xml")
+	    public static class FindUserTest{
 			 
-			 @Inject
-			 UserRepository userRepository;
+			@Inject
+			UserRepository userRepository;
 			 
-	         @Before
-	         public void setUp() throws Exception{
-	        	 new TestContextManager(getClass()).prepareTestInstance(this);
-	         }
+	        @Before
+	        public void setUp() throws Exception{
+	        	new TestContextManager(getClass()).prepareTestInstance(this);
+	        }
 	         
-	         @DataPoints
-	         public static FindUserFixture[] findUserFixture = {
-	        	 new FindUserFixture()
+	        @DataPoints
+	        public static FindUserFixture[] findUserFixture = {
+	        		new FindUserFixture()
 	        	 		.userId("00000000")
 	        	 		.expected((User.builder())
 	        	 							.userId("00000000")
@@ -114,44 +117,112 @@ public class UserRepositoryTest {
 	        	 							.build()
 	        	 					)
 	        	 
-	         };
+	        };
 	         
-	         @Theory
-	         @Category(TestsWithDatabaseAccess.class)
-	         public void normalTestCase1_findOneForUser(FindUserFixture fixture){
+	        @Theory
+	        @Category(TestsWithDatabaseAccess.class)
+	        public void normalTestCase1_findOneForUser(FindUserFixture fixture){
 	        	 
-	        	 User user = userRepository.findOne(fixture.userId);
+	        	User user = userRepository.findOne(fixture.userId);
 	        	 
-	        	 assertThat(fixture.toString(), user.getUserName(), 
+	        	assertThat(fixture.toString(), user.getUserName(), 
 	        			 is(fixture.expected.getUserName()));
-	        	 assertThat(fixture.toString(), user.getLoginId(), 
+	        	assertThat(fixture.toString(), user.getLoginId(), 
 	        			 is(fixture.expected.getLoginId()));
 
-	         }
+	        }
 
-	         public static class FindUserFixture{
-	        	 String userId;
-	             User expected;
-	             FindUserFixture(){};
-	             FindUserFixture(String userId, User expected){
-	            	 this.userId = userId;
-	                 this.expected = expected;
-	             }
-	             public FindUserFixture userId(String userId){
-	                 this.userId = userId;
-	                 return this;
-	             }
+	        public static class FindUserFixture{
+	        	String userId;
+	            User expected;
+	            FindUserFixture(){};
+	            FindUserFixture(String userId, User expected){
+	            	this.userId = userId;
+	            	this.expected = expected;
+	            }
+	            public FindUserFixture userId(String userId){
+	            	this.userId = userId;
+	                return this;
+	            }
 	                
-	             public FindUserFixture expected(User expected){
-	                 this.expected = expected;
-	                 return this;
-	             }
+	            public FindUserFixture expected(User expected){
+	                this.expected = expected;
+	                return this;
+	            }
 	                
-	             @Override
-	             public String toString(){
-	                 return String.format("when exception = %s, expceted = %s ", userId, expected);
-	             }
-	         }
-		 }
+	            @Override
+	            public String toString(){
+	            	return String.format("when exception = %s, expceted = %s ", userId, expected);
+	            }
+	        }
+		}
+
+		@RunWith(Theories.class)
+		@ContextConfiguration("classpath:META-INF/spring/wedding-test.xml")
+		public static class FindUsersByInfoIdAndIsAccessed{
+
+			@Inject
+			UserRepository userRepository;
+			
+	        @Before
+	        public void setUp() throws Exception{
+	        	new TestContextManager(getClass()).prepareTestInstance(this);
+
+	        	List<User> case1ExpectedUserList = new ArrayList<User>();
+	        	case1ExpectedUserList.add(User.builder().userId("00000001").build());
+	        	case1ExpectedUserList.add(User.builder().userId("00000002").build());
+	        	case1ExpectedUserList.add(User.builder().userId("00000003").build());
+	        	case1ExpectedUserList.add(User.builder().userId("00000004").build());
+	        	findUsersFixture[0].expected.addAll(case1ExpectedUserList);
+
+	        	List<User> case2ExpectedUserList = new ArrayList<User>();
+	        	case2ExpectedUserList.add(User.builder().userId("00000005").build());
+	        	case2ExpectedUserList.add(User.builder().userId("00000006").build());
+	        	case2ExpectedUserList.add(User.builder().userId("00000007").build());
+	        	case2ExpectedUserList.add(User.builder().userId("00000008").build());
+	        	case2ExpectedUserList.add(User.builder().userId("00000009").build());
+	        	findUsersFixture[1].expected.addAll(case2ExpectedUserList);
+	        }
+	        
+	        @DataPoints
+	        public static FindUsersFixture[] findUsersFixture = {
+	        	FindUsersFixture.builder()
+	        					.infoId("0000000000")
+	        					.isAccessed(false)
+	        					.expected((List<User>)new ArrayList<User>())
+	        					.build(),
+	        	FindUsersFixture.builder()
+	        					.infoId("0000000001")
+	        					.isAccessed(true)
+	        					.expected((List<User>)new ArrayList<User>())
+	        					.build(),
+	        };
+	        
+	        @Theory
+	        @Category(TestsWithDatabaseAccess.class)
+	        public void normalTestCase(FindUsersFixture fixture){
+	        	List<User> userList = userRepository.findUsersByInfoIdAndIsAccessed(
+	        			fixture.infoId, fixture.isAccessed);
+	        	
+	        	for(int i=0 ; i < userList.size() ; i++){
+	        		assertThat(fixture.toString(), userList.get(i).getUserId(),
+	        				is(fixture.expected.get(i).getUserId()));
+	        	}
+	        	
+	        }
+			
+			@Data
+			@Builder
+			public static class FindUsersFixture{
+				String infoId;
+				boolean isAccessed;
+				List<User> expected;
+				@Override
+				public String toString(){
+					return String.format("when infoId = %s, isAccessed = %s, expected = %s", 
+							infoId, isAccessed, expected);
+				}
+			}
+		}
 	}
 }
