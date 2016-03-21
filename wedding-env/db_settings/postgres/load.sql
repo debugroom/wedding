@@ -72,22 +72,22 @@ INSERT INTO FNCTION VALUES ('9030', '9032', '依頼変更', '/request/edit', '20
 INSERT INTO FNCTION VALUES ('9030', '9033', '依頼削除', '/request/delete', '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO FNCTION VALUES ('9030', '9034', '依頼状況一括エクスポート', '/request/export', '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 
-INSERT INTO INFOMATION VALUES('00000000', '新郎・新婦からのご挨拶', '/info/00000000_message.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000001', '結婚式のご案内及び事前出席確認', '/info/00000001_guide_ceremony.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000002', '披露宴のご案内及び事前出席確認', '/info/00000002_guide_party.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000003', 'ご宿泊を希望する皆様へ', '/info/00000003_ask_if_staying_hotel.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000004', '新郎・新婦へメッセージの寄稿のお願い', '/info/00000004_request_message.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000005', '結婚式当日の乾杯音頭のお願い', '/info/00000005_request_pledge.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000006', '結婚式当日のスピーチのお願い', '/info/00000006_request_speech.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000007', '結婚式当日の友人代表スピーチのお願い', '/info/00000007_request_speech_of_friend.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000008', 'フォト・ムービーの共有のお願い', '/info/00000008_request_sharing_photomovie.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000009', '豪華景品が当たる！結婚式事前クイズ！', '/info/00000009_question_wedding.jsp', '2015-01-01 00:00:00.0', '2017-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000010', '結婚式２次会のご案内及び事前出席確認', '/info/00000010_guide_second_party.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000011', '結婚式当日のサイト運営ご協力のお願い', '/info/00000011_request_help_operation_website_for_ceremony.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000012', '結婚式当日の受付のお願い', '/info/00000012_request_help_clerk_for_ceremony.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000013', '結婚式2次会のサイト運営のお願い', '/info/00000013_request_help_clerk_for_secondparty.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000014', '結婚式2次会の受付のお願い', '/info/00000014_request_help_clerk_for_secondceremony.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
-INSERT INTO INFOMATION VALUES('00000015', '宿泊先のご案内', '/info/00000015_announce_staying_hotel.jsp', '2015-01-01 00:00:00.0', '2017-02-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000000', '新郎・新婦からのご挨拶', 'info/00000000_message.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000001', '結婚式のご案内及び事前出席確認', 'info/00000001_guide_ceremony.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000002', '披露宴のご案内及び事前出席確認', 'info/00000002_guide_party.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000003', 'ご宿泊を希望する皆様へ', 'info/00000003_ask_if_staying_hotel.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000004', '新郎・新婦へメッセージの寄稿のお願い', 'info/00000004_request_message.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000005', '結婚式当日の乾杯音頭のお願い', 'info/00000005_request_pledge.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000006', '結婚式当日のスピーチのお願い', 'info/00000006_request_speech.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000007', '結婚式当日の友人代表スピーチのお願い', 'info/00000007_request_speech_of_friend.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000008', 'フォト・ムービーの共有のお願い', 'info/00000008_request_sharing_photomovie.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000009', '豪華景品が当たる！結婚式事前クイズ！', 'info/00000009_question_wedding.jsp', '2015-01-01 00:00:00.0', '2017-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000010', '結婚式２次会のご案内及び事前出席確認', 'info/00000010_guide_second_party.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000011', '結婚式当日のサイト運営ご協力のお願い', 'info/00000011_request_help_operation_website_for_ceremony.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000012', '結婚式当日の受付のお願い', 'info/00000012_request_help_clerk_for_ceremony.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000013', '結婚式2次会のサイト運営のお願い', 'info/00000013_request_help_operation_website_for_secondparty.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000014', '結婚式2次会の受付のお願い', 'info/00000014_request_help_clerk_for_secondparty.jsp', '2015-01-01 00:00:00.0', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO INFOMATION VALUES('00000015', '宿泊先のご案内', 'info/00000015_announce_staying_hotel.jsp', '2015-01-01 00:00:00.0', '2017-02-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
 
 INSERT INTO USR VALUES('00000000', '(ΦωΦ)', 'org.debugroom', '/resources/app/img/debugroom.png', 9, '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
 INSERT INTO USR VALUES('00000001', '今夜がやまだ', 'konyagayamada', '/resources/app/img/konyagayamada.png', 1, '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');

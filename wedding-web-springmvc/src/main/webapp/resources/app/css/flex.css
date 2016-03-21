@@ -375,3 +375,21 @@ tbody > tr:nth-child(even) > td{
     background: -ms-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
     background: linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
 }
+
+.infomation-panel {
+	margin: 30px;
+	padding:10px;
+}
+
+.editMessagePanel {
+	margin:  auto;
+	text-align: center;
+	display: table;
+}
+
+.editMessagePanel textarea {
+	display: block;
+	resize:none;
+	font-size: 1.1em;
+	margin: 20px auto 20px;
+}

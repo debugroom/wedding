@@ -30,3 +30,8 @@
     width : 200px;
     height : 60px;
 }
+
+.formPanel .centering{
+	text-align: center;
+	margin : 10px auto 30px;
+}

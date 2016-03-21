@@ -14,6 +14,9 @@ import lombok.Builder;
 @Builder
 public class InfomationDetail {
 
+	public InfomationDetail(){
+	}
+
 	private Infomation infomation;
 	private List<User> accessedUsers;
 	private List<User> noAccessedUsers;

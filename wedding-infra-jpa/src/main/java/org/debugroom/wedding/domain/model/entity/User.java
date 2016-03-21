@@ -49,7 +49,7 @@ public class User implements Serializable {
 	private Integer ver;
 
 	//bi-directional one-to-one association to Address
-	@OneToOne(mappedBy="usr", cascade = {CascadeType.ALL})
+	@OneToOne(mappedBy="usr", cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	private Address address;
 
 	//bi-directional many-to-one association to Affiliation

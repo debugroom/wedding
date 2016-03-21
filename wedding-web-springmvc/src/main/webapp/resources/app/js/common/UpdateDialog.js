@@ -41,6 +41,12 @@ function showUpdateDialog(event){
 		case "credentials" :
 			inputElement.setAttribute("type", "password");
 			break;
+		case "infomation.title" :
+			inputElement.setAttribute("type", "text");
+			break;
+		case "infomation.releaseDate" :
+			inputElement.setAttribute("type", "text");
+			break;
 	}
 	
 	//Formのtype属性がfile以外の場合は、現在入力されているパラメータをhiddenから取得してフォームに設定する。
@@ -74,10 +80,10 @@ function showUpdateDialog(event){
 		false
 	);
 
-	//更新ボタンを作成する。
 	cancelButtonElement.appendChild(cancelButtonTitle);
 	panelElement.appendChild(cancelButtonElement);
 	
+	//更新ボタンを作成する。
 	var submitButtonElement = document.createElement("button");
 	var submitButtonTitle = document.createTextNode("変更");
 	submitButtonElement.setAttribute("id", "updateParam");
@@ -105,7 +111,7 @@ function addWarningMessage(event, target){
 		var warningPanel = document.createElement("div");
 		warningPanel.setAttribute("id", event.currentTarget.name + "-message");
 		warningPanel.setAttribute("class", "warningMessage");
-		warningPanel.appendChild(document.createTextNode("!下のボタンを押して、更新を確定してください。"));
+		warningPanel.appendChild(document.createTextNode("!下の「更新を確定する」ボタンを押して、更新を確定してください。"));
 		warningFragment.appendChild(warningPanel);
 		target.appendChild(warningFragment); 
 	}

@@ -30,7 +30,7 @@ public class NewUserForm implements Serializable{
 	public static interface SaveUser{}
 
 	@NotNull(groups = {SaveUser.class})
-	@Size(groups = {SaveUser.class})
+	@Size(min=8, max=8, groups = {SaveUser.class})
 	@Pattern(regexp = "[0-9]*", groups = {SaveUser.class})
 	private String userId;
 

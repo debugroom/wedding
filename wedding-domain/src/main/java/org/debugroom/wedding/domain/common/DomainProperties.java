@@ -15,4 +15,7 @@ public class DomainProperties {
 	@Value("${password.expired.day.default}")
 	private String passwordExpiredDayDefault;
 
+	@Value("${info.rootpath}")
+	private String infoRootPath;
+
 }
