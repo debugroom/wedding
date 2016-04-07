@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -31,13 +31,11 @@ public class User implements Serializable {
 	@Column(name="image_file_path", length=2147483647)
 	private String imageFilePath;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_login_date")
-	private Date lastLoginDate;
+	private Timestamp lastLoginDate;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
 	@Column(name="login_id", length=2147483647)
 	private String loginId;
@@ -49,7 +47,7 @@ public class User implements Serializable {
 	private Integer ver;
 
 	//bi-directional one-to-one association to Address
-	@OneToOne(mappedBy="usr", cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
+	@OneToOne(optional = false, mappedBy="usr" , cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private Address address;
 
 	//bi-directional many-to-one association to Affiliation
@@ -57,11 +55,11 @@ public class User implements Serializable {
 	private Set<Affiliation> affiliations;
 
 	//bi-directional many-to-one association to Credential
-	@OneToMany(mappedBy="usr", cascade = {CascadeType.ALL})
+	@OneToMany(mappedBy="usr", cascade=CascadeType.ALL)
 	private Set<Credential> credentials;
 
 	//bi-directional many-to-one association to Email
-	@OneToMany(mappedBy="usr", cascade = {CascadeType.ALL})
+	@OneToMany(mappedBy="usr",  cascade=CascadeType.ALL)
 	private Set<Email> emails;
 
 	//bi-directional many-to-one association to Notification
@@ -112,19 +110,19 @@ public class User implements Serializable {
 		this.imageFilePath = imageFilePath;
 	}
 
-	public Date getLastLoginDate() {
+	public Timestamp getLastLoginDate() {
 		return this.lastLoginDate;
 	}
 
-	public void setLastLoginDate(Date lastLoginDate) {
+	public void setLastLoginDate(Timestamp lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 

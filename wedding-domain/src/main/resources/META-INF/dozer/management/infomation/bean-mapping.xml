@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+     <mapping map-id="infomationDetailMappingExcludingUserRelatedEntity">
+        <class-a>org.debugroom.wedding.domain.service.management.InfomationDetail</class-a>
+        <class-b>org.debugroom.wedding.domain.service.management.InfomationDetail</class-b>
+        <field map-id="userMappingExcludingRelatedEntity">
+            <a>accessedUsers</a>
+            <b>accessedUsers</b>
+            <a-hint>org.debugroom.wedding.domain.model.entity.User</a-hint>
+            <b-hint>org.debugroom.wedding.domain.model.entity.User</b-hint>
+        </field>
+        <field map-id="userMappingExcludingRelatedEntity">
+            <a>noAccessedUsers</a>
+            <b>noAccessedUsers</b>
+            <a-hint>org.debugroom.wedding.domain.model.entity.User</a-hint>
+            <b-hint>org.debugroom.wedding.domain.model.entity.User</b-hint>
+        </field>
+    </mapping>      
+    <mapping map-id="userMappingExcludingRelatedEntity">
+        <class-a>org.debugroom.wedding.domain.model.entity.User</class-a>
+        <class-b>org.debugroom.wedding.domain.model.entity.User</class-b>
+        <field-exclude>
+            <a>address</a>
+            <b>address</b>
+        </field-exclude>
+        <field-exclude>
+            <a>emails</a>
+            <b>emails</b>
+        </field-exclude>
+        <field-exclude>
+            <a>credentials</a>
+            <b>credentials</b>
+        </field-exclude>
+        <field-exclude>
+            <a>affiliations</a>
+            <b>affiliations</b>
+        </field-exclude>
+        <field-exclude>
+            <a>notifications</a>
+            <b>notifications</b>
+        </field-exclude>
+        <field-exclude>
+            <a>requestStatuses</a>
+            <b>requestStatuses</b>
+        </field-exclude>
+        <field-exclude>
+            <a>grps</a>
+            <b>grps</b>
+        </field-exclude>
+    </mapping>
+</mappings>

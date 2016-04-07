@@ -56,7 +56,7 @@ public class InfomationRepositoryTest {
 				new TestContextManager(getClass()).prepareTestInstance(this);
 				
 				Calendar calendar = Calendar.getInstance();
-				calendar.set(Calendar.YEAR, 2015);
+				calendar.set(Calendar.YEAR, 2016);
 				calendar.set(Calendar.MONTH, 7);
 				calendar.set(Calendar.DAY_OF_MONTH, 1);
 

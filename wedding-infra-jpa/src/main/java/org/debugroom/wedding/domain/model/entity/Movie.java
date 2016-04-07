@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -31,9 +31,8 @@ public class Movie implements Serializable {
 	@Column(name="is_controled")
 	private Boolean isControled;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
 	@Version
 	private Integer ver;
@@ -86,11 +85,11 @@ public class Movie implements Serializable {
 		this.isControled = isControled;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 

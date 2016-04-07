@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -28,9 +28,8 @@ public class Menu implements Serializable {
 	@Column(name="authority_level")
 	private Integer authorityLevel;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
 	@Column(name="menu_name", length=2147483647)
 	private String menuName;
@@ -38,13 +37,11 @@ public class Menu implements Serializable {
 	@Column(length=2147483647)
 	private String url;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="usable_end_date")
-	private Date usableEndDate;
+	private Timestamp usableEndDate;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="usable_start_date")
-	private Date usableStartDate;
+	private Timestamp usableStartDate;
 
 	@Version
 	private Integer ver;
@@ -72,11 +69,11 @@ public class Menu implements Serializable {
 		this.authorityLevel = authorityLevel;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 
@@ -96,19 +93,19 @@ public class Menu implements Serializable {
 		this.url = url;
 	}
 
-	public Date getUsableEndDate() {
+	public Timestamp getUsableEndDate() {
 		return this.usableEndDate;
 	}
 
-	public void setUsableEndDate(Date usableEndDate) {
+	public void setUsableEndDate(Timestamp usableEndDate) {
 		this.usableEndDate = usableEndDate;
 	}
 
-	public Date getUsableStartDate() {
+	public Timestamp getUsableStartDate() {
 		return this.usableStartDate;
 	}
 
-	public void setUsableStartDate(Date usableStartDate) {
+	public void setUsableStartDate(Timestamp usableStartDate) {
 		this.usableStartDate = usableStartDate;
 	}
 

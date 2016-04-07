@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 
 import org.dozer.Mapper;
 import org.dozer.MappingException;
@@ -33,11 +34,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.web.management.infomation.InfomationDatailForm.GetInfomation;
+import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.ConfirmInfomation;
 import org.debugroom.wedding.domain.service.management.InfomationManagementService;
 import org.debugroom.wedding.domain.service.management.InfomationDetail;
+import org.debugroom.wedding.domain.service.management.InfomationDraft;
 import org.debugroom.wedding.domain.model.entity.Infomation;
 
 /**
@@ -46,14 +50,22 @@ import org.debugroom.wedding.domain.model.entity.Infomation;
  *
  */
 @Controller
-public class InfomationManagementController {
+public class InfomationManagementController implements ServletContextAware{
 
+	@Inject
+	ServletContext servletContext;
+	
 	@Inject
 	Mapper mapper;
 	
 	@Inject
 	MessageSource messageSource;
 	
+	@ModelAttribute
+	public NewInfomationForm setUpNewInfomationForm(){
+		return NewInfomationForm.builder().build();
+	}
+
 	@ModelAttribute
 	public InfomationDatailForm setUpInfomationDetailForm(){
 		return InfomationDatailForm.builder().build();
@@ -105,7 +117,7 @@ public class InfomationManagementController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/management/infomation/{infomation.infoId}")
 	public String updateInfomation(@Validated InfomationUpdateForm infomationUpdateForm,
-			BindingResult bindingResult, Model model){
+			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 		
 		if(bindingResult.hasErrors()){
 			model.addAttribute(mapper.map(infomationUpdateForm, InfomationDetail.class));
@@ -114,9 +126,11 @@ public class InfomationManagementController {
 		}
 
 		try {
-			infomationManagementService.updateInfomationService(
+			redirectAttributes.addFlashAttribute(
+					infomationManagementService.updateInfomationService(
 					mapper.map(infomationUpdateForm.getInfomation(), Infomation.class), 
-					infomationUpdateForm.getInfomation().getMessageBody());
+					servletContext.getRealPath(""),
+					infomationUpdateForm.getInfomation().getMessageBody()));
 		} catch (BusinessException e) {
 			model.addAttribute("errorCode", e.getCode());
 			model.addAttribute(mapper.map(infomationUpdateForm, InfomationDetail.class));
@@ -134,6 +148,38 @@ public class InfomationManagementController {
 			params = "complete")
 	public String updateComplete(){
 		return "management/infomation/updateComplete";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/management/infomation/new")
+	public String newInfomationForm(Model model){
+		return "management/infomation/form";
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value="/management/infomation/draft/new")
+	public String newInfomationDraft(@Validated(ConfirmInfomation.class) NewInfomationForm newInfomationForm,
+			BindingResult bindingResult, Model model, Locale locale){
+		
+		if(bindingResult.hasErrors()){
+			model.addAttribute("infomation", newInfomationForm);
+			model.addAttribute(BindingResult.class.getName() + ".infomation", bindingResult);
+			return "management/infomation/form";
+		}
+		
+		InfomationDraft infomationDraft = mapper.map(newInfomationForm, InfomationDraft.class);
+
+		try {
+			model.addAttribute(infomationManagementService.
+					createInfomationDraft(infomationDraft, servletContext.getRealPath("")));
+		} catch (BusinessException e) {
+			model.addAttribute("errorMessage", messageSource.getMessage(e.getCode(), e.getArgs(), locale));
+			return "management/infomation/form";
+		}
+		return "management/infomation/confirm";
+	}
+
+	@Override
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
 	}
 
 }

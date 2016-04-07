@@ -16,6 +16,12 @@ public interface InfomationManagementService {
 	public InfomationDetail getInfomationDetail(String infoId);
 	
 	public UpdateResult<InfomationDetail> updateInfomationService(
-			Infomation infomation, String messageBody) throws BusinessException;
+			Infomation infomation, String rootPathForMessage, 
+			String messageBody) throws BusinessException;
+
+	public InfomationDraft createInfomationDraft(InfomationDraft infomationDraft,
+			String rootPathForMessage) throws BusinessException;
+
+	public Infomation saveInfomation(Infomation infomation) throws BusinessException;
 
 }

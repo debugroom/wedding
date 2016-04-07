@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -25,9 +25,8 @@ public class MessageBoard implements Serializable {
 	@Column(name="message_board_id", unique=true, nullable=false, length=8)
 	private String messageBoardId;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
 	@Column(length=512)
 	private String title;
@@ -50,11 +49,11 @@ public class MessageBoard implements Serializable {
 		this.messageBoardId = messageBoardId;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 

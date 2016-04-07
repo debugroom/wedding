@@ -44,6 +44,9 @@
               </c:forEach>
             </tbody>
           </table>
+          <form action="${pageContext.request.contextPath}/management/infomation/new">
+            <button id="new-infomation-button" class="main-button" type="submit">インフォメーション新規作成</button>
+          </form>
         </div>
      </div>
    </div>

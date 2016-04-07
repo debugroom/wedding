@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -28,9 +28,8 @@ public class Group implements Serializable {
 	@Column(name="group_name", length=256)
 	private String groupName;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
 	@Version
 	private Integer ver;
@@ -86,11 +85,11 @@ public class Group implements Serializable {
 		this.groupName = groupName;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 

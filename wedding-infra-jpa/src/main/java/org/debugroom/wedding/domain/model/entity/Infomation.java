@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -28,17 +28,14 @@ public class Infomation implements Serializable {
 	@Column(name="info_page_path", length=2147483647)
 	private String infoPagePath;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="registrated_date")
-	private Date registratedDate;
+	private Timestamp registratedDate;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="release_date")
-	private Date releaseDate;
+	private Timestamp releaseDate;
 
 	@Column(length=256)
 	private String title;
@@ -86,27 +83,27 @@ public class Infomation implements Serializable {
 		this.infoPagePath = infoPagePath;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 
-	public Date getRegistratedDate() {
+	public Timestamp getRegistratedDate() {
 		return this.registratedDate;
 	}
 
-	public void setRegistratedDate(Date registratedDate) {
+	public void setRegistratedDate(Timestamp registratedDate) {
 		this.registratedDate = registratedDate;
 	}
 
-	public Date getReleaseDate() {
+	public Timestamp getReleaseDate() {
 		return this.releaseDate;
 	}
 
-	public void setReleaseDate(Date releaseDate) {
+	public void setReleaseDate(Timestamp releaseDate) {
 		this.releaseDate = releaseDate;
 	}
 

@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -25,13 +25,11 @@ public class Request implements Serializable {
 	@Column(name="request_id", unique=true, nullable=false, length=4)
 	private String requestId;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="registrated_date")
-	private Date registratedDate;
+	private Timestamp registratedDate;
 
 	@Column(name="request_contents", length=2147483647)
 	private String requestContents;
@@ -54,19 +52,19 @@ public class Request implements Serializable {
 		this.requestId = requestId;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 
-	public Date getRegistratedDate() {
+	public Timestamp getRegistratedDate() {
 		return this.registratedDate;
 	}
 
-	public void setRegistratedDate(Date registratedDate) {
+	public void setRegistratedDate(Timestamp registratedDate) {
 		this.registratedDate = registratedDate;
 	}
 

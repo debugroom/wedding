@@ -1,5 +1,6 @@
 package org.debugroom.wedding.domain.service.management;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -85,10 +86,10 @@ public class UserManagementServiceImpl implements UserManagementService {
 	@Override
 	public User saveUser(User user) throws BusinessException {
 
-		user.setLastUpdatedDate(new Date());
+		user.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 		user.getAddress().setUserId(user.getUserId());
-		user.getAddress().setLastUpdatedDate(new Date());
+		user.getAddress().setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(
@@ -99,8 +100,8 @@ public class UserManagementServiceImpl implements UserManagementService {
 		for(Credential credential : user.getCredentials()){
 
 			credential.getId().setUserId(user.getUserId());;
-			credential.setLastUpdatedDate(new Date());
-			credential.setValidDate(calendar.getTime());
+			credential.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			credential.setValidDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
 			if(domainPorperties.getCredentialTypePassword().equals(
 					credential.getId().getCredentialType())){
@@ -113,7 +114,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 
 		for(Email email : user.getEmails()){
 			email.getId().setUserId(user.getUserId());
-			email.setLastUpdatedDate(new Date());
+			email.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		}
 
 		return userSharedService.saveUser(user);

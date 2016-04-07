@@ -1,8 +1,9 @@
 package org.debugroom.wedding.domain.service.common;
 
 import java.util.List;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.inject.Inject;
 
@@ -80,33 +81,33 @@ public class UserSharedServiceImpl implements UserSharedService{
 		
 		if(!updateTargetUser.getUserName().equals(user.getUserName())){
 			updateTargetUser.setUserName(user.getUserName());
-			updateTargetUser.setLastUpdatedDate(new Date());
+			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("userName");
 		}
 		
 		if(!updateTargetUser.getLoginId().equals(user.getLoginId())){
 			updateTargetUser.setLoginId(user.getLoginId());
-			updateTargetUser.setLastUpdatedDate(new Date());
+			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("loginId");
 		}
 
 		if(!updateTargetUser.getImageFilePath().equals(user.getImageFilePath())){
 			updateTargetUser.setImageFilePath(user.getImageFilePath());
-			updateTargetUser.setLastUpdatedDate(new Date());
+			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("imageFile");
 		}
 
 		if(!updateTargetUser.getAddress().getPostCd().equals(
 				user.getAddress().getPostCd())){
 			updateTargetUser.getAddress().setPostCd(user.getAddress().getPostCd());
-			updateTargetUser.getAddress().setLastUpdatedDate(new Date());
+			updateTargetUser.getAddress().setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("address.postCd");
 		}
 		
 		if(!updateTargetUser.getAddress().getAddress().equals(
 				user.getAddress().getAddress())){
 			updateTargetUser.getAddress().setAddress(user.getAddress().getAddress());
-			updateTargetUser.getAddress().setLastUpdatedDate(new Date());
+			updateTargetUser.getAddress().setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("address.address");
 		}
 
@@ -123,7 +124,7 @@ public class UserSharedServiceImpl implements UserSharedService{
 						// Set encode password. 
 						targetCredential.setCredentialKey(passwordEncoder.encode(
 								credential.getCredentialKey()));
-						targetCredential.setLastUpdatedDate(new Date());
+						targetCredential.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 						updateParamList.add(new StringBuilder()
 													.append("credentials#")
 													.append(targetCredential.getId().getCredentialType())
@@ -138,7 +139,7 @@ public class UserSharedServiceImpl implements UserSharedService{
 				if(paramEmail.getId().getEmailId() == targetEmail.getId().getEmailId()
 						&& !paramEmail.getEmail().equals(targetEmail.getEmail())){
 					targetEmail.setEmail(paramEmail.getEmail());
-					targetEmail.setLastUpdatedDate(new Date());
+					targetEmail.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 					updateParamList.add(new StringBuilder()
 												.append("emails#")
 												.append(targetEmail.getId().getEmailId())

@@ -22,7 +22,9 @@ encoding//src/main/webapp/WEB-INF/jsp/info/00000012_request_help_clerk_for_cerem
 encoding//src/main/webapp/WEB-INF/jsp/info/00000013_request_help_operation_website_for_secondparty.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/info/00000014_request_help_clerk_for_secondparty.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/info/00000015_announce_staying_hotel.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/management/infomation/confirm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/infomation/detail.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/management/infomation/form.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/infomation/infomationComplete.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/infomation/portal.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/infomation/updateComplete.jsp=UTF-8

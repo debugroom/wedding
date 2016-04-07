@@ -1,0 +1,32 @@
+.panel table{
+     width : 700px;
+    margin : 30px auto;
+}
+
+.infomationFormPanel table tr td{
+    border : none;
+    margin : 0 auto 0;
+    padding : 5px 20px 5px;
+}
+
+.infomationFormPanel td:first-child{
+    text-align : right;
+}
+
+.infomationFormPanel .alternative-button{
+	display: block;
+	text-align :center;
+    margin : 20px auto 40px; 
+}
+
+.infomationFormPanel .alternative-first-button {
+    font-size : 1.2em;
+    width : 200px;
+    height : 60px;
+}
+
+.infomationFormPanel .alternative-last-button {
+    font-size : 1.2em;
+    width : 200px;
+    height : 60px;
+}

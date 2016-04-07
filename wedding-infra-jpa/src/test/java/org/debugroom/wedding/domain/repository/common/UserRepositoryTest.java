@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -108,11 +109,11 @@ public class UserRepositoryTest {
 	        	 							.userId("00000000")
 	        	 							.loginId("org.debugroom")
 	        	 							.userName("(ΦωΦ)")
-	        	 							.lastLoginDate(new Calendar.Builder()
+	        	 							.lastLoginDate(new Timestamp(new Calendar.Builder()
 	        	 													.setDate(2015, 1, 1)
 	        	 													.setTimeOfDay(0, 0, 0)
 	        	 													.build()
-	        	 													.getTime()
+	        	 													.getTimeInMillis())
 	        	 									)
 	        	 							.build()
 	        	 					)

@@ -6,6 +6,7 @@ import lombok.Builder;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
+import java.sql.Timestamp;
 
 
 /**
@@ -29,9 +30,8 @@ public class Function implements Serializable {
 	@Column(name="function_name", length=100)
 	private String functionName;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
 	@Column(length=2147483647)
 	private String url;
@@ -79,11 +79,11 @@ public class Function implements Serializable {
 		this.functionName = functionName;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 

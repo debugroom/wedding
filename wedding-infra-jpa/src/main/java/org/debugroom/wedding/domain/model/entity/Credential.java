@@ -5,7 +5,7 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 
 
 /**
@@ -26,13 +26,11 @@ public class Credential implements Serializable {
 	@Column(name="credential_key", length=2147483647)
 	private String credentialKey;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="last_updated_date")
-	private Date lastUpdatedDate;
+	private Timestamp lastUpdatedDate;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="valid_date")
-	private Date validDate;
+	private Timestamp validDate;
 
 	@Version
 	private Integer ver;
@@ -61,19 +59,19 @@ public class Credential implements Serializable {
 		this.credentialKey = credentialKey;
 	}
 
-	public Date getLastUpdatedDate() {
+	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
 
-	public void setLastUpdatedDate(Date lastUpdatedDate) {
+	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 
-	public Date getValidDate() {
+	public Timestamp getValidDate() {
 		return this.validDate;
 	}
 
-	public void setValidDate(Date validDate) {
+	public void setValidDate(Timestamp validDate) {
 		this.validDate = validDate;
 	}
 
