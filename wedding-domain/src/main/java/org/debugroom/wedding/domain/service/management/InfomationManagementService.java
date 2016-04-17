@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.service.common.UpdateResult;
 import org.debugroom.wedding.domain.model.entity.Infomation;
+import org.debugroom.wedding.domain.model.entity.User;
 
 public interface InfomationManagementService {
 
@@ -22,6 +23,8 @@ public interface InfomationManagementService {
 	public InfomationDraft createInfomationDraft(InfomationDraft infomationDraft,
 			String rootPathForMessage) throws BusinessException;
 
-	public Infomation saveInfomation(Infomation infomation) throws BusinessException;
+	public Infomation saveInfomation(InfomationDraft infomationDraft) throws BusinessException;
 
+	public List<User> getUsers();
+		
 }

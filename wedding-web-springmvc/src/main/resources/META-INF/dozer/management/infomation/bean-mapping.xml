@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping>
+        <class-a>org.debugroom.wedding.app.web.management.infomation.NewInfomationForm</class-a>
+        <class-b>org.debugroom.wedding.domain.service.management.InfomationDraft</class-b>
+        <field>
+            <a>infoId</a>
+            <b>infomation.infoId</b>
+        </field>
+        <field>
+            <a>title</a>
+            <b>infomation.title</b>
+        </field>
+        <field>
+            <a>releaseDate</a>
+            <b>infomation.releaseDate</b>
+        </field>
+        <field>
+            <a>registratedDate</a>
+            <b>infomation.registratedDate</b>
+        </field>
+        <field>
+            <a>infoPagePath</a>
+            <b>infomation.infoPagePath</b>
+        </field>
+        <field>
+            <a>checkedUsers</a>
+            <b>viewUsers</b>
+        </field>
+    </mapping>
+</mappings>

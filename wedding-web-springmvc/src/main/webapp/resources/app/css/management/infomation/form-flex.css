@@ -14,6 +14,21 @@
     text-align : left;
 }
 
+.userListPanel td:first-child{
+    width : 30px;
+    text-align : center;
+}
+
+.userListPanel td:nth-child(2){
+    width : auto;
+    text-align : center;
+}
+
+.userListPanel td:nth-child(3){
+    width : auto;
+    text-align : left;
+}
+
 .infomationFormPanel button{
     width : 100px;
     height : 40px;

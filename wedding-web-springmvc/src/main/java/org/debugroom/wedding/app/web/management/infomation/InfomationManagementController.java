@@ -39,6 +39,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.web.management.infomation.InfomationDatailForm.GetInfomation;
 import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.ConfirmInfomation;
+import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.SaveInfomation;
 import org.debugroom.wedding.domain.service.management.InfomationManagementService;
 import org.debugroom.wedding.domain.service.management.InfomationDetail;
 import org.debugroom.wedding.domain.service.management.InfomationDraft;
@@ -152,6 +153,7 @@ public class InfomationManagementController implements ServletContextAware{
 	
 	@RequestMapping(method = RequestMethod.GET, value="/management/infomation/new")
 	public String newInfomationForm(Model model){
+		model.addAttribute("users", infomationManagementService.getUsers());
 		return "management/infomation/form";
 	}
 
@@ -162,12 +164,13 @@ public class InfomationManagementController implements ServletContextAware{
 		if(bindingResult.hasErrors()){
 			model.addAttribute("infomation", newInfomationForm);
 			model.addAttribute(BindingResult.class.getName() + ".infomation", bindingResult);
-			return "management/infomation/form";
+			return newInfomationForm(model);
 		}
 		
 		InfomationDraft infomationDraft = mapper.map(newInfomationForm, InfomationDraft.class);
 
 		try {
+			model.addAttribute(newInfomationForm.getUsers());
 			model.addAttribute(infomationManagementService.
 					createInfomationDraft(infomationDraft, servletContext.getRealPath("")));
 		} catch (BusinessException e) {
@@ -175,6 +178,46 @@ public class InfomationManagementController implements ServletContextAware{
 			return "management/infomation/form";
 		}
 		return "management/infomation/confirm";
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value="/management/infomation/new/{infoId}")
+	public String saveInfomation(@Validated(SaveInfomation.class) NewInfomationForm newInfomationForm,
+			 BindingResult bindingResult, Model model, 
+			 RedirectAttributes redirectAttrivutes, Locale locale){
+		
+		InfomationDraft infomationDraft = mapper.map(newInfomationForm, InfomationDraft.class);
+
+		if(bindingResult.hasErrors()){
+			model.addAttribute(infomationDraft);
+			model.addAttribute(BindingResult.class.getName() + ".infomationDraft", bindingResult);
+			return "management/infomation/confirm";
+		}
+
+		if(!"save".equals(newInfomationForm.getType())){
+			model.addAttribute("infomation", newInfomationForm);
+			return newInfomationForm(model);
+		}
+
+		try {
+			redirectAttrivutes.addFlashAttribute("users", infomationDraft.getViewUsers());
+			redirectAttrivutes.addFlashAttribute(
+					infomationManagementService.saveInfomation(infomationDraft));
+		}catch (BusinessException e){
+			model.addAttribute("errorCode", e.getCode());
+			return "common/error";
+		}
+
+		return new StringBuilder().append("redirect:")
+					.append(newInfomationForm.getInfoId())
+					.append("?complete")
+					.toString();
+	}
+
+	@RequestMapping(method = RequestMethod.GET,
+			value = "/management/infomation/new/{infoId}",
+			params = "complete")
+	public String saveComplete(){
+		return "management/infomation/saveComplete";
 	}
 
 	@Override

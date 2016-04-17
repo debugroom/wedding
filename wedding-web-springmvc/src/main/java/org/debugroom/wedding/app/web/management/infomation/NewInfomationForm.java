@@ -1,6 +1,8 @@
 package org.debugroom.wedding.app.web.management.infomation;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Max;
@@ -41,8 +43,8 @@ public class NewInfomationForm implements Serializable{
 	@Pattern(regexp = "[a-zA-Z0-9¥.¥-¥_]*")
 	private String infoName;
 	
-	@NotNull(groups = {ConfirmInfomation.class})
-	@Size(min=1, max=50, groups = {ConfirmInfomation.class})
+	@NotNull(groups = {SaveInfomation.class})
+	@Size(min=1, max=50, groups = {SaveInfomation.class})
 	@Pattern(regexp = "[a-zA-Z0-9¥.¥-¥_¥/]*")
 	private String infoPagePath;
 
@@ -50,11 +52,25 @@ public class NewInfomationForm implements Serializable{
 	@Size(min=1, max=256, groups = {ConfirmInfomation.class, SaveInfomation.class})
 	private String title;
 	
+	@NotNull(groups = {SaveInfomation.class})
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date registratedDate;
+
 	@NotNull(groups = {ConfirmInfomation.class, SaveInfomation.class})
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@Future(groups = {ConfirmInfomation.class, SaveInfomation.class})
-	private String releaseDate;
+	private Date releaseDate;
 
 	private String messageBody;
+	
+	@Valid
+	private List<User> checkedUsers;
+	
+	@Valid
+	private List<User> users;
+	
+	@NotNull(groups = {SaveInfomation.class})
+	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*", groups = {SaveInfomation.class})
+	private String type;
 	
 }

@@ -54,7 +54,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 		if(userSharedService.exists(user)){
 			updateResult = userSharedService.updateUser(user);
 		}else{
-			throw new BusinessException("UserManagementService.error.0001");
+			throw new BusinessException("userManagementService.error.0001");
 		}
 		return updateResult;
 	}
@@ -62,7 +62,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 	@Override
 	public User createUserProfile(User user) throws BusinessException {
 		if(userSharedService.exists(user.getLoginId())){
-			throw new BusinessException("UserManagementService.error.0002", 
+			throw new BusinessException("userManagementService.error.0002", 
 					null, user.getLoginId());
 		}
 		String newUserId = userSharedService.getNewUserId();

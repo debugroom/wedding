@@ -6,6 +6,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.ConfirmInfomation;
+import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.SaveInfomation;
+
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,13 +25,13 @@ public class User implements Serializable{
 	public User(){
 	}
 	
-	@NotNull
-	@Size(min=8, max=8)
-	@Pattern(regexp = "[0-9]*")
+	@NotNull(groups = {Default.class})
+	@Size(min=8, max=8, groups = {Default.class, ConfirmInfomation.class, SaveInfomation.class})
+	@Pattern(regexp = "[0-9]*", groups = {Default.class, ConfirmInfomation.class, SaveInfomation.class})
 	private String userId;
 
-	@NotNull
-	@Size(min=1, max=50)
+	@NotNull(groups = {Default.class})
+	@Size(min=1, max=50, groups = {Default.class, ConfirmInfomation.class, SaveInfomation.class})
 	private String userName;
 
 }

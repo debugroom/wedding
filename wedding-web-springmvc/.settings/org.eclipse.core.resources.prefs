@@ -27,6 +27,7 @@ encoding//src/main/webapp/WEB-INF/jsp/management/infomation/detail.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/infomation/form.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/infomation/infomationComplete.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/infomation/portal.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/management/infomation/saveComplete.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/infomation/updateComplete.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/user/confirm.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/management/user/delete.jsp=UTF-8
