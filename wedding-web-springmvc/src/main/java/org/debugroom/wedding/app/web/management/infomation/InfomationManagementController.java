@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.app.web.common.model.UserSearchCriteria;
+import org.debugroom.wedding.app.web.common.model.UserSearchResult;
 import org.debugroom.wedding.app.web.management.infomation.InfomationDatailForm.GetInfomation;
 import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.ConfirmInfomation;
 import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.SaveInfomation;
@@ -116,6 +118,29 @@ public class InfomationManagementController implements ServletContextAware{
 		return "management/infomation/detail";
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value="/not-infomation-viewers", params="infoId")
+	public ResponseEntity<UserSearchResult> getNotInfomationViewers(@Validated UserSearchCriteria userSearchCriteria,
+			Errors errors, Locale locale){
+		
+		String infoId = userSearchCriteria.getInfoId();
+		UserSearchResult userSearchResult = UserSearchResult.builder()
+												.infoId(infoId)
+												.build();
+		
+		if(errors.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			userSearchResult.setMessages(messages);
+			for(FieldError fieldError : errors.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userSearchResult);
+		}
+		
+		userSearchResult.setUsers(infomationManagementService.getNoViewers(infoId));
+		return ResponseEntity.status(HttpStatus.OK).body(userSearchResult);
+
+	}
+
 	@RequestMapping(method = RequestMethod.POST, value = "/management/infomation/{infomation.infoId}")
 	public String updateInfomation(@Validated InfomationUpdateForm infomationUpdateForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
@@ -128,10 +153,9 @@ public class InfomationManagementController implements ServletContextAware{
 
 		try {
 			redirectAttributes.addFlashAttribute(
-					infomationManagementService.updateInfomationService(
-					mapper.map(infomationUpdateForm.getInfomation(), Infomation.class), 
-					servletContext.getRealPath(""),
-					infomationUpdateForm.getInfomation().getMessageBody()));
+					infomationManagementService.updateInfomation(
+					mapper.map(infomationUpdateForm, InfomationDraft.class), 
+					servletContext.getRealPath("")));
 		} catch (BusinessException e) {
 			model.addAttribute("errorCode", e.getCode());
 			model.addAttribute(mapper.map(infomationUpdateForm, InfomationDetail.class));

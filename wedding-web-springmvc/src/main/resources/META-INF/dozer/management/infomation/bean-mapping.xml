@@ -31,4 +31,44 @@
             <b>viewUsers</b>
         </field>
     </mapping>
+    <mapping>
+        <class-a>org.debugroom.wedding.app.web.management.infomation.InfomationUpdateForm</class-a>
+        <class-b>org.debugroom.wedding.domain.service.management.InfomationDraft</class-b>
+        <field>
+            <a>infomation.infoId</a>
+            <b>infomation.infoId</b>
+        </field>
+        <field>
+            <a>infomation.title</a>
+            <b>infomation.title</b>
+        </field>
+        <field>
+            <a>infomation.infoPagePath</a>
+            <b>infomation.infoPagePath</b>
+        </field>
+        <field>
+            <a>infomation.registratedDate</a>
+            <b>infomation.registratedDate</b>
+        </field>
+        <field>
+            <a>infomation.releaseDate</a>
+            <b>infomation.releaseDate</b>
+        </field>
+        <field>
+            <a>infomation.lastUpdatedDate</a>
+            <b>infomation.lastUpdatedDate</b>
+        </field>
+        <field>
+            <a>infomation.messageBody</a>
+            <b>messageBody</b>
+        </field>
+        <field>
+            <a>checkedAddUsers</a>
+            <b>viewUsers</b>
+        </field>
+        <field>
+            <a>checkedDeleteUsers</a>
+            <b>excludeUsers</b>
+        </field>
+    </mapping>
 </mappings>

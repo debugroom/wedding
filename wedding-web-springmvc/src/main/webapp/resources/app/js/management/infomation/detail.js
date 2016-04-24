@@ -9,12 +9,30 @@ document.addEventListener('DOMContentLoaded', function(){
 			buttonArray[i].addEventListener("click", function(event){
 				showTextAreaDialog(event);
 			}, false);
+		}else if(buttonArray[i].id == "get-not-infomation-viewers-button"){
 		}else{
 			buttonArray[i].addEventListener("click", function(event){
 				showUpdateDialog(event);
 			}, false);
 		}
 	}
+	
+	var checkboxNodeList = formElement.getElementsByTagName("input");
+	var checkboxArray = Array.prototype.slice.call(checkboxNodeList);
+
+	for(var i=0; i < checkboxArray.length ; i++){
+		if(checkboxArray[i].type == "checkbox"){
+			checkboxArray[i].addEventListener("change", function(event){
+				setHiddenParameterForDeleteUserId(event);
+			}, false);
+		}
+	}
+	
+	var getNotInfomationViewerButtonElement = document.getElementById("get-not-infomation-viewers-button");
+	getNotInfomationViewerButtonElement.addEventListener("click", function(event){
+		getNotInfomationViewerList(event);
+	}, false);
+	
 }, false)
 
 function showTextAreaDialog(event){
@@ -120,8 +138,103 @@ function updateParam(event){
 	updateRootNode.removeChild(updatePanel);
 }	
 
+function getNotInfomationViewerList(event){
+	var infoIdFormElement = document.getElementById("infomation.infoId");
+	var infoId = infoIdFormElement.value;
+	var xhr = new XMLHttpRequest();
 	
+	xhr.onreadystatechange = function(){
+		if(xhr.readyState == 4){
+			var tableElement = document.getElementById("no-viewer-list-table");
+			if(tableElement == null){
+				var buttonElement = document.getElementById("get-not-infomation-viewers-button");
+				tableElement = document.createElement("table");
+				tableElement.setAttribute("id", "no-viewer-list-table");
+				tableElement.innerHTML = '<tbody><tr id="no-viewer-list-table-header"><th>No</th><th>ユーザID</th><th>ユーザ名</th><th>追加</th></tr></tbody>'; 
+				buttonElement.parentNode.insertBefore(tableElement, buttonElement.nextSibling);
+			}
+			if(xhr.status == 200){
+				var json = JSON.parse(xhr.responseText);
+				var users = json.users;
+				var count = 1;
+				for(var user in users){
+					var trElement = document.createElement("tr");
+					tableElement.firstElementChild.appendChild(trElement);
+					trElement.setAttribute("id", "no-viewer-list-table-tr-" + count);
+					var tdElementForNo = document.createElement("td");
+					trElement.appendChild(tdElementForNo);
+					tdElementForNo.appendChild(document.createTextNode(count))
+					var tdElementForUserId = document.createElement("td");
+					tdElementForUserId.setAttribute("id", "no-viewer-list-table-td-userId-" + count);
+					trElement.appendChild(tdElementForUserId);
+					tdElementForUserId.appendChild(document.createTextNode(users[user].userId));
+					var tdElementForUserName = document.createElement("td");
+					trElement.appendChild(tdElementForUserName);
+					tdElementForUserName.appendChild(document.createTextNode(users[user].userName));
+					var tdElementForAddCheckBox = document.createElement("td");
+					trElement.appendChild(tdElementForAddCheckBox);
+					var checkBoxElement = document.createElement("input")
+					checkBoxElement.setAttribute("type", "checkbox");
+					checkBoxElement.setAttribute("name", count);
+					checkBoxElement.setAttribute("value", "off");
+					checkBoxElement.setAttribute("autocomplete", "off");
+					checkBoxElement.addEventListener("change", function(event){setHiddenParameterForAddUserId(event);}, false);
+					tdElementForAddCheckBox.appendChild(checkBoxElement);
+					count++
+				}
+			}else if(xhr.status == 400){
+				var text = xhr.responseText;
+			}
+		}
+	}
 	
+	xhr.open('GET', 'http://localhost:8080/wedding/not-infomation-viewers?infoId=' + infoId);
+	xhr.setRequestHeader('If-Modified-Since', 'Thu, 01 Jun 1970 00:00:00 GMT');
+	xhr.send(null);
+
+}
 	
+function setHiddenParameterForAddUserId(event){
+
+	var checkbox = event.currentTarget;
+	var parentNode = event.currentTarget.parentNode;
+	var tdForUserIdElement = document.getElementById("no-viewer-list-table-td-userId-" + checkbox.name);
 	
+	if(checkbox.value == "on"){
+        var userIdHiddenElement = document.getElementById("checkedAddUsers[" + checkbox.name + "].userId");
+        parentNode.removeChild(userIdHiddenElement);
+        checkbox.value = "off";
+	}else{
+		var userIdHiddenElement = document.createElement("input");
+		userIdHiddenElement.setAttribute("type", "hidden");
+		userIdHiddenElement.setAttribute("id", "checkedAddUsers[" + checkbox.name + "].userId");
+		userIdHiddenElement.setAttribute("name", "checkedAddUsers[" + checkbox.name + "].userId");
+		userIdHiddenElement.setAttribute("value", tdForUserIdElement.innerText);
+		
+		parentNode.appendChild(userIdHiddenElement);
+        checkbox.value = "on";
+	}
+}
+
+function setHiddenParameterForDeleteUserId(event){
+
+	var checkbox = event.currentTarget;
+	var parentNode = event.currentTarget.parentNode;
+	var hiddenUserIdElement = document.getElementById("viewUsers[" + checkbox.name + "].userId");
+	
+	if(checkbox.value == "on"){
+        var userIdHiddenElement = document.getElementById("checkedDeleteUsers[" + checkbox.name + "].userId");
+        parentNode.removeChild(userIdHiddenElement);
+        checkbox.value = "off";
+	}else{
+		var userIdHiddenElement = document.createElement("input");
+		userIdHiddenElement.setAttribute("type", "hidden");
+		userIdHiddenElement.setAttribute("id", "checkedDeleteUsers[" + checkbox.name + "].userId");
+		userIdHiddenElement.setAttribute("name", "checkedDeleteUsers[" + checkbox.name + "].userId");
+		userIdHiddenElement.setAttribute("value", hiddenUserIdElement.value);
+		
+		parentNode.appendChild(userIdHiddenElement);
+        checkbox.value = "on";
+	}
+}
 

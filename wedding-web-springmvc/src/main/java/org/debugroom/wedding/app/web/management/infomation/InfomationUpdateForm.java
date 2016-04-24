@@ -30,4 +30,10 @@ public class InfomationUpdateForm implements Serializable{
 	@Valid
 	private List<User> noAccessedUsers;
 
+	@Valid
+	private List<User> checkedAddUsers;
+	
+	@Valid
+	private List<User> checkedDeleteUsers;
+	
 }

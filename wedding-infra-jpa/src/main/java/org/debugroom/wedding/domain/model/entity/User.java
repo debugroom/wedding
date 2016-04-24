@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The persistent class for the usr database table.
@@ -48,26 +49,32 @@ public class User implements Serializable {
 
 	//bi-directional one-to-one association to Address
 	@OneToOne(optional = false, mappedBy="usr" , cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@JsonIgnore
 	private Address address;
 
 	//bi-directional many-to-one association to Affiliation
 	@OneToMany(mappedBy="usr")
+	@JsonIgnore
 	private Set<Affiliation> affiliations;
 
 	//bi-directional many-to-one association to Credential
 	@OneToMany(mappedBy="usr", cascade=CascadeType.ALL)
+	@JsonIgnore
 	private Set<Credential> credentials;
 
 	//bi-directional many-to-one association to Email
 	@OneToMany(mappedBy="usr",  cascade=CascadeType.ALL)
+	@JsonIgnore
 	private Set<Email> emails;
 
 	//bi-directional many-to-one association to Notification
 	@OneToMany(mappedBy="usr")
+	@JsonIgnore
 	private Set<Notification> notifications;
 
 	//bi-directional many-to-one association to RequestStatus
 	@OneToMany(mappedBy="usr")
+	@JsonIgnore
 	private Set<RequestStatus> requestStatuses;
 
 	//bi-directional many-to-many association to Group
@@ -81,6 +88,7 @@ public class User implements Serializable {
 			@JoinColumn(name="group_id", nullable=false)
 			}
 		)
+	@JsonIgnore
 	private Set<Group> grps;
 
 	public User() {

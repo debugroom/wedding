@@ -3,6 +3,7 @@ package org.debugroom.wedding.domain.repository.common;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -13,7 +14,8 @@ import org.debugroom.wedding.domain.model.entity.User;
  * @author org.debugroom
  *
  */
-public interface UserRepository extends JpaRepository<User, String>{
+public interface UserRepository extends JpaRepository<User, String>
+											, JpaSpecificationExecutor<User>{
 
 	long countByUserId(String userId);
 	
@@ -27,5 +29,6 @@ public interface UserRepository extends JpaRepository<User, String>{
 			+ "ORDER BY u.userId")
 	public List<User> findUsersByInfoIdAndIsAccessed(
 			@Param("infoId") String infoId, @Param("isAccessed") boolean isAccessed);
+	
 	
 }

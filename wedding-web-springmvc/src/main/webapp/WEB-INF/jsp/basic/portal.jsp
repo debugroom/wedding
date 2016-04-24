@@ -38,7 +38,7 @@
     	   <c:forEach var="infomation" items="${portalInfoOutput.infomationList}" varStatus="status">
     	           <tr>
     	               <td><fmt:formatDate value="${portalInfoOutput.user.lastLoginDate}" pattern="yyyy-MM-dd" /> </td>
-    	               <td><a href="${pageContext.request.contextPath}${infomation.infoPagePath}">${infomation.title}</a></td>
+    	               <td><a href="${pageContext.request.contextPath}/${infomation.infoPagePath}">${infomation.title}</a></td>
     	           </tr>
     	   </c:forEach>
     	       </tbody>

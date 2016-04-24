@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +31,7 @@ import org.debugroom.wedding.domain.model.entity.NotificationPK;
 import org.debugroom.wedding.domain.model.entity.User;
 import org.debugroom.wedding.domain.repository.basic.InfomationRepository;
 import org.debugroom.wedding.domain.repository.basic.NotificationRepository;
+import org.debugroom.wedding.domain.repository.common.FindNotViewInfomationUsersByInfoId;
 import org.debugroom.wedding.domain.repository.common.UserRepository;
 import org.debugroom.wedding.domain.service.common.UpdateResult;
 import org.debugroom.wedding.domain.service.common.UserSharedService;
@@ -76,8 +78,10 @@ public class InfomationManagementServiceImpl implements InfomationManagementServ
 	}
 
 	@Override
-	public UpdateResult<InfomationDetail> updateInfomationService(
-			Infomation infomation, String rootPathForMessage, String messageBody) throws BusinessException {
+	public UpdateResult<InfomationDetail> updateInfomation(
+		InfomationDraft infomationDraft, String rootPathForMessage) throws BusinessException {
+		
+		Infomation infomation = infomationDraft.getInfomation();
 		
 		UpdateResult<InfomationDetail> updateResult = new UpdateResult<InfomationDetail>();
 		
@@ -100,14 +104,14 @@ public class InfomationManagementServiceImpl implements InfomationManagementServ
 			updateParamList.add("infomation.releaseDate");
 		}
 		
-		if(null != messageBody){
+		if(null != infomationDraft.getMessageBody()){
 			File file = new File(new StringBuilder()
 										.append(rootPathForMessage)
 										.append(domainProperties.getInfoRootPath())
 										.append(infomation.getInfoPagePath())
 										.toString());
 			try {
-				FileUtils.writeStringToFile(file, messageBody, "UTF-8");
+				FileUtils.writeStringToFile(file, infomationDraft.getMessageBody(), "UTF-8");
 			} catch (IOException e) {
 				throw new BusinessException(
 						"infomationManagementService.error.0001", e, infomation.getInfoId());
@@ -116,7 +120,56 @@ public class InfomationManagementServiceImpl implements InfomationManagementServ
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("infomation.messageBody");
 		}
-		
+			
+		if(null != infomationDraft.getExcludeUsers()){
+			for(User excludeUser : infomationDraft.getExcludeUsers()){
+				if(null != excludeUser.getUserId()){
+					/*
+					Notification notification = notificationRepository.findOne(
+							NotificationPK.builder()
+											.infoId(infomation.getInfoId())
+											.userId(excludeUser.getUserId())
+											.build()
+							);
+					notificationRepository.delete(notification);
+					 */
+					Iterator<Notification> iterator = updateTargetInfomation.getNotifications().iterator();
+					while(iterator.hasNext()){
+						Notification notification = iterator.next();
+						if(excludeUser.getUserId().equals(notification.getId().getUserId())){
+							iterator.remove();
+						}
+					}
+					updateParamList.add(new StringBuilder()
+												.append("excludeUser-")
+												.append(excludeUser.getUserId())
+												.toString());
+				}
+			}
+		}	
+
+		if(null != infomationDraft.getViewUsers()){
+			for(User viewUser : infomationDraft.getViewUsers()){
+				if(null != viewUser.getUserId()){
+					updateTargetInfomation.addNotification(Notification.builder()
+															.id(NotificationPK
+																	.builder()
+																	.infoId(infomation.getInfoId())
+																	.userId(viewUser.getUserId())
+																	.build())
+															.lastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()))
+															.ver(0)
+															.build());
+					updateParamList.add(new StringBuilder()
+												.append("viewUser-")
+												.append(viewUser.getUserId())
+												.toString());
+				}
+			}
+			updateTargetInfomationDetail.setNoAccessedUsers(userRepository.findAll());
+		}
+
+
 		if(updateParamList.size() != 0){
 			notificationRepository.updateIsAccessedByInfoId(false, infomation.getInfoId());
 		}
@@ -209,6 +262,15 @@ public class InfomationManagementServiceImpl implements InfomationManagementServ
 	@Override
 	public List<User> getUsers() {
 		return userSharedService.getUsers();
+	}
+
+	@Override
+	public List<User> getNoViewers(String infoId) {
+		FindNotViewInfomationUsersByInfoId spec = FindNotViewInfomationUsersByInfoId
+														.builder()
+														.infoId(infoId)
+														.build();
+		return userRepository.findAll(spec);
 	}
 
 }

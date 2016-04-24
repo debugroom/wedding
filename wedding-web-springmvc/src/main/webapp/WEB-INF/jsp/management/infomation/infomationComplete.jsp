@@ -49,6 +49,8 @@
             </table>
           </c:when>
         </c:choose>
+      </c:forEach>
+      <c:forEach items="${updateResult.updateParamList}" var="updateParam" varStatus="status">
         <c:choose>
           <c:when test="${updateParam == 'infomation.messageBody'}">
             <h3>メッセージ本文</h3>
@@ -57,6 +59,81 @@
               </div>
           </c:when>
         </c:choose>
-     </c:forEach>
+      </c:forEach>
+     <c:set var="userCount" value="0"/>
+      <c:forEach items="${updateResult.updateParamList}" var="updateParam" varStatus="status">
+        <c:choose>
+          <c:when test="${fn:startsWith(updateParam, 'viewUser-')}">
+            <c:if test="${userCount == 0}">
+              <table>
+                <tbody>
+                  <tr>
+                    <th>No</th>
+                    <th>ユーザID</th>
+                    <th>ユーザ名</th>
+                    <th></th>
+                  </tr>
+            </c:if>
+              <c:forEach items="${updateResult.afterEntity.accessedUsers}" var="user" varStatus="status1">
+                <c:if test="${user.userId == fn:substringAfter(updateParam, '-')}">
+                  <tr>
+                    <td>${userCount+1}</td>
+                    <td>${user.userId}</td>
+                    <td>${user.userName}</td>
+                    <td>追加</td>
+                  </tr>
+                </c:if>
+              </c:forEach>
+              <c:forEach items="${updateResult.afterEntity.noAccessedUsers}" var="user" varStatus="status1">
+                <c:if test="${user.userId == fn:substringAfter(updateParam, '-')}">
+                  <tr>
+                    <td>${userCount+1}</td>
+                    <td>${user.userId}</td>
+                    <td>${user.userName}</td>
+                    <td>追加</td>
+                  </tr>
+                </c:if>
+              </c:forEach>
+          <c:set var="userCount" value="${userCount+1}"/>
+          </c:when>
+          <c:when test="${fn:startsWith(updateParam, 'excludeUser-')}">
+            <c:if test="${userCount == 0}">
+              <table>
+                <tbody>
+                  <tr>
+                    <th>No</th>
+                    <th>ユーザID</th>
+                    <th>ユーザ名</th>
+                    <th></th>
+                  </tr>
+              </c:if>
+              <c:forEach items="${updateResult.beforeEntity.accessedUsers}" var="user" varStatus="status1">
+                <c:if test="${user.userId == fn:substringAfter(updateParam, '-')}">
+                  <tr>
+                    <td>${userCount+1}</td>
+                    <td>${user.userId}</td>
+                    <td>${user.userName}</td>
+                    <td>削除</td>
+                  </tr>
+                </c:if>
+              </c:forEach>
+              <c:forEach items="${updateResult.beforeEntity.noAccessedUsers}" var="user" varStatus="status1">
+                <c:if test="${user.userId == fn:substringAfter(updateParam, '-')}">
+                  <tr>
+                    <td>${userCount+1}</td>
+                    <td>${user.userId}</td>
+                    <td>${user.userName}</td>
+                    <td>削除</td>
+                  </tr>
+                </c:if>
+              </c:forEach>
+          <c:set var="userCount" value="${userCount+1}"/>
+          </c:when>
+        </c:choose>
+      </c:forEach>
+      <c:if test="${userCount > 0}">
+                </tbody>
+              </table>
+      </c:if>
    </div>
  </div>

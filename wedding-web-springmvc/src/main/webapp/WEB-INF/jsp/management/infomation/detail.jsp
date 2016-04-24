@@ -84,7 +84,7 @@
             <div class="centering">
               <button id="messageBody-button" name="messageBody-button" class="centering-button" type="button" value="messageBody">変更</button>
             </div>
-            <h3 id="contents3">アクセス状況</h3>
+            <h3 id="contents3">ユーザアクセス</h3>
             <table>
               <tbody>
                 <tr>
@@ -92,39 +92,50 @@
                   <th>ユーザID</th>
                   <th>ユーザ名</th>
                   <th>アクセス状況</th>
+                  <th>削除</th>
                 </tr>
                 <c:set var="userCount" value="0" />
                 <c:forEach items="${infomationDetail.noAccessedUsers}" var="user" varStatus="status">
                 <tr>
-                  <td>${status.index+1}</td>
+                  <td>${userCount+1}</td>
                   <td>
                     <c:out value="${user.userId}" />
-                    <input id="noAccessedUsers[${status.index}].userId" name="noAccessedUsers[${status.index}].userId" type="hidden" value='<c:out value="${user.userId}" />'>
+                    <input id="viewUsers[${userCount}].userId" name="noAccessedUsers[${status.index}].userId" type="hidden" value='<c:out value="${user.userId}" />'>
                   </td>
                   <td>
                     <c:out value="${user.userName}" />
-                    <input id="noAccessedUsers[${status.index}].userName" name="noAccessedUsers[${status.index}].userName" type="hidden" value='<c:out value="${user.userName}" />'>
+                    <input id="viewUsers[${userCount}].userName" name="noAccessedUsers[${status.index}].userName" type="hidden" value='<c:out value="${user.userName}" />'>
                   </td>
                   <td>未</td>
+                  <td>
+                    <input type="checkbox" name="${userCount}" value="off" autocomplete="off" />
+                  </td>
                 </tr>
-                  <c:set var="userCount" value="${userCount+1}" />
+                <c:set var="userCount" value="${userCount+1}" />
                 </c:forEach>
                 <c:forEach items="${infomationDetail.accessedUsers}" var="user" varStatus="status">
                 <tr>
-                  <td>${userCount+status.index+1}</td>
+                  <td>${userCount+1}</td>
                   <td>
                     <c:out value="${user.userId}" />
-                    <input id="accessedUsers[${status.index}].userId" name="accessedUsers[${status.index}].userId" type="hidden" value='<c:out value="${user.userId}" />'>
+                    <input id="viewUsers[${userCount}].userId" name="accessedUsers[${status.index}].userId" type="hidden" value='<c:out value="${user.userId}" />'>
                   </td>
                   <td>
                     <c:out value="${user.userName}" />
-                    <input id="accessedUsers[${status.index}].userName" name="accessedUsers[${status.index}].userName" type="hidden" value='<c:out value="${user.userName}" />'>
+                    <input id="accessedUsers[${userCount}].userName" name="accessedUsers[${status.index}].userName" type="hidden" value='<c:out value="${user.userName}" />'>
                   </td>
                   <td>アクセス済</td>
+                  <td>
+                    <input type="checkbox" name="${userCount}" value="off" autocomplete="off" />
+                  </td>
                 </tr>
+                <c:set var="userCount" value="${userCount+1}" />
                 </c:forEach>
               </tbody>
             </table>
+            <div class="centering">
+              <button id="get-not-infomation-viewers-button" type="button" class="centering-button" >追加</button>
+            </div>
             <form:button class="main-button" name="confirmUpdate" >更新を確定する</form:button>
             </form:form>
           </div>

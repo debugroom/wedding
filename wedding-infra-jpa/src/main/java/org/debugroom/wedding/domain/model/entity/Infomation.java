@@ -61,7 +61,7 @@ public class Infomation implements Serializable {
 	private Set<Group> grps;
 
 	//bi-directional many-to-one association to Notification
-	@OneToMany(mappedBy="infomation", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="infomation", cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<Notification> notifications;
 
 	public Infomation() {

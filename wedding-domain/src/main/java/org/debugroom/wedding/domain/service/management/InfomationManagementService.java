@@ -16,9 +16,8 @@ public interface InfomationManagementService {
 
 	public InfomationDetail getInfomationDetail(String infoId);
 	
-	public UpdateResult<InfomationDetail> updateInfomationService(
-			Infomation infomation, String rootPathForMessage, 
-			String messageBody) throws BusinessException;
+	public UpdateResult<InfomationDetail> updateInfomation(
+			InfomationDraft infomationDraft, String rootPathForMessage) throws BusinessException;
 
 	public InfomationDraft createInfomationDraft(InfomationDraft infomationDraft,
 			String rootPathForMessage) throws BusinessException;
@@ -27,4 +26,6 @@ public interface InfomationManagementService {
 
 	public List<User> getUsers();
 		
+	public List<User> getNoViewers(String infoId);
+
 }

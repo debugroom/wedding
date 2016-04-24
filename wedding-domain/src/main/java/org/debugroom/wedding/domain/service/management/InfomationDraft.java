@@ -24,5 +24,6 @@ public class InfomationDraft implements Serializable{
 	private String infoName;
 	private String messageBody;
 	private List<User> viewUsers;
+	private List<User> excludeUsers;
 
 }

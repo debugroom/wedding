@@ -23,6 +23,7 @@
     <javax.servlet_jstl_version>1.2</javax.servlet_jstl_version>
     <org.apache.commons_commons-lang3_version>3.3.2</org.apache.commons_commons-lang3_version>
     <org.apache.httpcomponents_httpclient_version>4.5.2</org.apache.httpcomponents_httpclient_version>
+    <org.codehaus.jackson_jackson-mapper-asl_version>1.6.3</org.codehaus.jackson_jackson-mapper-asl_version>
     <org.apache.maven.plugins_maven-surefire-plugin_version>2.17</org.apache.maven.plugins_maven-surefire-plugin_version>
     <org.apache.maven.plugins_maven-compiler-plugin_version>3.1</org.apache.maven.plugins_maven-compiler-plugin_version>
     <org.apache.maven.plugins_maven-dependency-plugin_version>2.9</org.apache.maven.plugins_maven-dependency-plugin_version>
@@ -114,6 +115,12 @@
         <version>${javax.inject_javax.inject_version}</version>
       </dependency>
     
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-mapper-asl</artifactId>
+        <version>${org.codehaus.jackson_jackson-mapper-asl_version}</version>
+        <type>provided</type>
+      </dependency>
       <!-- Test -->
       <dependency>
         <groupId>junit</groupId>

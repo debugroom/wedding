@@ -1,0 +1,20 @@
+package org.debugroom.wedding.domain.model.entity;
+
+import java.sql.Timestamp;
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SetAttribute;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value="Dali", date="2016-04-17T19:24:01.756+0900")
+@StaticMetamodel(Photo.class)
+public class Photo_ {
+	public static volatile SingularAttribute<Photo, String> photoId;
+	public static volatile SingularAttribute<Photo, String> filePath;
+	public static volatile SingularAttribute<Photo, Boolean> isControled;
+	public static volatile SingularAttribute<Photo, Timestamp> lastUpdatedDate;
+	public static volatile SingularAttribute<Photo, Integer> ver;
+	public static volatile SetAttribute<Photo, GroupVisiblePhoto> groupVisiblePhotos;
+	public static volatile SetAttribute<Photo, Message> messages;
+	public static volatile SetAttribute<Photo, Group> grps;
+}
