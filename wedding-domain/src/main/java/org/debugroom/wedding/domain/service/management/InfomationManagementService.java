@@ -28,4 +28,6 @@ public interface InfomationManagementService {
 		
 	public List<User> getNoViewers(String infoId);
 
+	public Infomation deleteInfomation(String infoId);
+	
 }

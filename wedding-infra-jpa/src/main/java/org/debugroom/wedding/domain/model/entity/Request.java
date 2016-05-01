@@ -25,6 +25,9 @@ public class Request implements Serializable {
 	@Column(name="request_id", unique=true, nullable=false, length=4)
 	private String requestId;
 
+	@Column(name="title", length=512)
+	private String title;
+	
 	@Column(name="last_updated_date")
 	private Timestamp lastUpdatedDate;
 
@@ -38,7 +41,7 @@ public class Request implements Serializable {
 	private Integer ver;
 
 	//bi-directional many-to-one association to RequestStatus
-	@OneToMany(mappedBy="request")
+	@OneToMany(mappedBy="request", cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<RequestStatus> requestStatuses;
 
 	public Request() {
@@ -104,6 +107,14 @@ public class Request implements Serializable {
 		requestStatus.setRequest(null);
 
 		return requestStatus;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

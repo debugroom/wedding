@@ -36,7 +36,7 @@
               	<td><c:out value="${user.userId}" /></td>
               	<td><c:out value="${user.loginId}" /></td>
               	<td><c:out value="${user.userName}" /></td>
-              	<td><fmt:formatDate value="${user.lastLoginDate}" pattern="yyyy-MM-dd hh:mm:ss" /></td>
+              	<td><fmt:formatDate value="${user.lastLoginDate}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
               	<td>
                     <form id="user_${user.userId}" action="${pageContext.request.contextPath}/management/user/${user.userId}" >
               	      <button id="edit-update-button-${user.userId}" name="type" type="submit" value="update" >変更</button>

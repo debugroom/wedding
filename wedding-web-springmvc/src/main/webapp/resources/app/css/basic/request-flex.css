@@ -1,0 +1,60 @@
+h1 {
+	text-align: center;
+}
+
+h2 {
+    float : none;
+    padding-bottom : 0 0 15px 0;
+    border-bottom  : solid 1px #888888;
+}
+
+
+.panel button{
+    width : 100px;
+    height : 40px;
+    font-size : 0.8em;
+    margin :  5px 10px 5px;
+    padding : 5px 25px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+.panel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    
+}
+
+.panel .alternative-button{
+    display: block;
+    text-align :center;
+    margin : 20px auto 40px; 
+}
+
+.panel .alternative-first-button {
+    font-size : 1.2em;
+    width : 200px;
+    height : 60px;
+}
+
+.panel .alternative-last-button {
+    font-size : 1.2em;
+    width : 200px;
+    height : 60px;
+}
+
+.panel a{
+	text-decoration:none;
+}

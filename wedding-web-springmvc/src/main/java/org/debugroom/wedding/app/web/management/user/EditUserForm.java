@@ -70,5 +70,6 @@ public class EditUserForm implements Serializable{
 	private List<Group> grps; 
 	
 	@NotNull(groups = {GetUser.class})
+	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*", groups={GetUser.class})
 	private String type;
 }

@@ -7,7 +7,7 @@
 <link rel="stylesheet"
     href="${pageContext.request.contextPath}/resources/app/css/flex.css">
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/resources/app/css/management/user/saveComplete-flex.css">
+    href="${pageContext.request.contextPath}/resources/app/css/management/infomation/saveComplete-flex.css">
 </head>
 <body>
   <c:import url="/WEB-INF/jsp/common/header.jsp" />

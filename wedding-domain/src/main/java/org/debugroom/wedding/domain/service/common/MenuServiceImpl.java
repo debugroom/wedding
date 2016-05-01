@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.model.entity.Menu;
 import org.debugroom.wedding.domain.model.entity.User;
-
-import org.debugroom.wedding.domain.service.common.UserSharedService;
 import org.debugroom.wedding.domain.repository.common.MenuRepository;
+
 
 @Service("menuService")
 public class MenuServiceImpl implements MenuService{
@@ -28,9 +27,7 @@ public class MenuServiceImpl implements MenuService{
 		} catch (BusinessException e) {
 			throw new BusinessException("userSharedService.error.0002");
 		}
-		List<Menu> menuList = menuRepository
-				.findByAuthorityLevelLessThanOrderByMenuIdAsc(
-						user.getAuthorityLevel());
+		List<Menu> menuList = menuRepository.findByAuthorityLevelLessThanOrderByMenuIdAsc(user.getAuthorityLevel());
 		return menuList;
 	}
 }

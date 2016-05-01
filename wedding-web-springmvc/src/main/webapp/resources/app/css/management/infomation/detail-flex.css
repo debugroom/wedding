@@ -35,3 +35,7 @@
 	text-align: center;
 	margin : 10px auto 30px;
 }
+
+.formPanel a{
+	text-decoration:none;
+}

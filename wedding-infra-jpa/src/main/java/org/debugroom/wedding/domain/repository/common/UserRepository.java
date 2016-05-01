@@ -2,6 +2,7 @@ package org.debugroom.wedding.domain.repository.common;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +18,7 @@ import org.debugroom.wedding.domain.model.entity.User;
 public interface UserRepository extends JpaRepository<User, String>
 											, JpaSpecificationExecutor<User>{
 
+	@Cacheable(cacheNames="existUser")
 	long countByUserId(String userId);
 	
 	long countByloginId(String loginId);

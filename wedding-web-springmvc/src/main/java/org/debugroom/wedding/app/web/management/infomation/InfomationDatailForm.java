@@ -28,5 +28,8 @@ public class InfomationDatailForm implements Serializable{
 	@Pattern(regexp = "[0-9]*", groups={GetInfomation.class})
 	private String infoId;
 
+	@NotNull(groups = {GetInfomation.class})
+	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*", groups = {GetInfomation.class})
+	private String type;
 
 }

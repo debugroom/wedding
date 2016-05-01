@@ -39,6 +39,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.web.common.model.UserSearchCriteria;
 import org.debugroom.wedding.app.web.common.model.UserSearchResult;
+import org.debugroom.wedding.app.web.common.model.UserSearchCriteria.GetNotInfomationViewers;
 import org.debugroom.wedding.app.web.management.infomation.InfomationDatailForm.GetInfomation;
 import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.ConfirmInfomation;
 import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.SaveInfomation;
@@ -114,12 +115,18 @@ public class InfomationManagementController implements ServletContextAware{
 		
 		model.addAttribute(infomationManagementService
 				.getInfomationDetail(infomationDetailForm.getInfoId()));
+		
+		if("detail".equals(infomationDetailForm.getType())){
+			return "management/infomation/detail";
+		} else{
+			return "management/infomation/delete";
+		}
 
-		return "management/infomation/detail";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value="/not-infomation-viewers", params="infoId")
-	public ResponseEntity<UserSearchResult> getNotInfomationViewers(@Validated UserSearchCriteria userSearchCriteria,
+	public ResponseEntity<UserSearchResult> getNotInfomationViewers(
+			@Validated(GetNotInfomationViewers.class) UserSearchCriteria userSearchCriteria,
 			Errors errors, Locale locale){
 		
 		String infoId = userSearchCriteria.getInfoId();
@@ -218,7 +225,7 @@ public class InfomationManagementController implements ServletContextAware{
 		}
 
 		if(!"save".equals(newInfomationForm.getType())){
-			model.addAttribute("infomation", newInfomationForm);
+			model.addAttribute(newInfomationForm);
 			return newInfomationForm(model);
 		}
 
@@ -247,6 +254,36 @@ public class InfomationManagementController implements ServletContextAware{
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value="/management/infomation/delete/{infoId}")
+	public String deleteConfirm(@Validated DeleteInfomationForm deleteInfomationForm,
+			BindingResult bindingResult, Model model,
+			RedirectAttributes redirectAttributes){
+
+		if(bindingResult.hasErrors()){
+			return "common/error";
+		}
+
+		if(!"delete".equals(deleteInfomationForm.getType())){
+			return "redirect:/management/infomation/portal";
+		}
+		
+		redirectAttributes.addFlashAttribute(
+				infomationManagementService.deleteInfomation(
+						deleteInfomationForm.getInfoId()));
+
+		return new StringBuilder().append("redirect:")
+					.append(deleteInfomationForm.getInfoId())
+					.append("?complete")
+					.toString();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET,
+			value="/management/infomation/delete/{infoId}",
+			params= "complete")
+	public String deleteComplete(){
+		return "management/infomation/deleteComplete";
 	}
 
 }

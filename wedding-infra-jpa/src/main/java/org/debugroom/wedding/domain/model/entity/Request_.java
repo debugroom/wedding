@@ -6,10 +6,11 @@ import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2016-04-17T19:24:01.757+0900")
+@Generated(value="Dali", date="2016-04-27T21:14:51.720+0900")
 @StaticMetamodel(Request.class)
 public class Request_ {
 	public static volatile SingularAttribute<Request, String> requestId;
+	public static volatile SingularAttribute<Request, String> title;
 	public static volatile SingularAttribute<Request, Timestamp> lastUpdatedDate;
 	public static volatile SingularAttribute<Request, Timestamp> registratedDate;
 	public static volatile SingularAttribute<Request, String> requestContents;

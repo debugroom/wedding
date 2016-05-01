@@ -29,9 +29,9 @@ import org.debugroom.wedding.domain.model.entity.Infomation;
 import org.debugroom.wedding.domain.model.entity.Notification;
 import org.debugroom.wedding.domain.model.entity.NotificationPK;
 import org.debugroom.wedding.domain.model.entity.User;
+import org.debugroom.wedding.domain.repository.basic.FindNotViewInfomationUsersByInfoId;
 import org.debugroom.wedding.domain.repository.basic.InfomationRepository;
 import org.debugroom.wedding.domain.repository.basic.NotificationRepository;
-import org.debugroom.wedding.domain.repository.common.FindNotViewInfomationUsersByInfoId;
 import org.debugroom.wedding.domain.repository.common.UserRepository;
 import org.debugroom.wedding.domain.service.common.UpdateResult;
 import org.debugroom.wedding.domain.service.common.UserSharedService;
@@ -90,18 +90,21 @@ public class InfomationManagementServiceImpl implements InfomationManagementServ
 		InfomationDetail beforeUpdate = mapper.map(updateTargetInfomationDetail, InfomationDetail.class, 
 				"infomationDetailMappingExcludingUserRelatedEntity");
 
+		boolean isChangedInfomation = false;
 		List<String> updateParamList = new ArrayList<String>();
 		
 		if(!updateTargetInfomation.getTitle().equals(infomation.getTitle())){
 			updateTargetInfomation.setTitle(infomation.getTitle());
 			updateTargetInfomation.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("infomation.title");
+			isChangedInfomation = true;
 		}
 		
 		if(!updateTargetInfomation.getReleaseDate().toString().equals(infomation.getReleaseDate().toString())){
 			updateTargetInfomation.setReleaseDate(infomation.getReleaseDate());
 			updateTargetInfomation.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("infomation.releaseDate");
+			isChangedInfomation = true;
 		}
 		
 		if(null != infomationDraft.getMessageBody()){
@@ -119,6 +122,7 @@ public class InfomationManagementServiceImpl implements InfomationManagementServ
 			updateTargetInfomation.setLastUpdatedDate(
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 			updateParamList.add("infomation.messageBody");
+			isChangedInfomation = true;
 		}
 			
 		if(null != infomationDraft.getExcludeUsers()){
@@ -170,7 +174,7 @@ public class InfomationManagementServiceImpl implements InfomationManagementServ
 		}
 
 
-		if(updateParamList.size() != 0){
+		if(isChangedInfomation){
 			notificationRepository.updateIsAccessedByInfoId(false, infomation.getInfoId());
 		}
 		
@@ -271,6 +275,13 @@ public class InfomationManagementServiceImpl implements InfomationManagementServ
 														.infoId(infoId)
 														.build();
 		return userRepository.findAll(spec);
+	}
+
+	@Override
+	public Infomation deleteInfomation(String infoId) {
+		Infomation deleteInfomation = infomationRepository.findOne(infoId);
+		infomationRepository.delete(deleteInfomation);
+		return deleteInfomation;
 	}
 
 }

@@ -16,6 +16,8 @@ import lombok.Builder;
 @Builder
 public class InfomationDetail implements Serializable{
 
+	private static final long serialVersionUID = 5739691988984782214L;
+
 	public InfomationDetail(){
 	}
 

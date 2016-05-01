@@ -47,6 +47,9 @@ function showUpdateDialog(event){
 		case "infomation.releaseDate" :
 			inputElement.setAttribute("type", "text");
 			break;
+		case "request.title" :
+			inputElement.setAttribute("type", "text");
+			break;
 	}
 	
 	//Formのtype属性がfile以外の場合は、現在入力されているパラメータをhiddenから取得してフォームに設定する。

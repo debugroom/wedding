@@ -257,3 +257,25 @@ INSERT INTO AFFILIATION VALUES('0000000004', '00000016',  0, '2015-01-01 00:00:0
 INSERT INTO AFFILIATION VALUES('0000000004', '00000017',  0, '2015-01-01 00:00:00.0');
 INSERT INTO AFFILIATION VALUES('0000000004', '00000018',  0, '2015-01-01 00:00:00.0');
 INSERT INTO AFFILIATION VALUES('0000000004', '00000019',  0, '2015-01-01 00:00:00.0');
+
+INSERT INTO REQUEST VALUES ('0000', '結婚式の事前出席確認', '<p>ご多用の中、恐縮に存じますが、結婚式にもご参席賜りたく存じます。</p><p>ご列席いただける場合は、下記のご出席ボタンにてご一報いただきたく存じます。後日、正式にご案内を送らせていただきます。</p> <p>なお、案内のご送付につき、お手数ですが、プロフィールよりご住所の登録をお願いいたします。</p> <div class="alternative-button"><button id="request-button" class="alternative-first-button" name="request.response" type="submit" value="true">ご出席</button><button id="request-button" class="alternative-last-button" name="request.response" type="submit" value="false">ご欠席</button></div>', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST VALUES ('0001', '披露宴の事前出席確認', '<p>ご多用の中、恐縮に存じますが、披露宴にもご参席賜りたく存じます。</p><p>ご列席いただける場合は、下記のご出席ボタンにてご一報いただきたく存じます。後日、正式にご案内を送らせていただきます。</p> <p>なお、案内のご送付につき、お手数ですが、プロフィールよりご住所の登録をお願いいたします。</p> <div class="alternative-button"><button id="request-button" class="alternative-first-button" name="request.response" type="submit" value="true">ご出席</button><button id="request-button" class="alternative-last-button" name="request.response" type="submit" value="false">ご欠席</button></div>', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST VALUES ('0002', '宿泊利用確認', '<p>遠方よりお越しの方は、宿泊先を手配致します。ご利用の際は下記ボタンにより、利用有無のご回答をお願い致します。</p> <div class="alternative-button"><button id="request-button" class="alternative-first-button" name="request.response" type="submit" value="true">利用する</button><button id="request-button" class="alternative-last-button" name="request.response" type="submit" value="false">利用しない</button></div>', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST VALUES ('0003', '2次会の事前出席確認', '<p>ご多用の中、恐縮に存じますが、結婚式2次会にもご参席賜りたく存じます。</p><p>大まかな人数把握のため、ご列席いただける場合は、下記のご出席ボタンにてご一報いただきたく存じます。後日、正式にご案内を送らせていただきます。</p> <p>なお、案内のご送付につき、お手数ですが、プロフィールよりメール登録をお願いいたします。</p> <div class="alternative-button"><button id="request-button" class="alternative-first-button" name="request.response" type="submit" value="true">ご出席</button><button id="request-button" class="alternative-last-button" name="request.response" type="submit" value="false">ご欠席</button></div>', '2015-01-01 00:00:00.0', 0, '2015-01-01 00:00:00.0');
+
+INSERT INTO REQUEST_STATUS VALUES ('0000', '00000000', true, true, 'APPROVE', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0000', '00000001', true, false, 'APPROVE', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0000', '00000002', false, true, '', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0000', '00000003', false, false, '', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0001', '00000000', true, true, 'APPROVE', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0001', '00000001', true, false, 'APPROVE', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0001', '00000002', false, true, '', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0001', '00000003', false, false, '', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0002', '00000000', true, true, 'APPROVE', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0002', '00000001', true, false, 'APPROVE', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0002', '00000002', false, true, '', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0002', '00000003', false, false, '', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0003', '00000000', true, true, 'APPROVE', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0003', '00000001', true, false, 'APPROVE', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0003', '00000002', false, true, '', 0, '2015-01-01 00:00:00.0');
+INSERT INTO REQUEST_STATUS VALUES ('0003', '00000003', false, false, '', 0, '2015-01-01 00:00:00.0');

@@ -26,6 +26,9 @@ public class RequestStatus implements Serializable {
 	@Column(name="is_answered")
 	private Boolean isAnswered;
 
+	@Column(name="is_approved")
+	private Boolean isApproved;
+
 	@Column(name="last_updated_date")
 	private Timestamp lastUpdatedDate;
 

@@ -24,7 +24,7 @@
            </div>
  -->
     	       <h2>${portalInfoOutput.user.userName} さん</h2>
-    	       <p>前回ログイン日時：<fmt:formatDate value="${portalInfoOutput.user.lastLoginDate}" pattern="yyyy-MM-dd hh:mm:ss" /> </p>
+    	       <p>前回ログイン日時：<fmt:formatDate value="${portalInfoOutput.user.lastLoginDate}" pattern="yyyy-MM-dd HH:mm:ss" /> </p>
         <div class="infomationPanel">
     	       <h3>お知らせ</h3>
     	   <table>
@@ -38,7 +38,7 @@
     	   <c:forEach var="infomation" items="${portalInfoOutput.infomationList}" varStatus="status">
     	           <tr>
     	               <td><fmt:formatDate value="${portalInfoOutput.user.lastLoginDate}" pattern="yyyy-MM-dd" /> </td>
-    	               <td><a href="${pageContext.request.contextPath}/${infomation.infoPagePath}">${infomation.title}</a></td>
+    	               <td><a href="${pageContext.request.contextPath}/infomation/${infomation.infoId}"><c:out value="${infomation.title}"/></a></td>
     	           </tr>
     	   </c:forEach>
     	       </tbody>

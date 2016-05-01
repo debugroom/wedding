@@ -61,6 +61,7 @@ public class NewInfomationForm implements Serializable{
 	@Future(groups = {ConfirmInfomation.class, SaveInfomation.class})
 	private Date releaseDate;
 
+	@NotNull(groups = {ConfirmInfomation.class, SaveInfomation.class})
 	private String messageBody;
 	
 	@Valid

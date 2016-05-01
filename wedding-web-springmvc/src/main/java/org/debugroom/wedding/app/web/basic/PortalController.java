@@ -4,6 +4,8 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.debugroom.framework.common.exception.BusinessException;
@@ -31,6 +33,26 @@ public class PortalController {
 			e.printStackTrace();
 		}
         return "basic/portal";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/infomation/{infoId}")
+    public String infomation(@Validated Infomation infomation,
+    		BindingResult bindingResult, Model model){
+    	if(bindingResult.hasErrors()){
+    		return portal(model);
+    	}
+    	model.addAttribute(portalService.getInfomation(infomation.getInfoId()));
+    	return "basic/infomation";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/request/{requestId}")
+    public String request(@Validated Request request,
+    		BindingResult bindingResult, Model model){
+    	if(bindingResult.hasErrors()){
+    		return portal(model);
+    	}
+    	model.addAttribute(portalService.getRequest(request.getRequestId()));
+    	return "basic/request";
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/sample")

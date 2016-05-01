@@ -33,7 +33,7 @@
               	<td>${status.index + 1}</td>
               	<td><c:out value="${infomation.infoId}" /></td>
               	<td><c:out value="${infomation.title}" /></td>
-              	<td><fmt:formatDate value="${infomation.releaseDate}" pattern="yyyy-MM-dd hh:mm:ss" /></td>
+              	<td><fmt:formatDate value="${infomation.releaseDate}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
               	<td>
                     <form id="infomation_${infomation.infoId}" action="${pageContext.request.contextPath}/management/infomation/${infomation.infoId}" >
               	      <button id="edit-delete-button-${infomation.infoId}" name="type" type="submit" value="detail" >詳細</button>
@@ -45,7 +45,7 @@
             </tbody>
           </table>
           <form action="${pageContext.request.contextPath}/management/infomation/new">
-            <button id="new-infomation-button" class="main-button" type="submit">インフォメーション新規作成</button>
+            <button id="new-infomation-button" class="main-button" type="submit">新規作成</button>
           </form>
         </div>
      </div>

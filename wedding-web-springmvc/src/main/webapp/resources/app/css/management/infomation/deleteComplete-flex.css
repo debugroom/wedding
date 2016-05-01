@@ -1,0 +1,16 @@
+.panel table {
+     width : 700px;
+}
+.panel th td {
+     width : auto;
+    padding : 5px 20px 5px;
+}
+
+.panel td:nth-child(1){
+    width : 200px;
+    text-align : right;
+}
+
+.panel td:nth-child(2){
+    width : auto;
+}

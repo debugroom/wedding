@@ -8,6 +8,7 @@
   href="${pageContext.request.contextPath}/resources/app/css/flex.css">
 <link rel="stylesheet"
   href="${pageContext.request.contextPath}/resources/app/css/management/infomation/form-flex.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/common/UserTableHelper.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/management/infomation/form.js"></script>
 </head>
 <body>

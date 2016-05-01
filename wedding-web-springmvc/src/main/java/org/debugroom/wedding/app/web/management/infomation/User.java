@@ -5,11 +5,11 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
 import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.ConfirmInfomation;
 import org.debugroom.wedding.app.web.management.infomation.NewInfomationForm.SaveInfomation;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

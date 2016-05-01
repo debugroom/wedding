@@ -17,6 +17,7 @@ public class UserSearchResult {
 	}
 	
 	private String infoId;
+	private String requestId;
 	private List<User> users;
 	private List<String> messages;
 

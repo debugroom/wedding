@@ -6,6 +6,8 @@
 <title>Wedding Portal</title>
 <link rel="stylesheet"
     href="${pageContext.request.contextPath}/resources/app/css/flex.css">
+<link rel="stylesheet"
+  href="${pageContext.request.contextPath}/resources/app/css/management/user/deleteComplete-flex.css">
 </head>
 <body>
   <c:import url="/WEB-INF/jsp/common/header.jsp" />

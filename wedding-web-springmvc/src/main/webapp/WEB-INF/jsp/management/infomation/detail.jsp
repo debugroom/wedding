@@ -9,6 +9,8 @@
 <link rel="stylesheet"
   href="${pageContext.request.contextPath}/resources/app/css/management/infomation/detail-flex.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/common/UpdateDialog.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/common/UpdateTextareaDialog.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/common/UserTableHelper.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/management/infomation/detail.js"></script>
 </head>
 <body>
@@ -48,7 +50,7 @@
               	  <td>
               	    <fmt:formatDate value="${infomationDetail.infomation.registratedDate}" pattern="yyyy/MM/dd hh:mm:ss" />
               	    <form:errors path="infomation.registratedDate" />
-                    <input id="infomation.registratedDate" name="infomation.registratedDate" type="hidden" value='<fmt:formatDate value="${infomationDetail.infomation.registratedDate}" pattern="yyyy-MM-dd hh:mm:ss" />'>
+                    <input id="infomation.registratedDate" name="infomation.registratedDate" type="hidden" value='<fmt:formatDate value="${infomationDetail.infomation.registratedDate}" pattern="yyyy-MM-dd HH:mm:ss" />'>
               	  </td>
               	  <td></td>
                 </tr>
@@ -57,7 +59,7 @@
               	  <td>
               	    <fmt:formatDate value="${infomationDetail.infomation.releaseDate}" pattern="yyyy/MM/dd hh:mm:ss" />
               	    <form:errors path="infomation.releaseDate" />
-                    <input id="infomation.releaseDate" name="infomation.releaseDate" type="hidden" value='<fmt:formatDate value="${infomationDetail.infomation.releaseDate}" pattern="yyyy-MM-dd hh:mm:ss" />'>
+                    <input id="infomation.releaseDate" name="infomation.releaseDate" type="hidden" value='<fmt:formatDate value="${infomationDetail.infomation.releaseDate}" pattern="yyyy-MM-dd HH:mm:ss" />'>
               	  </td>
                   <td><button id="infomation.releaseDate-button" name="infomation.releaseDate-button" type="button" value="infomation.releaseDate">変更</button></td>
                 </tr>
@@ -66,7 +68,7 @@
               	  <td>
               	    <fmt:formatDate value="${infomationDetail.infomation.lastUpdatedDate}" pattern="yyyy/MM/dd hh:mm:ss" />
               	    <form:errors path="infomation.lastUpdatedDate" />
-                    <input id="infomation.lastUpdatedDate" name="infomation.lastUpdatedDate" type="hidden" value='<fmt:formatDate value="${infomationDetail.infomation.lastUpdatedDate}" pattern="yyyy-MM-dd hh:mm:ss" />'>
+                    <input id="infomation.lastUpdatedDate" name="infomation.lastUpdatedDate" type="hidden" value='<fmt:formatDate value="${infomationDetail.infomation.lastUpdatedDate}" pattern="yyyy-MM-dd HH:mm:ss" />'>
               	  </td>
               	  <td></td>
                 </tr>
@@ -100,11 +102,11 @@
                   <td>${userCount+1}</td>
                   <td>
                     <c:out value="${user.userId}" />
-                    <input id="viewUsers[${userCount}].userId" name="noAccessedUsers[${status.index}].userId" type="hidden" value='<c:out value="${user.userId}" />'>
+                    <input id="users[${userCount}].userId" name="noAccessedUsers[${status.index}].userId" type="hidden" value='<c:out value="${user.userId}" />'>
                   </td>
                   <td>
                     <c:out value="${user.userName}" />
-                    <input id="viewUsers[${userCount}].userName" name="noAccessedUsers[${status.index}].userName" type="hidden" value='<c:out value="${user.userName}" />'>
+                    <input id="users[${userCount}].userName" name="noAccessedUsers[${status.index}].userName" type="hidden" value='<c:out value="${user.userName}" />'>
                   </td>
                   <td>未</td>
                   <td>
@@ -118,11 +120,11 @@
                   <td>${userCount+1}</td>
                   <td>
                     <c:out value="${user.userId}" />
-                    <input id="viewUsers[${userCount}].userId" name="accessedUsers[${status.index}].userId" type="hidden" value='<c:out value="${user.userId}" />'>
+                    <input id="users[${userCount}].userId" name="accessedUsers[${status.index}].userId" type="hidden" value='<c:out value="${user.userId}" />'>
                   </td>
                   <td>
                     <c:out value="${user.userName}" />
-                    <input id="accessedUsers[${userCount}].userName" name="accessedUsers[${status.index}].userName" type="hidden" value='<c:out value="${user.userName}" />'>
+                    <input id="users[${userCount}].userName" name="accessedUsers[${status.index}].userName" type="hidden" value='<c:out value="${user.userName}" />'>
                   </td>
                   <td>アクセス済</td>
                   <td>
@@ -134,7 +136,7 @@
               </tbody>
             </table>
             <div class="centering">
-              <button id="get-not-infomation-viewers-button" type="button" class="centering-button" >追加</button>
+              <button id="get-users-button" type="button" class="centering-button" >追加</button>
             </div>
             <form:button class="main-button" name="confirmUpdate" >更新を確定する</form:button>
             </form:form>

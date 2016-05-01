@@ -18,6 +18,7 @@
       <div class="flex-item-2">
         <div class="panel">
           <div class="infomationFormPanel">
+            以下のインフォメーションを作成します。よろしければ、登録ボタンを押してください。
             <form:form action="${pageContext.request.contextPath}/management/infomation/new/${infomationDraft.infomation.infoId}" 
                 modelAttribute="infomationDraft">
               <table>

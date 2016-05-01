@@ -39,10 +39,10 @@
                 </tr>
                 <tr>
                   <td>
-                    <fmt:formatDate value="${updateResult.beforeEntity.infomation.releaseDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                    <fmt:formatDate value="${updateResult.beforeEntity.infomation.releaseDate}" pattern="yyyy/MM/dd HH:mm:ss" />
                   </td>
                   <td>
-                    <fmt:formatDate value="${updateResult.afterEntity.infomation.releaseDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                    <fmt:formatDate value="${updateResult.afterEntity.infomation.releaseDate}" pattern="yyyy/MM/dd HH:mm:ss" />
                   </td>
                 </tr>
               </tbody>

@@ -58,3 +58,7 @@
     width : 200px;
     height : 60px;
 }
+
+.formPanel a{
+	text-decoration:none;
+}

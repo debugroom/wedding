@@ -16,9 +16,10 @@ import lombok.Builder;
 @Builder
 public class DeleteUserForm implements Serializable{
 
+	private static final long serialVersionUID = 7440076377576575712L;
+
 	public DeleteUserForm(){}
 	
-	private static final long serialVersionUID = 1L;
 
 	@NotNull
 	@Size(min=8, max=8)
@@ -26,6 +27,7 @@ public class DeleteUserForm implements Serializable{
 	private String userId;
 
 	@NotNull
+	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*")
 	private String type;
 
 }
