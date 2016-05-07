@@ -17,11 +17,26 @@
 
     <mvc:resources location="/resources/" mapping="/resources/**" cache-period="#{60 * 60}"/>
 
+    <bean id="jsonMessageConverter"
+        class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper" ref="objectMapper" />
+    </bean>
+
+    <bean id="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+        <property name="dateFormat">
+            <bean class="com.fasterxml.jackson.databind.util.StdDateFormat" />
+        </property>
+    </bean>
+    
     <mvc:annotation-driven>
         <mvc:argument-resolvers>
             <bean
                 class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
         </mvc:argument-resolvers>
+        <mvc:message-converters register-defaults="true">
+          <bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
+          <ref bean="jsonMessageConverter" />
+        </mvc:message-converters>
     </mvc:annotation-driven>
 
 	<mvc:interceptors>

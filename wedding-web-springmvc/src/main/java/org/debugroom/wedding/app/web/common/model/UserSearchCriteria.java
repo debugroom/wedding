@@ -15,6 +15,8 @@ public class UserSearchCriteria implements Serializable{
 
 	public static interface GetNotInfomationViewers{}
 	public static interface GetNotRequestUsers{}
+	public static interface GetNotFolderUsers{}
+	public static interface GetFolderUsers{}
 	
 	@NotNull(groups = {GetNotInfomationViewers.class})
 	@Size(min = 8, max = 8, groups={GetNotInfomationViewers.class})
@@ -26,4 +28,9 @@ public class UserSearchCriteria implements Serializable{
 	@Pattern(regexp = "[0-9]*", groups = {GetNotRequestUsers.class})
 	private String requestId;
 	
+	@NotNull(groups = {GetNotFolderUsers.class, GetFolderUsers.class})
+	@Size(min = 12, max = 12, groups={GetNotFolderUsers.class, GetFolderUsers.class})
+	@Pattern(regexp = "[0-9]*", groups = {GetNotFolderUsers.class, GetFolderUsers.class})
+	private String folderId;
+
 }

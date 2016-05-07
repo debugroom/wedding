@@ -98,6 +98,8 @@
                   class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="menus"/>
                 <bean
                   class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="existUser"/>
+                <bean
+                  class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="photo"/>
             </set>
         </property>
     </bean>

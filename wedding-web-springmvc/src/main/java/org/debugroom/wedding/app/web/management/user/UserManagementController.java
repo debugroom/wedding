@@ -45,8 +45,8 @@ import org.debugroom.wedding.app.web.management.user.EditUserForm.UpdateUser;
 import org.debugroom.wedding.app.web.management.user.NewUserForm.ConfirmUser;
 import org.debugroom.wedding.app.web.management.user.NewUserForm.SaveUser;
 import org.debugroom.wedding.common.external.api.AddressSearch;
+import org.debugroom.wedding.domain.management.service.UserManagementService;
 import org.debugroom.wedding.domain.model.entity.User;
-import org.debugroom.wedding.domain.service.management.UserManagementService;
 
 /**
  * 

@@ -38,6 +38,10 @@ public class Group implements Serializable {
 	@OneToMany(mappedBy="grp")
 	private Set<Affiliation> affiliations;
 
+	//bi-directional many-to-one association to GroupFolder
+	@OneToMany(mappedBy="grp")
+	private Set<GroupFolder> groupFolders;
+
 	//bi-directional many-to-one association to GroupNotification
 	@OneToMany(mappedBy="grp")
 	private Set<GroupNotification> groupNotifications;
@@ -121,6 +125,28 @@ public class Group implements Serializable {
 		affiliation.setGrp(null);
 
 		return affiliation;
+	}
+
+	public Set<GroupFolder> getGroupFolders() {
+		return this.groupFolders;
+	}
+
+	public void setGroupFolders(Set<GroupFolder> groupFolders) {
+		this.groupFolders = groupFolders;
+	}
+
+	public GroupFolder addGroupFolder(GroupFolder groupFolder) {
+		getGroupFolders().add(groupFolder);
+		groupFolder.setGrp(this);
+
+		return groupFolder;
+	}
+
+	public GroupFolder removeGroupFolder(GroupFolder groupFolder) {
+		getGroupFolders().remove(groupFolder);
+		groupFolder.setGrp(null);
+
+		return groupFolder;
 	}
 
 	public Set<GroupNotification> getGroupNotifications() {

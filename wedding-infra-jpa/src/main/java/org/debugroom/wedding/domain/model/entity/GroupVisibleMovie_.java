@@ -5,7 +5,7 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2016-04-17T19:24:01.746+0900")
+@Generated(value="Dali", date="2016-05-02T02:07:04.670+0900")
 @StaticMetamodel(GroupVisibleMovie.class)
 public class GroupVisibleMovie_ {
 	public static volatile SingularAttribute<GroupVisibleMovie, GroupVisibleMoviePK> id;

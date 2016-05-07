@@ -44,7 +44,7 @@ public class Infomation implements Serializable {
 	private Integer ver;
 
 	//bi-directional many-to-one association to GroupNotification
-	@OneToMany(mappedBy="infomation", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="infomation", cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<GroupNotification> groupNotifications;
 
 	//bi-directional many-to-many association to Group
@@ -61,7 +61,7 @@ public class Infomation implements Serializable {
 	private Set<Group> grps;
 
 	//bi-directional many-to-one association to Notification
-	@OneToMany(mappedBy="infomation", cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="infomation")
 	private Set<Notification> notifications;
 
 	public Infomation() {

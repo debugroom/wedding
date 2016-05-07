@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 import org.debugroom.wedding.domain.model.entity.User;
-import org.debugroom.wedding.domain.service.profile.ProfileManagementService;
+import org.debugroom.wedding.domain.profile.service.ProfileManagementService;
 
 /**
  * 

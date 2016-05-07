@@ -6,8 +6,8 @@ import org.springframework.web.servlet.tags.form.TagWriter;
 import org.springframework.web.servlet.tags.RequestContextAwareTag;
 
 import org.debugroom.wedding.domain.model.entity.User;
+import org.debugroom.wedding.domain.common.service.MenuService;
 import org.debugroom.wedding.domain.model.entity.Menu;
-import org.debugroom.wedding.domain.service.common.MenuService;
 
 public class MenuTag extends RequestContextAwareTag {
 
@@ -20,6 +20,8 @@ public class MenuTag extends RequestContextAwareTag {
 	private static final String LINK_ELEMENT = "a";
 	private static final String LINK_ATTRIBUTE = "href";
 	
+	private String cssStyle;
+	
 	@Override
 	protected int doStartTagInternal() throws Exception {
 		MenuService menuService = (MenuService) getRequestContext().getWebApplicationContext().getBean("menuService");
@@ -27,7 +29,7 @@ public class MenuTag extends RequestContextAwareTag {
 		List<Menu> menuList = menuService.getUsableMenu(user);
 		TagWriter tagWriter = new TagWriter(this.pageContext);
 		tagWriter.startTag(MENU_REGION_ELEMENT);
-		tagWriter.writeAttribute(MENU_REGION_ATTRIBUTE, "menu");
+		tagWriter.writeAttribute(MENU_REGION_ATTRIBUTE, cssStyle);
 		tagWriter.startTag(OUTER_ELEMENT);
 
 		StringBuilder stringBuilder = null;
@@ -46,6 +48,9 @@ public class MenuTag extends RequestContextAwareTag {
 		return SKIP_BODY;
 	}
 
+	public void setCssStyle(String cssStyle) {
+		this.cssStyle = cssStyle;
+	}
 	
 
 }

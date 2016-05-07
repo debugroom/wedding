@@ -34,6 +34,9 @@ public class Movie implements Serializable {
 	@Column(name="last_updated_date")
 	private Timestamp lastUpdatedDate;
 
+	@Column(name="thumbnail_file_path", length=2147483647)
+	private String thumbnailFilePath;
+
 	@Version
 	private Integer ver;
 
@@ -57,6 +60,14 @@ public class Movie implements Serializable {
 			}
 		)
 	private Set<Group> grps;
+
+	//bi-directional many-to-one association to MovieRelatedFolder
+	@OneToMany(mappedBy="movie")
+	private Set<MovieRelatedFolder> movieRelatedFolders;
+
+	//bi-directional many-to-one association to MovieRelatedUser
+	@OneToMany(mappedBy="movie")
+	private Set<MovieRelatedUser> movieRelatedUsers;
 
 	public Movie() {
 	}
@@ -91,6 +102,14 @@ public class Movie implements Serializable {
 
 	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public String getThumbnailFilePath() {
+		return this.thumbnailFilePath;
+	}
+
+	public void setThumbnailFilePath(String thumbnailFilePath) {
+		this.thumbnailFilePath = thumbnailFilePath;
 	}
 
 	public Integer getVer() {
@@ -151,6 +170,50 @@ public class Movie implements Serializable {
 
 	public void setGrps(Set<Group> grps) {
 		this.grps = grps;
+	}
+
+	public Set<MovieRelatedFolder> getMovieRelatedFolders() {
+		return this.movieRelatedFolders;
+	}
+
+	public void setMovieRelatedFolders(Set<MovieRelatedFolder> movieRelatedFolders) {
+		this.movieRelatedFolders = movieRelatedFolders;
+	}
+
+	public MovieRelatedFolder addMovieRelatedFolder(MovieRelatedFolder movieRelatedFolder) {
+		getMovieRelatedFolders().add(movieRelatedFolder);
+		movieRelatedFolder.setMovie(this);
+
+		return movieRelatedFolder;
+	}
+
+	public MovieRelatedFolder removeMovieRelatedFolder(MovieRelatedFolder movieRelatedFolder) {
+		getMovieRelatedFolders().remove(movieRelatedFolder);
+		movieRelatedFolder.setMovie(null);
+
+		return movieRelatedFolder;
+	}
+
+	public Set<MovieRelatedUser> getMovieRelatedUsers() {
+		return this.movieRelatedUsers;
+	}
+
+	public void setMovieRelatedUsers(Set<MovieRelatedUser> movieRelatedUsers) {
+		this.movieRelatedUsers = movieRelatedUsers;
+	}
+
+	public MovieRelatedUser addMovieRelatedUser(MovieRelatedUser movieRelatedUser) {
+		getMovieRelatedUsers().add(movieRelatedUser);
+		movieRelatedUser.setMovie(this);
+
+		return movieRelatedUser;
+	}
+
+	public MovieRelatedUser removeMovieRelatedUser(MovieRelatedUser movieRelatedUser) {
+		getMovieRelatedUsers().remove(movieRelatedUser);
+		movieRelatedUser.setMovie(null);
+
+		return movieRelatedUser;
 	}
 
 }

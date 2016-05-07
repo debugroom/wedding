@@ -18,7 +18,7 @@
     </header>
     <div id="flex-container">
         <div class="flex-item-1">
-            <d:Menu/>
+          <c:import url="/WEB-INF/jsp/common/menu.jsp" />
         </div>
         <div class="flex-item-2">
             <p>ファイルアップロードに失敗しました。</p>

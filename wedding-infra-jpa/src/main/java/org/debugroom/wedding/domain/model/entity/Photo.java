@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The persistent class for the photo database table.
@@ -34,15 +35,20 @@ public class Photo implements Serializable {
 	@Column(name="last_updated_date")
 	private Timestamp lastUpdatedDate;
 
+	@Column(name="thumbnail_file_path", length=2147483647)
+	private String thumbnailFilePath;
+
 	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to GroupVisiblePhoto
 	@OneToMany(mappedBy="photo")
+	@JsonIgnore
 	private Set<GroupVisiblePhoto> groupVisiblePhotos;
 
 	//bi-directional many-to-one association to Message
 	@OneToMany(mappedBy="photo")
+	@JsonIgnore
 	private Set<Message> messages;
 
 	//bi-directional many-to-many association to Group
@@ -56,7 +62,18 @@ public class Photo implements Serializable {
 			@JoinColumn(name="group_id", nullable=false)
 			}
 		)
+	@JsonIgnore
 	private Set<Group> grps;
+
+	//bi-directional many-to-one association to PhotoRelatedFolder
+	@OneToMany(mappedBy="photo")
+	@JsonIgnore
+	private Set<PhotoRelatedFolder> photoRelatedFolders;
+
+	//bi-directional many-to-one association to PhotoRelatedUser
+	@OneToMany(mappedBy="photo")
+	@JsonIgnore
+	private Set<PhotoRelatedUser> photoRelatedUsers;
 
 	public Photo() {
 	}
@@ -91,6 +108,14 @@ public class Photo implements Serializable {
 
 	public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
 		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public String getThumbnailFilePath() {
+		return this.thumbnailFilePath;
+	}
+
+	public void setThumbnailFilePath(String thumbnailFilePath) {
+		this.thumbnailFilePath = thumbnailFilePath;
 	}
 
 	public Integer getVer() {
@@ -151,6 +176,50 @@ public class Photo implements Serializable {
 
 	public void setGrps(Set<Group> grps) {
 		this.grps = grps;
+	}
+
+	public Set<PhotoRelatedFolder> getPhotoRelatedFolders() {
+		return this.photoRelatedFolders;
+	}
+
+	public void setPhotoRelatedFolders(Set<PhotoRelatedFolder> photoRelatedFolders) {
+		this.photoRelatedFolders = photoRelatedFolders;
+	}
+
+	public PhotoRelatedFolder addPhotoRelatedFolder(PhotoRelatedFolder photoRelatedFolder) {
+		getPhotoRelatedFolders().add(photoRelatedFolder);
+		photoRelatedFolder.setPhoto(this);
+
+		return photoRelatedFolder;
+	}
+
+	public PhotoRelatedFolder removePhotoRelatedFolder(PhotoRelatedFolder photoRelatedFolder) {
+		getPhotoRelatedFolders().remove(photoRelatedFolder);
+		photoRelatedFolder.setPhoto(null);
+
+		return photoRelatedFolder;
+	}
+
+	public Set<PhotoRelatedUser> getPhotoRelatedUsers() {
+		return this.photoRelatedUsers;
+	}
+
+	public void setPhotoRelatedUsers(Set<PhotoRelatedUser> photoRelatedUsers) {
+		this.photoRelatedUsers = photoRelatedUsers;
+	}
+
+	public PhotoRelatedUser addPhotoRelatedUser(PhotoRelatedUser photoRelatedUser) {
+		getPhotoRelatedUsers().add(photoRelatedUser);
+		photoRelatedUser.setPhoto(this);
+
+		return photoRelatedUser;
+	}
+
+	public PhotoRelatedUser removePhotoRelatedUser(PhotoRelatedUser photoRelatedUser) {
+		getPhotoRelatedUsers().remove(photoRelatedUser);
+		photoRelatedUser.setPhoto(null);
+
+		return photoRelatedUser;
 	}
 
 }

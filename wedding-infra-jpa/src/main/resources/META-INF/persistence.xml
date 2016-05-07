@@ -5,35 +5,48 @@
 
     <persistence-unit name="wedding">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>org.debugroom.wedding.domain.model.entity.Credential</class>
-        <class>org.debugroom.wedding.domain.model.entity.Menu</class>
-        <class>org.debugroom.wedding.domain.model.entity.User</class>
         <class>org.debugroom.wedding.domain.model.entity.Address</class>
         <class>org.debugroom.wedding.domain.model.entity.Affiliation</class>
-        <class>org.debugroom.wedding.domain.model.entity.Email</class>
-        <class>org.debugroom.wedding.domain.model.entity.Function</class>
-        <class>org.debugroom.wedding.domain.model.entity.Group</class>
-        <class>org.debugroom.wedding.domain.model.entity.Infomation</class>
-        <class>org.debugroom.wedding.domain.model.entity.Message</class>
-        <class>org.debugroom.wedding.domain.model.entity.MessageBoard</class>
-        <class>org.debugroom.wedding.domain.model.entity.Movie</class>
-        <class>org.debugroom.wedding.domain.model.entity.Notification</class>
-        <class>org.debugroom.wedding.domain.model.entity.Photo</class>
         <class>org.debugroom.wedding.domain.model.entity.AffiliationPK</class>
-        <class>org.debugroom.wedding.domain.model.entity.NotificationPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Credential</class>
         <class>org.debugroom.wedding.domain.model.entity.CredentialPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Email</class>
         <class>org.debugroom.wedding.domain.model.entity.EmailPK</class>
-        <class>org.debugroom.wedding.domain.model.entity.MessagePK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Function</class>
         <class>org.debugroom.wedding.domain.model.entity.FunctionPK</class>
-        <class>org.debugroom.wedding.domain.model.entity.Request</class>
-        <class>org.debugroom.wedding.domain.model.entity.RequestStatus</class>
-        <class>org.debugroom.wedding.domain.model.entity.RequestStatusPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Folder</class>
+        <class>org.debugroom.wedding.domain.model.entity.GroupFolder</class>
+        <class>org.debugroom.wedding.domain.model.entity.GroupFolderPK</class>
         <class>org.debugroom.wedding.domain.model.entity.GroupNotification</class>
         <class>org.debugroom.wedding.domain.model.entity.GroupNotificationPK</class>
         <class>org.debugroom.wedding.domain.model.entity.GroupVisibleMovie</class>
         <class>org.debugroom.wedding.domain.model.entity.GroupVisibleMoviePK</class>
         <class>org.debugroom.wedding.domain.model.entity.GroupVisiblePhoto</class>
         <class>org.debugroom.wedding.domain.model.entity.GroupVisiblePhotoPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Group</class>
+        <class>org.debugroom.wedding.domain.model.entity.Infomation</class>
+        <class>org.debugroom.wedding.domain.model.entity.Menu</class>
+        <class>org.debugroom.wedding.domain.model.entity.Message</class>
+        <class>org.debugroom.wedding.domain.model.entity.MessagePK</class>
+        <class>org.debugroom.wedding.domain.model.entity.MessageBoard</class>
+        <class>org.debugroom.wedding.domain.model.entity.Movie</class>
+        <class>org.debugroom.wedding.domain.model.entity.MovieRelatedFolder</class>
+        <class>org.debugroom.wedding.domain.model.entity.MovieRelatedFolderPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Notification</class>
+        <class>org.debugroom.wedding.domain.model.entity.NotificationPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Photo</class>
+        <class>org.debugroom.wedding.domain.model.entity.PhotoRelatedFolder</class>
+        <class>org.debugroom.wedding.domain.model.entity.PhotoRelatedFolderPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.Request</class>
+        <class>org.debugroom.wedding.domain.model.entity.RequestStatus</class>
+        <class>org.debugroom.wedding.domain.model.entity.RequestStatusPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.UserRelatedFolder</class>
+        <class>org.debugroom.wedding.domain.model.entity.UserRelatedFolderPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.User</class>
+        <class>org.debugroom.wedding.domain.model.entity.MovieRelatedUser</class>
+        <class>org.debugroom.wedding.domain.model.entity.MovieRelatedUserPK</class>
+        <class>org.debugroom.wedding.domain.model.entity.PhotoRelatedUser</class>
+        <class>org.debugroom.wedding.domain.model.entity.PhotoRelatedUserPK</class>
         <properties>
 <!--  
             <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect" />

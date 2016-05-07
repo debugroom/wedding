@@ -6,7 +6,7 @@ import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2016-04-17T19:24:01.760+0900")
+@Generated(value="Dali", date="2016-05-02T02:19:55.076+0900")
 @StaticMetamodel(User.class)
 public class User_ {
 	public static volatile SingularAttribute<User, String> userId;
@@ -21,7 +21,11 @@ public class User_ {
 	public static volatile SetAttribute<User, Affiliation> affiliations;
 	public static volatile SetAttribute<User, Credential> credentials;
 	public static volatile SetAttribute<User, Email> emails;
+	public static volatile SetAttribute<User, Folder> folders;
 	public static volatile SetAttribute<User, Notification> notifications;
 	public static volatile SetAttribute<User, RequestStatus> requestStatuses;
+	public static volatile SetAttribute<User, UserRelatedFolder> userRelatedFolders;
 	public static volatile SetAttribute<User, Group> grps;
+	public static volatile SetAttribute<User, MovieRelatedUser> movieRelatedUsers;
+	public static volatile SetAttribute<User, PhotoRelatedUser> photoRelatedUsers;
 }

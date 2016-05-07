@@ -33,6 +33,8 @@
     <org.apache.maven.plugins_maven-jar-plugin_version>2.5</org.apache.maven.plugins_maven-jar-plugin_version>
     <org.apache.maven.plugins_maven-war-plugin_version>2.5</org.apache.maven.plugins_maven-war-plugin_version>
     <commons-io_commons-io_version>2.4</commons-io_commons-io_version>
+    <org.bytedeco_javacv_version>0.10</org.bytedeco_javacv_version>
+    <org.bytedeco.javacpp-presets_opencv_version>2.4.10-0.10</org.bytedeco.javacpp-presets_opencv_version>
     <com.google.code.maven-license-plugin_maven-license-plugin_version>1.4.0</com.google.code.maven-license-plugin_maven-license-plugin_version>
     <junit_junit_version>4.11</junit_junit_version>
     <org.dbunit_dbunit_version>2.4.8</org.dbunit_dbunit_version>
@@ -121,6 +123,25 @@
         <version>${org.codehaus.jackson_jackson-mapper-asl_version}</version>
         <type>provided</type>
       </dependency>
+      
+      <!-- OpenCV -->
+      <dependency>
+        <groupId>org.bytedeco</groupId>
+        <artifactId>javacv</artifactId>
+        <version>${org.bytedeco_javacv_version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bytedeco.javacpp-presets</groupId>
+        <artifactId>opencv</artifactId>
+        <version>${org.bytedeco.javacpp-presets_opencv_version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bytedeco.javacpp-presets</groupId>
+        <artifactId>opencv</artifactId>
+        <version>${org.bytedeco.javacpp-presets_opencv_version}</version>
+        <classifier>${classifier}</classifier>
+      </dependency>
+
       <!-- Test -->
       <dependency>
         <groupId>junit</groupId>
@@ -201,6 +222,57 @@
     </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <profiles>
+    <profile>
+      <id>macosx-x86_64</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+      </activation>
+      <properties>
+        <classifier>macosx-x86_64</classifier>
+      </properties>
+      </profile>
+      <profile>
+        <id>linux-x86_64</id>
+        <activation>
+          <os>
+            <family>unix</family>
+            <arch>amd64</arch>
+          </os>
+        </activation>
+        <properties>
+          <classifier>linux-x86_64</classifier>
+        </properties>
+      </profile>
+      <profile>
+        <id>windows-x86_64</id>
+        <activation>
+          <os>
+            <family>windows</family>
+            <arch>amd64</arch>
+          </os>
+        </activation>
+        <properties>
+          <classifier>windows-x86_64</classifier>
+        </properties>
+      </profile>
+      <profile>
+        <id>windows-x86</id>
+        <activation>
+          <os>
+            <family>windows</family>
+            <arch>x86</arch>
+          </os>
+        </activation>
+        <properties>
+          <classifier>windows-x86</classifier>
+        </properties>
+      </profile>
+    </profiles>
 
   <build>
     <pluginManagement>

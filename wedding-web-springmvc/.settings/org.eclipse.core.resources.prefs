@@ -8,6 +8,7 @@ encoding//src/main/webapp/WEB-INF/jsp/common/error.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/common/fileUploadError.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/common/userComplete.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/common/userUpdateResult.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/gallery/portal.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/info/00000000_message.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/info/00000001_guide_ceremony.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/info/00000002_guide_party.jsp=UTF-8

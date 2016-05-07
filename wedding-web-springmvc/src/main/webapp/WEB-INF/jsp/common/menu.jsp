@@ -1,1 +1,1 @@
-        	<d:Menu/>
+        	<d:Menu cssStyle="menu"/>

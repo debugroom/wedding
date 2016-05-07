@@ -18,4 +18,15 @@ public class DomainProperties {
 	@Value("${info.rootpath}")
 	private String infoRootPath;
 
+	@Value("${gallery.numberOfPhoto}")
+	private int numberOfPhotoForGallery;
+	
+	@Value("${gallery.image.rootdirectory}")
+	private String galleryImageRootDirectory;
+	
+	@Value("${gallery.image.original.directory}")
+	private String galleryImageOriginalDirectory;
+	
+	@Value("${gallery.image.thumbnail.directory}")
+	private String galleryImageThumbnailDirectory;
 }

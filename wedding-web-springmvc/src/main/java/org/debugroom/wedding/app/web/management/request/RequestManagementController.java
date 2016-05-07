@@ -42,9 +42,9 @@ import org.debugroom.wedding.app.web.common.model.UserSearchCriteria.GetNotReque
 import org.debugroom.wedding.app.web.common.model.UserSearchResult;
 import org.debugroom.wedding.app.web.management.request.NewRequestForm.ConfirmRequest;
 import org.debugroom.wedding.app.web.management.request.NewRequestForm.SaveRequest;
-import org.debugroom.wedding.domain.service.management.RequestDetail;
-import org.debugroom.wedding.domain.service.management.RequestDraft;
-import org.debugroom.wedding.domain.service.management.RequestManagementService;
+import org.debugroom.wedding.domain.management.model.RequestDetail;
+import org.debugroom.wedding.domain.management.model.RequestDraft;
+import org.debugroom.wedding.domain.management.service.RequestManagementService;
 
 @Controller
 public class RequestManagementController {

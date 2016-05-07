@@ -11,6 +11,11 @@
         <name>Menu</name>
         <tag-class>org.debugroom.wedding.app.web.common.tag.MenuTag</tag-class>
         <body-content>empty</body-content>
+        <attribute>
+            <name>cssStyle</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
     <tag>
         <name>Page</name>

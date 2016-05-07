@@ -18,6 +18,7 @@ public class UserSearchResult {
 	
 	private String infoId;
 	private String requestId;
+	private String folderId;
 	private List<User> users;
 	private List<String> messages;
 

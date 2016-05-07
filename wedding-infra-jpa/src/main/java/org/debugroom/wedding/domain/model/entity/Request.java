@@ -25,9 +25,6 @@ public class Request implements Serializable {
 	@Column(name="request_id", unique=true, nullable=false, length=4)
 	private String requestId;
 
-	@Column(name="title", length=512)
-	private String title;
-	
 	@Column(name="last_updated_date")
 	private Timestamp lastUpdatedDate;
 
@@ -36,6 +33,9 @@ public class Request implements Serializable {
 
 	@Column(name="request_contents", length=2147483647)
 	private String requestContents;
+
+	@Column(length=512)
+	private String title;
 
 	@Version
 	private Integer ver;
@@ -79,6 +79,14 @@ public class Request implements Serializable {
 		this.requestContents = requestContents;
 	}
 
+	public String getTitle() {
+		return this.title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public Integer getVer() {
 		return this.ver;
 	}
@@ -107,14 +115,6 @@ public class Request implements Serializable {
 		requestStatus.setRequest(null);
 
 		return requestStatus;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 }

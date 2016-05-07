@@ -3,8 +3,8 @@
     xsi:schemaLocation="http://dozer.sourceforge.net
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
      <mapping map-id="requestDetailMappingExcludingUserRelatedEntity">
-        <class-a>org.debugroom.wedding.domain.service.management.RequestDetail</class-a>
-        <class-b>org.debugroom.wedding.domain.service.management.RequestDetail</class-b>
+        <class-a>org.debugroom.wedding.domain.management.model.RequestDetail</class-a>
+        <class-b>org.debugroom.wedding.domain.management.model.RequestDetail</class-b>
         <field map-id="userMappingExcludingRelatedEntity">
             <a>approvedUsers</a>
             <b>approvedUsers</b>

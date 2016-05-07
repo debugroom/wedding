@@ -67,6 +67,14 @@ public class RequestStatus implements Serializable {
 		this.isAnswered = isAnswered;
 	}
 
+	public Boolean getIsApproved() {
+		return this.isApproved;
+	}
+
+	public void setIsApproved(Boolean isApproved) {
+		this.isApproved = isApproved;
+	}
+
 	public Timestamp getLastUpdatedDate() {
 		return this.lastUpdatedDate;
 	}
