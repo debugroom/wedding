@@ -10,6 +10,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.debugroom.wedding.app.web.galley.CreateFolderForm.CreateFolder;
+import org.debugroom.wedding.app.web.galley.UpdateFolderForm.UpdateFolder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
@@ -27,8 +28,8 @@ public class User implements Serializable{
 	}
 	
 	@NotNull(groups = {CreateFolder.class})
-	@Size(min=8, max=8, groups = {CreateFolder.class})
-	@Pattern(regexp = "[0-9]*", groups = {CreateFolder.class})
+	@Size(min=8, max=8, groups = {CreateFolder.class, UpdateFolder.class})
+	@Pattern(regexp = "[0-9]*", groups = {CreateFolder.class, UpdateFolder.class})
 	private String userId;
 	
 }

@@ -43,16 +43,21 @@
             <c:forEach items="${portalOutput.folders}" var="folder" varStatus="status">
               <div id="folder-<c:out value='${folder.folderId}' />" >
                 <img id="folder-icon-<c:out value='${folder.folderId}' />" 
-                data-folder-id="<c:out value='${folder.folderId}' />" 
-                data-folder-name="<c:out value='${folder.folderName}' />" 
-                data-human-icon-url="${pageContext.request.contextPath}/resources/app/img/human-icon.png"
-                data-folder-related-users-url="${pageContext.request.contextPath}/gallery/folder/viewers/<c:out value='${folder.folderId}' />"
-                data-folder-related-photographs-url="${pageContext.request.contextPath}/gallery/photographs/<c:out value='${folder.folderId}' />?folderName=<c:out value='${folder.folderName}' />"
-                src="${pageContext.request.contextPath}/resources/app/img/Pictures.png" />
-                <img id="delete-folder-icon-<c:out value='${folder.folderId}' />" class="delete-folder-icon"
-                data-folderId="<c:out value='${folder.folderId}' />" 
-                data-url="${pageContext.request.contextPath}/gallery/folders/<c:out value='${folder.folderId}' />"
-                src="${pageContext.request.contextPath}/resources/app/img/delete.png" /><br/>
+                    data-folder-id="<c:out value='${folder.folderId}' />" 
+                    data-folder-name="<c:out value='${folder.folderName}' />" 
+                    data-human-icon-url="${pageContext.request.contextPath}/resources/app/img/human-icon.png"
+                    data-folder-related-users-url="${pageContext.request.contextPath}/gallery/folder/viewers/<c:out value='${folder.folderId}' />"
+                    data-folder-related-no-users-url="${pageContext.request.contextPath}/gallery/folder/no-viewers/<c:out value='${folder.folderId}' />"
+                    data-folder-related-photographs-url="${pageContext.request.contextPath}/gallery/photographs/<c:out value='${folder.folderId}' />?folderName=<c:out value='${folder.folderName}' />"
+                    data-edit-folder-url="${pageContext.request.contextPath}/gallery/folders/<c:out value='${folder.folderId}' />"
+                    src="${pageContext.request.contextPath}/resources/app/img/Pictures.png" />
+                <c:if test="${folder.folderId != '000000000000'}">
+                    <img id="delete-folder-icon-<c:out value='${folder.folderId}' />" class="delete-folder-icon"
+                        data-folderId="<c:out value='${folder.folderId}' />" 
+                        data-url="${pageContext.request.contextPath}/gallery/folders/<c:out value='${folder.folderId}' />"
+                        src="${pageContext.request.contextPath}/resources/app/img/delete.png" />
+                </c:if>
+                <br/>
                 <c:out value="${folder.folderName}" />
               <br>
               </div>

@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
 import org.debugroom.wedding.app.web.galley.CreateFolderForm.CreateFolder;
+import org.debugroom.wedding.app.web.galley.UpdateFolderForm.UpdateFolder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
@@ -26,12 +27,12 @@ public class Folder implements Serializable{
 	}
 	
 	@NotNull(groups = {Default.class})
-	@Size(min=12, max=12, groups = {Default.class, CreateFolder.class})
-	@Pattern(regexp = "[0-9]*", groups = {Default.class, CreateFolder.class})
+	@Size(min=12, max=12, groups = {Default.class, CreateFolder.class, UpdateFolder.class})
+	@Pattern(regexp = "[0-9]*", groups = {Default.class, CreateFolder.class, UpdateFolder.class})
 	private String folderId;
 
-	@NotNull(groups = {Default.class, CreateFolder.class})
-	@Size(min=1, max=256, groups = {Default.class, CreateFolder.class})
+	@NotNull(groups = {Default.class, CreateFolder.class, UpdateFolder.class})
+	@Size(min=1, max=256, groups = {Default.class, CreateFolder.class, UpdateFolder.class})
 	private String folderName;
 	
 }

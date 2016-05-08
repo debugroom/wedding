@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -203,6 +204,50 @@ public class GalleryServiceImpl implements GalleryService{
 		Folder folder = folderRepository.findOne(folderId);
 		folderRepository.delete(folder);
 		return folder;
+	}
+
+	@Override
+	public Folder updateFolder(FolderDraft folderDraft) {
+		Folder folder = folderDraft.getFolder();
+		
+		Folder updateTargetFolder = folderRepository.findOne(folder.getFolderId());
+		
+		if(!updateTargetFolder.getFolderName().equals(folder.getFolderName())){
+			updateTargetFolder.setFolderName(folder.getFolderName());
+			updateTargetFolder.setLastUpdatedDate(
+					new Timestamp(Calendar.getInstance().getTimeInMillis()));
+		}
+		
+		if(null != folderDraft.getCheckedAddUsers()){
+			for(User viewUser : folderDraft.getCheckedAddUsers()){
+				if(null != viewUser){
+					updateTargetFolder.addUserRelatedFolder(UserRelatedFolder.builder()
+																.id(UserRelatedFolderPK
+																	.builder()
+																	.folderId(folder.getFolderId())
+																	.userId(viewUser.getUserId())
+																	.build())
+															.lastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()))
+															.ver(0)
+															.build());
+				}
+			}
+		}
+		
+		if(null != folderDraft.getCheckedDeleteUsers()){
+			for(User excludeUser : folderDraft.getCheckedDeleteUsers()){
+				if(null != excludeUser){
+					Iterator<UserRelatedFolder> iterator = updateTargetFolder.getUserRelatedFolders().iterator();
+					while(iterator.hasNext()){
+						UserRelatedFolder userRelatedFolder = iterator.next();
+						if(excludeUser.getUserId().equals(userRelatedFolder.getId().getUserId())){
+							iterator.remove();
+						}
+					}
+				}
+			}
+		}
+		return updateTargetFolder;
 	}
 
 }

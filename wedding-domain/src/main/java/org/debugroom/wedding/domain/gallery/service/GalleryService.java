@@ -36,4 +36,6 @@ public interface GalleryService {
 
 	public Folder deleteFolder(String folderId);
 
+	public Folder updateFolder(FolderDraft folderDraft);
+	
 }

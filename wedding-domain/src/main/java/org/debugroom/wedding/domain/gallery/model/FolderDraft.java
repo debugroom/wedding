@@ -26,4 +26,8 @@ public class FolderDraft implements Serializable{
 	
 	private List<User> users;
 	
+	private List<User> checkedAddUsers;
+	
+	private List<User> checkedDeleteUsers;
+	
 }

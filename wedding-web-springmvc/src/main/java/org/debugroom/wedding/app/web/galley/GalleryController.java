@@ -37,6 +37,7 @@ import org.debugroom.wedding.app.web.common.util.RequestContextUtil;
 import org.debugroom.wedding.app.web.common.model.UserSearchCriteria.GetFolderUsers;
 import org.debugroom.wedding.app.web.common.model.UserSearchCriteria.GetNotFolderUsers;
 import org.debugroom.wedding.app.web.galley.CreateFolderForm.CreateFolder;
+import org.debugroom.wedding.app.web.galley.UpdateFolderForm.UpdateFolder;
 import org.debugroom.wedding.domain.gallery.model.FolderDraft;
 import org.debugroom.wedding.domain.gallery.service.GalleryService;
 import org.debugroom.wedding.domain.model.entity.User;
@@ -191,6 +192,36 @@ public class GalleryController {
 		return ResponseEntity.status(HttpStatus.OK).body(createFolderResult);
 	}
 	
+	@RequestMapping(method = RequestMethod.PUT, value="/gallery/folders/{folderId}")
+	public ResponseEntity<UpdateFolderResult> updateFolder(
+			@Validated(UpdateFolder.class) @RequestBody UpdateFolderForm updateFolderForm,
+			Errors errors, HttpServletRequest request){
+		
+		UpdateFolderResult updateFolderResult = mapper.map(updateFolderForm, UpdateFolderResult.class);
+		
+		if(errors.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			updateFolderResult.setMessages(messages);
+			for(FieldError fieldError : errors.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(updateFolderResult);
+		}
+		
+		try {
+			updateFolderResult.setRequestContextPath(
+					RequestContextUtil.getRequestContextPath(request));
+		} catch (MalformedURLException | URISyntaxException e) {
+			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(updateFolderResult);
+		}
+		
+		updateFolderResult.setFolder(galleryService.updateFolder(
+				mapper.map(updateFolderForm, FolderDraft.class)));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(updateFolderResult);
+		
+	}
+
 	@RequestMapping(method = RequestMethod.DELETE, value="/gallery/folders/{folderId}")
 	public ResponseEntity<DeleteFolderResult> deleteFolder(
 			@Validated DeleteFolderForm deleteFolderForm,

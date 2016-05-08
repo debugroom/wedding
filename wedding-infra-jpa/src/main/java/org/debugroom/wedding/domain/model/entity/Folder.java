@@ -62,7 +62,7 @@ public class Folder implements Serializable {
 	private Set<PhotoRelatedFolder> photoRelatedFolders;
 
 	//bi-directional many-to-one association to UserRelatedFolder
-	@OneToMany(mappedBy="folder", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="folder", cascade=CascadeType.ALL, orphanRemoval=true)
 	@JsonIgnore
 	private Set<UserRelatedFolder> userRelatedFolders;
 
