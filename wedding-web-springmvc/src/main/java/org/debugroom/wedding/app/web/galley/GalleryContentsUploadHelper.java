@@ -1,4 +1,4 @@
-package org.debugroom.wedding.app.web.common.util;
+package org.debugroom.wedding.app.web.galley;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,36 +13,32 @@ import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 
 @Component
-public class ProfileImageUploadHelper implements FileUploadHelper{
+public class GalleryContentsUploadHelper implements FileUploadHelper{
 
-	@Value("${app.profile.image.rootdirectory}")
+	@Value("${gallery.image.rootdirectory}")
 	private String uploadRootDirectory;
-
-	@Value("${app.profile.image.directory}")
+	
+	@Value("${gallery.image.original.directory}")
 	private String uploadDirectory;
 
 	@Override
-	public String saveFile(MultipartFile multipartFile, String userId) {
+	public String saveFile(MultipartFile multipartFile, String userId) throws BusinessException {
 		String uploadDirectoryContextPath = new StringBuilder()
-									.append(uploadDirectory)
-									.append("/")
 									.append(userId)
-									.append("/")
-									.append(UUID.randomUUID().toString())
+									.append(uploadDirectory)
 									.toString();
 		String uploadDirectoryAbsolutePath = new StringBuilder()
 									.append(uploadRootDirectory)
 									.append("/")
 									.append(uploadDirectoryContextPath)
-									.append("/")
 									.toString();
 		
 		File uploadFile = new File(uploadDirectoryAbsolutePath, multipartFile.getOriginalFilename());
 		
-		try {
+		try{
 			FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), uploadFile);
-		} catch (IOException e) {
-			new BusinessException("profileImageUploadHelper.error.0001", null, userId);
+		}catch(IOException e){
+			throw new BusinessException("galleryContentsUploadHelper.error.0001", null, userId);
 		}
 		return new StringBuilder()
 				.append(uploadDirectoryContextPath)
@@ -50,5 +46,6 @@ public class ProfileImageUploadHelper implements FileUploadHelper{
 				.append(multipartFile.getOriginalFilename())
 				.toString();
 	}
+	
 	
 }

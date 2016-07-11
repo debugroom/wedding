@@ -3,6 +3,8 @@ package org.debugroom.wedding.domain.gallery.service;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import org.debugroom.wedding.domain.gallery.model.Media;
+import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.gallery.model.FolderDraft;
 import org.debugroom.wedding.domain.gallery.model.PortalOutput;
 import org.debugroom.wedding.domain.model.entity.Folder;
@@ -37,5 +39,13 @@ public interface GalleryService {
 	public Folder deleteFolder(String folderId);
 
 	public Folder updateFolder(FolderDraft folderDraft);
+	
+	public Media saveMedia(Media media) throws BusinessException;
+
+	public Photo savePhotograph(Photo photo, String folderId);
+	
+	public Movie saveMovie(Movie movie);
+	
+	public void createPhotoThumbnail(Photo photo, Media media) throws BusinessException;
 	
 }

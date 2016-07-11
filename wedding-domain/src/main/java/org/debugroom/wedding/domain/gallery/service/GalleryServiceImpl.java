@@ -1,5 +1,7 @@
 package org.debugroom.wedding.domain.gallery.service;
 
+import java.awt.Image;
+import java.awt.PageAttributes.MediaType;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,13 +22,17 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.lang3.StringUtils;
+import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.common.exception.SystemException;
 import org.debugroom.wedding.domain.common.DomainProperties;
 import org.debugroom.wedding.domain.gallery.model.FolderDraft;
+import org.debugroom.wedding.domain.gallery.model.Media;
 import org.debugroom.wedding.domain.gallery.model.PortalOutput;
 import org.debugroom.wedding.domain.model.entity.Folder;
 import org.debugroom.wedding.domain.model.entity.Movie;
 import org.debugroom.wedding.domain.model.entity.Photo;
+import org.debugroom.wedding.domain.model.entity.PhotoRelatedFolder;
+import org.debugroom.wedding.domain.model.entity.PhotoRelatedFolderPK;
 import org.debugroom.wedding.domain.model.entity.User;
 import org.debugroom.wedding.domain.model.entity.UserRelatedFolder;
 import org.debugroom.wedding.domain.model.entity.UserRelatedFolderPK;
@@ -40,7 +46,6 @@ import org.debugroom.wedding.domain.repository.photo.FindRelatedPhotoByFolderId;
 import org.debugroom.wedding.domain.repository.photo.FindViewablePhotoByUserId;
 import org.debugroom.wedding.domain.repository.photo.PhotoRepository;
 
-@Transactional
 @Service("galleryService")
 public class GalleryServiceImpl implements GalleryService{
 
@@ -165,6 +170,7 @@ public class GalleryServiceImpl implements GalleryService{
 	}
 
 	@Override
+	@Transactional
 	public Folder createFolder(FolderDraft folderDraft) {
 		
 		Folder folder = folderDraft.getFolder();
@@ -200,6 +206,7 @@ public class GalleryServiceImpl implements GalleryService{
 	}
 
 	@Override
+	@Transactional
 	public Folder deleteFolder(String folderId) {
 		Folder folder = folderRepository.findOne(folderId);
 		folderRepository.delete(folder);
@@ -207,6 +214,7 @@ public class GalleryServiceImpl implements GalleryService{
 	}
 
 	@Override
+	@Transactional
 	public Folder updateFolder(FolderDraft folderDraft) {
 		Folder folder = folderDraft.getFolder();
 		
@@ -248,6 +256,98 @@ public class GalleryServiceImpl implements GalleryService{
 			}
 		}
 		return updateTargetFolder;
+	}
+
+	@Override
+	public Media saveMedia(Media media) throws BusinessException {
+		switch(media.getMediaType()){
+			case PHOTOGRAPH:
+				Photo photo = Photo.builder()
+									.filePath(media.getFilePath())
+									.photoRelatedFolders(new HashSet<PhotoRelatedFolder>())
+									.build();
+				createPhotoThumbnail(photo, media);
+				savePhotograph(photo, media.getFolderId());
+				media.setMediaId(photo.getPhotoId());
+				break;
+			case MOVIE:
+				Movie movie = saveMovie(Movie.builder()
+							.filePath(media.getFilePath())
+							.build());
+				media.setMediaId(movie.getMovieId());
+				break;
+		}
+		return media;
+	}
+
+	@Override
+	@Transactional
+	public synchronized Photo savePhotograph(Photo photo, String folderId) {
+		Photo maxIdPhoto = photoRepository
+				.findTopByPhotoIdLikeOrderByPhotoIdDesc("0%");
+		String sequence = new StringBuilder()
+								.append("0000000000")
+								.append(Integer.parseInt(StringUtils.stripStart(maxIdPhoto.getPhotoId(), "0"))+1)
+								.toString();
+		String newPhotoId = StringUtils.substring(sequence, 
+				sequence.length()-10, sequence.length());
+		photo.setPhotoId(newPhotoId);
+		photo.setLastUpdatedDate(new Timestamp(
+				Calendar.getInstance().getTimeInMillis()));
+		photo.setIsControled(false);
+		photo.addPhotoRelatedFolder(
+				PhotoRelatedFolder.builder()
+					.id(PhotoRelatedFolderPK.builder()
+							.folderId(folderId)
+							.photoId(newPhotoId)
+							.build())
+					.lastUpdatedDate(new Timestamp(
+							Calendar.getInstance().getTimeInMillis()))
+					.build());
+		return photoRepository.save(photo);
+	}
+
+	@Override
+	@Transactional
+	public synchronized Movie saveMovie(Movie movie) {
+		return null;
+	}
+
+	@Override
+	public void createPhotoThumbnail(Photo photo, Media media) throws BusinessException {
+
+		int thumbnailWidth = domainProperties.getGalleryImageThumbnailWidth();
+		int thumbnailHeight = domainProperties.getGalleryImageThumbnailHeight();
+
+		BufferedImage bufferedImage = new BufferedImage(
+				thumbnailWidth, thumbnailHeight, BufferedImage.TYPE_INT_RGB);
+
+		String imageFilePath = new StringBuilder()
+				.append(domainProperties.getGalleryImageRootDirectory())
+				.append("/")
+				.append(photo.getFilePath())
+				.toString();
+		String thumbnailImageFilePath = new StringBuilder()
+				.append(media.getUserId())
+				.append(domainProperties.getGalleryImageThumbnailDirectory())
+				.append("/")
+				.append(media.getOriginalFilename())
+				.toString();
+		String thumbnailImageAbsoluteFilePath = new StringBuilder()
+				.append(domainProperties.getGalleryImageRootDirectory())
+				.append("/")
+				.append(thumbnailImageFilePath)
+				.toString();
+		try {
+			bufferedImage.getGraphics().drawImage(
+					ImageIO.read(new File(imageFilePath)).getScaledInstance(
+							thumbnailWidth, thumbnailHeight, Image.SCALE_SMOOTH),
+					0, 0, null);
+			ImageIO.write(bufferedImage, media.getExtension(), new File(thumbnailImageAbsoluteFilePath));
+		} catch (IOException e) {
+			throw new BusinessException("galleryService.error.0002", e, media.getOriginalFilename());
+		}
+		photo.setThumbnailFilePath(thumbnailImageFilePath);
 	}
 
 }

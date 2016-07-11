@@ -14,6 +14,9 @@
     href="${pageContext.request.contextPath}/resources/app/css/vendor/jquery/slider-pro.min.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/vendor/jquery/jquery.sliderPro.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/vendor/jquery/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/vendor/jquery/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/app/js/vendor/jquery/jquery.fileupload.js"></script>
 </head>
 <body>
   <c:import url="/WEB-INF/jsp/common/linedMenu.jsp" />

@@ -2,15 +2,17 @@ package org.debugroom.wedding.app.web.galley;
 
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.dozer.Mapper;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,14 +25,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
+
+import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 import org.debugroom.wedding.app.web.common.model.UserSearchCriteria;
 import org.debugroom.wedding.app.web.common.model.UserSearchResult;
 import org.debugroom.wedding.app.web.common.util.RequestContextUtil;
@@ -39,9 +43,11 @@ import org.debugroom.wedding.app.web.common.model.UserSearchCriteria.GetNotFolde
 import org.debugroom.wedding.app.web.galley.CreateFolderForm.CreateFolder;
 import org.debugroom.wedding.app.web.galley.UpdateFolderForm.UpdateFolder;
 import org.debugroom.wedding.domain.gallery.model.FolderDraft;
+import org.debugroom.wedding.domain.gallery.model.Media;
 import org.debugroom.wedding.domain.gallery.service.GalleryService;
 import org.debugroom.wedding.domain.model.entity.User;
-import org.dozer.Mapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
@@ -52,6 +58,16 @@ public class GalleryController {
 	
 	@Inject
 	GalleryService galleryService;
+
+	@Inject
+	MessageSource messageSource;
+	
+	@Inject
+	@Named("galleryContentsUploadHelper")
+	FileUploadHelper uploadHelper;
+
+	@Inject
+	GalleryContentsTypeHelper contentsHelper;
 	
 	@RequestMapping(method = RequestMethod.GET, value="/gallery")
 	public String gallery(Model model){
@@ -245,6 +261,44 @@ public class GalleryController {
 
 	}
 	
+	@RequestMapping(method = RequestMethod.POST, value="/gallery/upload")
+	public ResponseEntity<UploadFileResult> uploadFile(
+			@Validated UploadFileForm uploadFileForm,
+			Errors errors, HttpServletRequest request, Locale locale){
+		
+		UploadFileResult uploadFileResult = new UploadFileResult();
+		if(errors.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			uploadFileResult.setMessages(messages);
+			for(FieldError fieldError : errors.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uploadFileResult);
+		}
+
+		MultipartFile multipartFile = uploadFileForm.getUploadFile();
+		Media media = null;
+		try {
+			media = contentsHelper.createMedia(multipartFile);
+			media.setOriginalFilename(multipartFile.getOriginalFilename());
+			media.setFilePath(uploadHelper.saveFile(multipartFile, "00000000"));
+			media.setFolderId(uploadFileForm.getFolderId());
+			media.setUserId("00000000");
+			uploadFileResult.setMedia(galleryService.saveMedia(media));
+			uploadFileResult.setRequestContextPath(
+					RequestContextUtil.getRequestContextPath(request));
+		} catch (BusinessException e) {
+			List<String> messages = new ArrayList<String>();
+			uploadFileResult.setMessages(messages);
+			messages.add(messageSource.getMessage(e.getCode(), e.getArgs(), locale));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uploadFileResult);
+		} catch (MalformedURLException | URISyntaxException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(uploadFileResult);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(uploadFileResult);
+
+	}
+
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public void handle(HttpMessageNotReadableException e) {

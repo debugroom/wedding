@@ -12,4 +12,6 @@ public interface PhotoRepository extends JpaRepository<Photo, String>,
 	@Cacheable(cacheNames="photo")
 	public Photo findOne(String photoId);
 
+	public Photo findTopByPhotoIdLikeOrderByPhotoIdDesc(String photoId);
+
 }

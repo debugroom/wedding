@@ -66,7 +66,7 @@ public class Photo implements Serializable {
 	private Set<Group> grps;
 
 	//bi-directional many-to-one association to PhotoRelatedFolder
-	@OneToMany(mappedBy="photo")
+	@OneToMany(mappedBy="photo", cascade=CascadeType.ALL)
 	@JsonIgnore
 	private Set<PhotoRelatedFolder> photoRelatedFolders;
 

@@ -29,4 +29,11 @@ public class DomainProperties {
 	
 	@Value("${gallery.image.thumbnail.directory}")
 	private String galleryImageThumbnailDirectory;
+	
+	@Value("${gallery.image.thumbnail.width}")
+	private int galleryImageThumbnailWidth;
+
+	@Value("${gallery.image.thumbnail.height}")
+	private int galleryImageThumbnailHeight;
+	
 }

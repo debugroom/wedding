@@ -66,7 +66,9 @@ function getFolderDetail(){
 								+ '</div>'));
 	$("#hyper-link-get-users").on("mouseenter", getViewers);
 	$("#hyper-link-edit-folder").on("click", editFolder);
-	$.get($(this).data("folderRelatedPhotographsUrl"), function(data){
+	
+ 	
+ 	$.get($(this).data("folderRelatedPhotographsUrl"), function(data){
 		var thumbnailPanel = $("#thumbnailPanel");
 		if(thumbnailPanel != null){
 			thumbnailPanel.remove();
@@ -79,10 +81,36 @@ function getFolderDetail(){
 							+ data.requestContextPath
 							+ '/gallery/photo-thumbnail/'
 							+ val.photoId
-							+ '">'));
+							+ '" data-photographs-url="' 
+							+ data.requestContextPath
+							+ '/gallery/photo/'
+							+ val.photoId
+							+ '">'));	
 			}
-		)
+		);
+		$(".thumbnail-image").on("click", selectContents);
+		$("#thumbnailPanel").append($('<img class="file-upload-button-image" id="file-upload-button" src="' 
+				+ data.requestContextPath
+				+ '/resources/app/img/picture-upload.png'
+				+ '" />'));
+		$("#thumbnailPanel").append($('<input type="file" id="file-upload-input" name="uploadFileForms[]" multiple ' 
+				+ ' data-folder-id="' 
+				+ data.folderId
+				+ '" data-url="' 
+				+ data.requestContextPath
+				+ '/gallery/upload'
+				+ '" />'));
+		$("#thumbnailPanel").before($('<div id="progress">' 
+				+ '<div id="progress-bar" class="progress-bar" style="width: 0%;"></div>'
+				+ '</div>'));
+		$("#file-upload-button").on("click",function(){
+			$('#file-upload-input').trigger("click");
+		});
+		$("#file-upload-input").on("click", uploadFiles);
+		$("#detailPanel").append($('<div class="alternative-button"><button id="download-button" class="alternative-first-button" disabled="true">ダウンロードする</button>'
+	 			+ '<button id="delete-button" class="alternative-last-button" disabled="true">削除する</button></div>'));
 	});
+
 }
 
 function displayModalWindow(){
@@ -143,6 +171,93 @@ function showFolderPanel(isNew, imageFolderIconUrl, viewersUrl, noViewersUrl, fo
 	$("#folderFormPanel-close-button").on("click", clearFormPanel);
 }
 
+function selectContents(event){
+	var selectedContents = $(".selectedContents");
+	if(selectedContents.length == 0){
+	    if(!((event.ctrlKey && !event.metaKey) 
+	    		|| (!event.ctrlKey && event.metaKey))){
+		// 何もコンテンツが選択おらず、ctlキーが押下されていない場合はコンテンツパネルを表示する。
+	    	showContentsPanel($(this).data("photographsUrl"));
+		}
+		$(this).toggleClass("selectedContents");
+		$("#download-button").toggleClass("activate");
+		$("#delete-button").toggleClass("activate");
+	}else{
+		// 既にコンテンツが選択済みでctlキーが押下されていない場合→新たに選択し直し、コンテンツパネルを表示する。
+	    if(!((event.ctrlKey && !event.metaKey) 
+	    		|| (!event.ctrlKey && event.metaKey))){
+			for(var i = 0 ; i < selectedContents.length ; i++){
+				$(selectedContents[i]).toggleClass("selectedContents");
+			}
+			showContentsPanel($(this).data("photographsUrl"));
+		}
+		$(this).toggleClass("selectedContents");
+		$("#download-button").toggleClass("activate");
+		$("#delete-button").toggleClass("activate");
+	}
+}
+
+function uploadFiles(){
+	$('#file-upload-input').fileupload({
+		url : $(this).data("url"),
+		dataType : 'json',
+		acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|wmv|mov)$/i,
+        maxFileSize: 10000000000,
+        formData : {folderId : $(this).data("folderId")},
+        submit : function(e, data){
+        	$("#upload-label").remove();
+            $('#progress .progress-bar').css(
+                    'width',
+                    0 + '%'
+                );
+        	$("#progress-bar").before($('<span id="upload-label" class="successMessage">アップロード進行状況：<br></span>'));
+			$.each(data.originalFiles, function(index, value){
+				if(data.files[0].name == value.name){
+					data.paramName = "uploadFile";
+				}
+			})        	
+        },
+		done : function(e, data){
+			$("#file-upload-button").before($(
+				'<img class="thumbnail-image" src="'
+					+ data.result.requestContextPath
+					+ '/gallery/photo-thumbnail/'
+					+ data.result.media.mediaId
+					+ '" data-photographs-url="'
+					+ data.result.requestContextPath
+					+ '/gallery/photo/'
+					+ data.result.media.mediaId
+					+ '" />'));
+		},
+		fail : function(e, data){
+			$(".errorMessage").remove();
+			$.each(data.jqXHR.responseJSON.messages, function(index, message){
+				$("#thumbnailPanel").before($('<span class="errorMessage">'
+						+ message
+						+ '</span>'));
+			});
+		}
+	}).on('fileuploadprogressall', function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        $('#progress .progress-bar').css(
+            'width',
+            progress + '%'
+        );
+    });
+}
+
+function showContentsPanel(contentsUrl){
+	var contentsPanel = $("#contentsPanel");
+	if(contentsPanel){
+		contentsPanel.remove();
+	}
+	$("#thumbnailPanel").before($('<div id="contentsPanel">'
+			+ '<img class="" src="'
+			+ contentsUrl
+			+ '" />'
+			+ '</div>'));
+}
+
 function createFolder(){
 	/* 通常のPostMethodでリクエスト送信する場合
 	if($("#input-folder-name").val() == ""){
@@ -152,7 +267,7 @@ function createFolder(){
 	 */
 	var users = [];
 //	var hiddenForm = $("#folderForm").find(":hidden");
-	var hiddenForm = $("#folderForm input:hidden");
+	var hiddenForm = $("#users-table input:hidden");
 	for(var i = 0; i < hiddenForm.length ; i++){
 		users[i] = { "userId" : $(hiddenForm[i]).val() }
 	}
