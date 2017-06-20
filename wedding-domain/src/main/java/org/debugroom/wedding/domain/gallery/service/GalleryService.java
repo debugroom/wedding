@@ -48,4 +48,6 @@ public interface GalleryService {
 	
 	public void createPhotoThumbnail(Photo photo, Media media) throws BusinessException;
 	
+	public Media createDownloadZipFile(List<Media> medias);
+	
 }

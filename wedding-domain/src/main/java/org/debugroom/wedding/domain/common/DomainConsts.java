@@ -2,6 +2,7 @@ package org.debugroom.wedding.domain.common;
 
 public class DomainConsts {
 
+	public static final String WHITESPACE = " ";
 	public static final String JPEG_EXTENSION = "jpg";
 	public static final String PNG_EXTENSION = "png";
 	public static final String GIF_EXTENSION = "gif";

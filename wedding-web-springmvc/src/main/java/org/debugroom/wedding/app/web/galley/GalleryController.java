@@ -299,6 +299,24 @@ public class GalleryController {
 
 	}
 
+	@RequestMapping(method = RequestMethod.POST, value="/gallery/archive")
+	public ResponseEntity<CreateDownloadFileResult> createDownloadFile(
+			@Validated CreateDownloadFileForm createDownloadFileForm,
+			Errors errors){
+		
+		CreateDownloadFileResult createDownloadFileResult = new CreateDownloadFileResult();
+		
+		if(errors.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			createDownloadFileResult.setMessages(messages);
+			for(FieldError fieldError : errors.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(createDownloadFileResult);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(null);
+	}
+
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public void handle(HttpMessageNotReadableException e) {

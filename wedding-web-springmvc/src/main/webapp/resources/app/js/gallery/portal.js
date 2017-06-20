@@ -81,6 +81,8 @@ function getFolderDetail(){
 							+ data.requestContextPath
 							+ '/gallery/photo-thumbnail/'
 							+ val.photoId
+							+ '" data-photo-id="' 
+							+ val.photoId
 							+ '" data-photographs-url="' 
 							+ data.requestContextPath
 							+ '/gallery/photo/'
@@ -107,9 +109,18 @@ function getFolderDetail(){
 			$('#file-upload-input').trigger("click");
 		});
 		$("#file-upload-input").on("click", uploadFiles);
-		$("#detailPanel").append($('<div class="alternative-button"><button id="download-button" class="alternative-first-button" disabled="true">ダウンロードする</button>'
-	 			+ '<button id="delete-button" class="alternative-last-button" disabled="true">削除する</button></div>'));
+		$("#detailPanel").append($('<div class="alternative-button">' 
+				+ '<button id="download-button" class="alternative-first-button" value="' 
+				+ data.requestContextPath
+				+ "/gallery/archive"
+				+ '" disabled="true">ダウンロードする</button>'
+	 			+ '<button id="delete-button" class="alternative-last-button" value="'
+				+ data.requestContextPath
+				+ "/gallery/media"
+	 			+'" disabled="true">削除する</button></div>'));
 	});
+ 	$("#download-button").on("click", downloadContents);
+ 	$("#delete-button").on("click", deleteContents);
 
 }
 
@@ -181,7 +192,9 @@ function selectContents(event){
 		}
 		$(this).toggleClass("selectedContents");
 		$("#download-button").toggleClass("activate");
+		$("#download-button").prop("disabled", false);
 		$("#delete-button").toggleClass("activate");
+		$("#delete-button").prop("disabled", false);
 	}else{
 		// 既にコンテンツが選択済みでctlキーが押下されていない場合→新たに選択し直し、コンテンツパネルを表示する。
 	    if(!((event.ctrlKey && !event.metaKey) 
@@ -190,10 +203,21 @@ function selectContents(event){
 				$(selectedContents[i]).toggleClass("selectedContents");
 			}
 			showContentsPanel($(this).data("photographsUrl"));
+			$(this).toggleClass("selectedContents");
+		}else{
+		// 既にコンテンツが選択済みでctlキーが押下されている場合→選択を解除し、コンテンツパネルを非表示にする。
+			var contentsPanel = $("#contentsPanel");
+			if(contentsPanel){
+				contentsPanel.remove();
+			}
+			$(this).toggleClass("selectedContents");
 		}
-		$(this).toggleClass("selectedContents");
 		$("#download-button").toggleClass("activate");
 		$("#delete-button").toggleClass("activate");
+	}
+	if($(".selectedContents").length == 0){
+		$("#download-button").prop("disabled", true);
+		$("#delete-button").prop("disabled", true);
 	}
 }
 
@@ -222,6 +246,8 @@ function uploadFiles(){
 				'<img class="thumbnail-image" src="'
 					+ data.result.requestContextPath
 					+ '/gallery/photo-thumbnail/'
+					+ data.result.media.mediaId
+					+ '" data-photo-id="'
 					+ data.result.media.mediaId
 					+ '" data-photographs-url="'
 					+ data.result.requestContextPath
@@ -530,7 +556,46 @@ function getNotViewers(){
 	})
 }
 
+function downloadContents(){
+	var selectedContents = $(".selectedContents");
+	if(selectedContents.length != 0){
+		var media = [];
+		for(var i = 0; i < selectedContents ; i++){
+			media[i] = { "mediaId" : $(selectedContents[i].data("photoId")) }
+		}
+		var form = {
+			"media" : media
+		}
+		$.ajax({
+			type : "post",
+			url : $(this).value,
+			data : JSON.stringfy(),
+			dataType : "json",
+			success : function(data){
+				
+			}
+		})
+	}
+}
 
+function deleteContents(){
+	var selectedContents = $(".selectedContents");
+	if(selectedContents.length != 0){
+		var media = [];
+		for(var i = 0; i < selectedContents ; i++){
+			media[i] = { "mediaId" : $(selectedContents[i].data("photoId")) }
+		}
+		$.ajax({
+			type : "delete",
+			url : $(this).value,
+			data : JSON.stringfy(),
+			dataType : "json",
+			success : function(data){
+				
+			}
+		})
+	}	
+}
 
 function setHiddenParameterForCheckedUserId(){
 	if($(this).prop('checked')){

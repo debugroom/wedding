@@ -1,7 +1,6 @@
 package org.debugroom.wedding.domain.gallery.service;
 
 import java.awt.Image;
-import java.awt.PageAttributes.MediaType;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.common.exception.SystemException;
 import org.debugroom.wedding.domain.common.DomainProperties;
+import org.debugroom.wedding.domain.common.service.FileSystemSharedService;
 import org.debugroom.wedding.domain.gallery.model.FolderDraft;
 import org.debugroom.wedding.domain.gallery.model.Media;
 import org.debugroom.wedding.domain.gallery.model.PortalOutput;
@@ -41,6 +42,7 @@ import org.debugroom.wedding.domain.repository.common.FindNotFolderUsersByFolder
 import org.debugroom.wedding.domain.repository.common.FindRelateFolderByUserId;
 import org.debugroom.wedding.domain.repository.common.FolderRepository;
 import org.debugroom.wedding.domain.repository.common.UserRepository;
+import org.debugroom.wedding.domain.repository.movie.MovieRepository;
 import org.debugroom.wedding.domain.repository.photo.FindRelatedFolderWithViewablePhotoByUserId;
 import org.debugroom.wedding.domain.repository.photo.FindRelatedPhotoByFolderId;
 import org.debugroom.wedding.domain.repository.photo.FindViewablePhotoByUserId;
@@ -56,11 +58,20 @@ public class GalleryServiceImpl implements GalleryService{
 	PhotoRepository photoRepository;
 	
 	@Inject
+	MovieRepository movieRepository;
+	
+	@Inject
 	FolderRepository folderRepository;
 
 	@Inject
 	UserRepository userRepository;
 
+	@Inject
+	FileService fileService;
+	
+	@Inject
+	FileSystemSharedService fileSystemSharedService;
+	
 	@Override
 	public List<Photo> getRandomPhotographs(List<Photo> photographs) {
 		List<Photo> randomPhotographs = new ArrayList<Photo>();
@@ -78,6 +89,62 @@ public class GalleryServiceImpl implements GalleryService{
 			}
 		}
 		return randomPhotographs;
+	}
+
+	@Override
+	public Media createDownloadZipFile(List<Media> mediaList) {
+		
+		List<String> photoIds = new ArrayList<String>();
+		List<String> movieIds = new ArrayList<String>();
+
+		for(Media media : mediaList){
+			switch (media.getMediaType()) {
+			case PHOTOGRAPH:
+				photoIds.add(media.getMediaId());
+				break;
+			case MOVIE:
+				movieIds.add(media.getMediaId());
+				break;
+			default:
+				break;
+			}
+		}
+		
+		List<Photo> photographs = photoRepository.findByPhotoIdIn(photoIds);
+		List<Movie> movies = movieRepository.findByMovieIdIn(movieIds);
+		
+		Media zipFile = null;
+		
+		if(!photographs.isEmpty() || !movies.isEmpty()){
+			String randomUUID = UUID.randomUUID().toString();
+			String zipDirectory = fileSystemSharedService.createDirectory(randomUUID, 
+					domainProperties.getGalleryDownloadDirectoryName());
+		
+			for(Media media : mediaList){
+				switch(media.getMediaType()){
+				case PHOTOGRAPH:
+					for(Photo photo : photographs){
+						if(photo.getPhotoId().equals(media.getMediaId())){
+							media.setFilePath(photo.getFilePath());
+						}
+					}
+					break;
+				case MOVIE:
+					for(Movie movie : movies){
+						if(movie.getMovieId().equals(media.getMediaId())){
+							media.setFilePath(movie.getFilePath());
+						}
+					}
+					break;
+				case ZIP:
+					break;
+				default:
+					break;
+				}
+			}
+			zipFile = fileService.createZipFile(mediaList, zipDirectory);
+		}
+		return zipFile;
 	}
 
 	@Override
@@ -276,6 +343,10 @@ public class GalleryServiceImpl implements GalleryService{
 							.build());
 				media.setMediaId(movie.getMovieId());
 				break;
+		case ZIP:
+			break;
+		default:
+			break;
 		}
 		return media;
 	}
