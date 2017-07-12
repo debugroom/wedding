@@ -50,7 +50,20 @@
                   <tr>
                     <td><form:label path="imageFilePath">ピクチャ</form:label> : </td>
                     <td>
-                      <img src='/profile/image/<c:out value="${portalResource.user.userId}" />'>
+                      <c:choose>
+                        <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"png")}'>
+                          <img src='/profile/image/<c:out value="${portalResource.user.userId}/xxxx.png" />'>
+                        </c:when>
+                        <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"jpg")}'>
+                          <img src='/profile/image/<c:out value="${portalResource.user.userId}/xxxx.jpg" />'>
+                        </c:when>
+                        <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"jpeg")}'>
+                          <img src='/profile/image/<c:out value="${portalResource.user.userId}/xxxx.jpg" />'>
+                        </c:when>
+                        <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"gif")}'>
+                          <img src='/profile/image/<c:out value="${portalResource.user.userId}/xxxx.gif" />'>
+                        </c:when>
+                      </c:choose>
                       <br><form:hidden path="imageFilePath"/>
                     </td>
                     <td><button id="user.imageFile-button" name="user.imageFile-button" type="button" value="user.imageFilePath" >変更</button></td>

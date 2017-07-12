@@ -36,7 +36,7 @@ public class User implements Serializable{
 	private String firstName;
 	@NotNull
 	@Size(min=1, max=1024)
-	@Pattern(regexp = "[-¥.¥/a-zA-Z0-9]*")
+	@Pattern(regexp = "[-¥.¥ ¥/a-zA-Z0-9]*")
 	private String imageFilePath;
 	@NotNull
 	@Size(min=1, max=32)

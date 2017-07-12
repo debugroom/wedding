@@ -81,21 +81,26 @@
                     <th colspan="2">ピクチャ</th>
                   </tr>
                   <tr>
-                    <th>更新前</th>
-                    <th>更新後</th>
+                    <th colspan="2">更新後</th>
                   </tr>
                   <tr>
-                    <td>
-                      <spring:nestedPath path="updateResult.beforeEntity" >
-                        <spring:bind path="imageFilePath">
-                          <img src='/profile/image/<c:out value="${userResult.beforeEntity.userId}" />'>
-                        </spring:bind>
-                      </spring:nestedPath>
-                    </td>
-                    <td>
+                    <td colspan="2">
                       <spring:nestedPath path="updateResult.afterEntity" >
                         <spring:bind path="imageFilePath">
-                          <img src='/profile/image/<c:out value="${userResult.afterEntity.userId}" />'>
+                          <c:choose>
+                            <c:when test='${fn:endsWith(updateResult.afterEntity.imageFilePath,"png")}'>
+                              <img src='/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.png" />'>
+                            </c:when>
+                            <c:when test='${fn:endsWith(updateResult.afterEntity.imageFilePath,"jpg")}'>
+                              <img src='/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.jpg" />'>
+                            </c:when>
+                            <c:when test='${fn:endsWith(updateResult.afterEntity.imageFilePath,"jpeg")}'>
+                              <img src='/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.jpg" />'>
+                            </c:when>
+                            <c:when test='${fn:endsWith(updateResult.afterEntity.imageFilePath,"gif")}'>
+                              <img src='/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.gif" />'>
+                            </c:when>
+                          </c:choose>
                         </spring:bind>
                       </spring:nestedPath>
                     </td>

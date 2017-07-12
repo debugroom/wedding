@@ -176,9 +176,8 @@ public class ServiceAdpaterController {
 
 	@RequestMapping(method = RequestMethod.GET,
 			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif",
-//			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE},
-			produces = {MediaType.IMAGE_PNG_VALUE},
-			value = "/profile/image/{userId}")
+			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE},
+			value = "/profile/image/{userId}/{imageFileExtention}")
 	@ResponseBody
 	public ResponseEntity<BufferedImage> getImage(@PathVariable String userId){
 		String serviceName = "profile";
