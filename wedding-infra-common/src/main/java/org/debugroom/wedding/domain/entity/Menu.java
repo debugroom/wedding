@@ -33,8 +33,12 @@ public class Menu implements Serializable {
 	@Column(name="menu_name")
 	private String menuName;
 
+	@Column(name="url")
 	private String url;
 
+	@Column(name="has_pathvariables")
+	private boolean hasPathvariables;
+	
 	@Column(name="usable_end_date")
 	private Timestamp usableEndDate;
 
@@ -135,6 +139,14 @@ public class Menu implements Serializable {
 		fnction.setMenu(null);
 
 		return fnction;
+	}
+
+	public boolean hasPathvariables() {
+		return hasPathvariables;
+	}
+
+	public void setHasPathvariables(boolean hasPathvariables) {
+		this.hasPathvariables = hasPathvariables;
 	}
 
 }

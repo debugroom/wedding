@@ -18,21 +18,23 @@ public class MenuTag extends RequestContextAwareTag{
 	private static final String INNER_ELEMENT = "li";
 	private static final String LINK_ELEMENT = "a";
 	private static final String LINK_ATTRIBUTE = "href";
+	private static final String PATH_SEPARATOR = "/";
 	
 	private String cssStyle;
 	private String userId;
+	private Integer authorityLevel;
 	
 	@Override
 	protected int doStartTagInternal() throws Exception{
 
-		MenuSharedService menuService = (MenuSharedService) getRequestContext().getWebApplicationContext().getBean("menuService");
+		MenuSharedService menuService = (MenuSharedService) getRequestContext().getWebApplicationContext().getBean("menuSharedService");
 
 		User user = null;
 		if(null == userId){
-		    user = User.builder().userId("00000000").authorityLevel(0).build();
-		}else{
-			user = User.builder().userId(userId).build();
+			userId = "00000000";
+			authorityLevel = 0;
 		}
+		user = User.builder().userId(userId).authorityLevel(authorityLevel).build();
 
 		List<Menu> menuList = menuService.getUsableMenu(user);
 		TagWriter tagWriter = new TagWriter(this.pageContext);
@@ -46,6 +48,9 @@ public class MenuTag extends RequestContextAwareTag{
 			tagWriter.startTag(LINK_ELEMENT);
 			stringBuilder = new StringBuilder();
 			stringBuilder.append(getRequestContext().getContextPath()).append(menu.getUrl());
+			if(menu.hasPathvariables()){
+				stringBuilder.append(PATH_SEPARATOR).append(userId);
+			}
 			tagWriter.writeAttribute(LINK_ATTRIBUTE, stringBuilder.toString());
 			tagWriter.appendValue(menu.getMenuName());
 			tagWriter.endTag();
@@ -64,4 +69,7 @@ public class MenuTag extends RequestContextAwareTag{
 		this.cssStyle = cssStyle;
 	}
 
+	public void setAuthorityLevel(String authorityLevel){
+		this.authorityLevel = Integer.parseInt(authorityLevel);
+	}
 }

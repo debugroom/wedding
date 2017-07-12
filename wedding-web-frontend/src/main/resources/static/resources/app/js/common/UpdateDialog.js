@@ -1,0 +1,171 @@
+function showUpdateDialog(event){
+	
+	//UPDATE対象のパラメータを取得する。
+	var value = event.currentTarget.value;
+	//配列を含む場合のパラメータ表現を変更する。
+	var target = replaceArrayExpression(value); 
+	
+	//パラメータを変更するためのパネルを作る。
+	var panelElement = document.createElement("div");
+	//パラメータを変更するためのパネルの属性をmodelPanelとする。
+	panelElement.setAttribute("class", "editPanel");
+	//インプットフォームを作成する。
+	var inputElement = document.createElement("input");
+	
+	//インプットフォームを作成する。
+	switch (target){
+		case "user.lastName" :
+			inputElement.setAttribute("type", "text");
+			break;
+		case "user.imageFilePath" :
+			inputElement.setAttribute("type", "file");
+			break;
+		case "user.loginId" :
+			inputElement.setAttribute("type", "text");
+			break;
+		case "user.authorityLevel" :
+			inputElement.setAttribute("type", "number");
+			break;
+		case "user.address.postCd" :
+			inputElement.setAttribute("type", "text");
+			break;
+		case "user.address.address" :
+			inputElement.setAttribute("type", "text");
+			break;
+		case "user.emails" :
+			inputElement.setAttribute("type", "email");
+			break;
+		case "user.groups" :
+			inputElement.setAttribute("type", "text");
+			break;
+		case "user.credentials" :
+			inputElement.setAttribute("type", "password");
+			break;
+		case "user.infomation.title" :
+			inputElement.setAttribute("type", "text");
+			break;
+		case "user.infomation.releaseDate" :
+			inputElement.setAttribute("type", "text");
+			break;
+		case "user.request.title" :
+			inputElement.setAttribute("type", "text");
+			break;
+	}
+
+	//Formのtype属性がfile以外の場合は、現在入力されているパラメータをhiddenから取得してフォームに設定する。
+	if(!inputElement.getAttribute("type") == "file"){
+		inputElement.setAttribute("value", document.getElementById(value).value);
+	}
+	
+	panelElement.appendChild(inputElement);
+	inputElement.setAttribute("id", value + "-edit");
+	inputElement.setAttribute("name", value + "-edit");
+
+	if(inputElement.getAttribute("type") == "text"){
+		inputElement.setAttribute("placeholder", document.getElementById(target).value);
+	}
+
+	if(inputElement.getAttribute("type") == "email"){
+		inputElement.setAttribute("placeholder", document.getElementById(value).value);
+	}
+
+	//Targetがuser.lastNameのときは、firstName用のフォームを作成する。
+	if(target == "user.lastName"){
+		var additionalInputElement = document.createElement("input");
+		additionalInputElement.setAttribute("type", "text");
+		additionalInputElement.setAttribute("id", "user.firstName-edit");
+		additionalInputElement.setAttribute("name", "user.firstName-edit");
+		additionalInputElement.setAttribute("placeholder", document.getElementById("user.firstName").value);
+		panelElement.appendChild(additionalInputElement);
+	}
+	
+	//パスワード入力の場合は２つ入力させる。
+	if(inputElement.getAttribute("type") == "password"){
+		var additionalTextElement = document.createElement("p");
+		var additionalText = document.createTextNode("確認のため、再入力してください。");
+		var additionalInputElement = document.createElement("input");
+		additionalInputElement.setAttribute("type", "password");
+		additionalInputElement.setAttribute("id", "user.credentials[1].credentialKey-edit");
+		additionalInputElement.setAttribute("name", "user.credentials[1].credentialKey-edit");
+		additionalTextElement.appendChild(additionalText);
+		panelElement.appendChild(additionalTextElement);
+		panelElement.appendChild(additionalInputElement);
+	}
+
+	//キャンセルボタンを作成する。
+	var cancelButtonElement = document.createElement("button");
+	var cancelButtonTitle = document.createTextNode("閉じる");
+	cancelButtonElement.setAttribute("id", "close");
+	cancelButtonElement.addEventListener("click", function(event){
+		closeUpdateDialog(event);},
+		false
+	);
+
+	cancelButtonElement.appendChild(cancelButtonTitle);
+	panelElement.appendChild(cancelButtonElement);
+	
+	//更新ボタンを作成する。
+	var submitButtonElement = document.createElement("button");
+	var submitButtonTitle = document.createTextNode("変更");
+	submitButtonElement.setAttribute("id", "updateParam");
+	submitButtonElement.setAttribute("name", value);
+	submitButtonElement.setAttribute("type", "button");
+	submitButtonElement.addEventListener("click", function(event){
+		updateParam(event);},
+		false
+	);
+	submitButtonElement.appendChild(submitButtonTitle);
+	panelElement.appendChild(submitButtonElement);
+
+	document.getElementById(value).parentNode.appendChild(panelElement);
+	
+}
+
+function closeUpdateDialog(){
+	event.currentTarget.parentNode.parentNode.removeChild(
+			event.currentTarget.parentNode);
+}
+
+function addWarningMessage(event, target){
+	var errorFragment = document.getElementById(event.currentTarget.name + "-error-message");
+	var warningFragment = document.getElementById(event.currentTarget.name + "-warning-message");
+	if(null == warningFragment || null != errorFragment){
+		if(null != errorFragment){
+			target.removeChild(errorFragment); 
+		}
+		var newWarningFragment = document.createDocumentFragment();
+		var warningPanel = document.createElement("div");
+		warningPanel.setAttribute("id", event.currentTarget.name + "-warning-message");
+		warningPanel.setAttribute("class", "warningMessage");
+		warningPanel.appendChild(document.createTextNode("!下の「更新を確定する」ボタンを押して、更新を確定してください。"));
+		newWarningFragment.appendChild(warningPanel);
+		target.appendChild(newWarningFragment); 
+	}
+}
+
+function addErrorMessage(event, target){
+	var errorFragment = document.getElementById(event.currentTarget.name + "-error-message");
+	var warningFragment = document.getElementById(event.currentTarget.name + "-warning-message");
+	if(null == errorFragment || null != warningFragment){
+		if(null != warningFragment){
+			target.removeChild(warningFragment); 
+		}
+		var newErrorFragment = document.createDocumentFragment();
+		var errorPanel = document.createElement("div");
+		errorPanel.setAttribute("id", event.currentTarget.name + "-error-message");
+		errorPanel.setAttribute("class", "errorMessage");
+		errorPanel.appendChild(document.createTextNode("入力値が異なります。"));
+		newErrorFragment.appendChild(errorPanel);
+		target.appendChild(newErrorFragment); 
+	}
+}
+
+
+function replaceArrayExpression(value){
+	var regExp = new RegExp("[0-9a-zA-Z¥.]+[¥[].*");
+	if(regExp.test(value)){
+		var splitString = value.slice(0, value.search("[¥[]"));
+		return splitString;
+	}
+	return value;	
+}

@@ -9,6 +9,11 @@
   <artifactId>wedding-web-frontend</artifactId>
   <name>wedding-web-frontend</name>
   
+  <properties>
+    <org.bytedeco_javacv_version>1.3</org.bytedeco_javacv_version>
+    <org.bytedeco.javacpp-presets_opencv_version>3.2.0-1.3</org.bytedeco.javacpp-presets_opencv_version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -25,13 +30,105 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>framework-spring</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>wedding-web-common</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
     </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+    <!-- OpenCV -->
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacv</artifactId>
+      <version>${org.bytedeco_javacv_version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bytedeco.javacpp-presets</groupId>
+      <artifactId>opencv</artifactId>
+      <version>${org.bytedeco.javacpp-presets_opencv_version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bytedeco.javacpp-presets</groupId>
+      <artifactId>opencv</artifactId>
+      <version>${org.bytedeco.javacpp-presets_opencv_version}</version>
+      <classifier>${classifier}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.8.1</version>
+    </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>macosx-x86_64</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>x86_64</arch>
+        </os>
+        <activeByDefault>true</activeByDefault>    
+      </activation>
+      <properties>
+        <classifier>macosx-x86_64</classifier>
+      </properties>
+      </profile>
+      <profile>
+        <id>linux-x86_64</id>
+        <activation>
+          <os>
+            <family>unix</family>
+            <arch>amd64</arch>
+          </os>
+        </activation>
+        <properties>
+          <classifier>linux-x86_64</classifier>
+        </properties>
+      </profile>
+      <profile>
+        <id>windows-x86_64</id>
+        <activation>
+          <os>
+            <family>windows</family>
+            <arch>amd64</arch>
+          </os>
+        </activation>
+        <properties>
+          <classifier>windows-x86_64</classifier>
+        </properties>
+      </profile>
+      <profile>
+        <id>windows-x86</id>
+        <activation>
+          <os>
+            <family>windows</family>
+            <arch>x86</arch>
+          </os>
+        </activation>
+        <properties>
+          <classifier>windows-x86</classifier>
+        </properties>
+      </profile>
+    </profiles>
 
   <build>
     <plugins>
@@ -40,7 +137,17 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <mainClass>org.debugroom.sample.cassandra.config.WebApp</mainClass>
+          <profiles>
+            <profile>macosx-x86_64</profile>
+          </profiles>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>springloaded</artifactId>
+            <version>${spring-loaded.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

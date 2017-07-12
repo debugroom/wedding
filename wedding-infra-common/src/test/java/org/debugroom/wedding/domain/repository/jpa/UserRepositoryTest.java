@@ -107,7 +107,8 @@ public class UserRepositoryTest {
 	        	 		.expected((User.builder())
 	        	 							.userId("00000000")
 	        	 							.loginId("org.debugroom")
-	        	 							.userName("(ΦωΦ)")
+	        	 							.lastName("(ΦωΦ)")
+	        	 							.firstName("うぇーい")
 	        	 							.lastLoginDate(new Timestamp(new Calendar.Builder()
 	        	 													.setDate(2015, 1, 1)
 	        	 													.setTimeOfDay(0, 0, 0)
@@ -125,8 +126,8 @@ public class UserRepositoryTest {
 	        	 
 	        	User user = userRepository.findOne(fixture.userId);
 	        	 
-	        	assertThat(fixture.toString(), user.getUserName(), 
-	        			 is(fixture.expected.getUserName()));
+	        	assertThat(fixture.toString(), user.getFirstName(), 
+	        			 is(fixture.expected.getFirstName()));
 	        	assertThat(fixture.toString(), user.getLoginId(), 
 	        			 is(fixture.expected.getLoginId()));
 

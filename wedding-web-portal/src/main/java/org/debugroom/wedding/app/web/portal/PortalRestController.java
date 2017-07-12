@@ -3,6 +3,7 @@ package org.debugroom.wedding.app.web.portal;
 import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,19 +13,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.dozer.Mapper;
 import org.dozer.MappingException;
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.app.model.portal.Information;
 import org.debugroom.wedding.app.model.portal.PortalResource;
 import org.debugroom.wedding.domain.entity.User;
 import org.debugroom.wedding.domain.model.portal.PortalInfoOutput;
 import org.debugroom.wedding.domain.service.portal.PortalService;
 
 @RestController
-@RequestMapping("/api/v1/portal")
+@RequestMapping("/api/v1")
 public class PortalRestController {
 
 	@Inject
+	Mapper mapper;
+	
+	@Inject
 	PortalService portalService;
 	
-	@RequestMapping(method=RequestMethod.GET, value="/{userId}")
+	@RequestMapping(method=RequestMethod.GET, value="/portal/{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public PortalResource getPortalResource(@PathVariable String userId) 
 			throws MappingException, BusinessException{
@@ -38,5 +43,11 @@ public class PortalRestController {
 				.build();
 	}
 	
+	@RequestMapping(method=RequestMethod.GET, value="/information/{infoId}")
+	@ResponseStatus(HttpStatus.OK)
+	public Information information(@Validated Information information){
+		return mapper.map(portalService.getInformation(information.getInfoId()),
+				Information.class);
+	}
 	
 }

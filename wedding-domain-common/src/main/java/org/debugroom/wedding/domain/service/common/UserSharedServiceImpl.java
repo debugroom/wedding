@@ -78,10 +78,16 @@ public class UserSharedServiceImpl implements UserSharedService{
 
 		List<String> updateParamList = new ArrayList<String>();
 		
-		if(!updateTargetUser.getUserName().equals(user.getUserName())){
-			updateTargetUser.setUserName(user.getUserName());
+		if(!updateTargetUser.getFirstName().equals(user.getFirstName())){
+			updateTargetUser.setFirstName(user.getFirstName());
 			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-			updateParamList.add("userName");
+			updateParamList.add("firstName");
+		}
+		
+		if(!updateTargetUser.getLastName().equals(user.getLastName())){
+			updateTargetUser.setLastName(user.getLastName());
+			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			updateParamList.add("lastName");
 		}
 		
 		if(!updateTargetUser.getLoginId().equals(user.getLoginId())){
@@ -110,24 +116,26 @@ public class UserSharedServiceImpl implements UserSharedService{
 			updateParamList.add("address.address");
 		}
 
-		for(Credential credential : user.getCredentials()){
-			// If credentialType equals "PASSWORD" and CredentialKey is not blank , null.
-			if(domainProperties.getCredentialTypePassword().equals(
+		if(null != user.getCredentials()){
+			for(Credential credential : user.getCredentials()){
+				// If credentialType equals "PASSWORD" and CredentialKey is not blank , null.
+				if(domainProperties.getCredentialTypePassword().equals(
 					credential.getId().getCredentialType()) 
 					&& (!"".equals(credential.getCredentialKey()) 
 							&& credential.getCredentialKey() != null)){
-				for(Credential targetCredential : updateTargetUser.getCredentials()){
-					// If update target credentialType equals "PASSWORD"
-					if(domainProperties.getCredentialTypePassword().equals(
+					for(Credential targetCredential : updateTargetUser.getCredentials()){
+						// If update target credentialType equals "PASSWORD"
+						if(domainProperties.getCredentialTypePassword().equals(
 							targetCredential.getId().getCredentialType())){
 						// Set encode password. 
-						targetCredential.setCredentialKey(passwordEncoder.encode(
+							targetCredential.setCredentialKey(passwordEncoder.encode(
 								credential.getCredentialKey()));
-						targetCredential.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-						updateParamList.add(new StringBuilder()
+							targetCredential.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+							updateParamList.add(new StringBuilder()
 													.append("credentials#")
 													.append(targetCredential.getId().getCredentialType())
 													.toString());
+						}
 					}
 				}
 			}

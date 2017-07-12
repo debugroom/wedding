@@ -36,8 +36,12 @@ public class Function implements Serializable {
 	@Column(name="last_updated_date")
 	private Timestamp lastUpdatedDate;
 
+	@Column(name="url")
 	private String url;
 
+	@Column(name="has_pathvariables")
+	private boolean hasPathvariables;
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name="usable_end_date")
 	private Date usableEndDate;
@@ -128,6 +132,14 @@ public class Function implements Serializable {
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
+	}
+
+	public boolean hasPathvariables() {
+		return hasPathvariables;
+	}
+
+	public void setHasPathvariables(boolean hasPathvariables) {
+		this.hasPathvariables = hasPathvariables;
 	}
 
 }

@@ -22,5 +22,7 @@
   	<module>wedding-infra-portal</module>
   	<module>wedding-web-portal</module>
   	<module>wedding-web-frontend</module>
+  	<module>wedding-domain-profile</module>
+  	<module>wedding-web-profile</module>
   </modules>
 </project>

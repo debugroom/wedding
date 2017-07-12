@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dozer.DozerBeanMapper;
+import org.dozer.spring.DozerBeanMapperFactoryBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -12,9 +14,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.io.Resource;
 
 @Import(MvcConfig.class)
+@PropertySource(value = "classpath:/env.properties")
 @SpringBootApplication
 public class WebApp extends SpringBootServletInitializer{
 
@@ -28,13 +33,23 @@ public class WebApp extends SpringBootServletInitializer{
 		return builder.sources(WebApp.class);
 	}
 	
-	@Bean(name = "mapper")
-	public DozerBeanMapper dozerBean(){
-		DozerBeanMapper mapper =  new DozerBeanMapper();
-		List<String> mappingFileUrls = new ArrayList<String>();
-		mappingFileUrls.add("classpath*/META-INF/dozer/**/*-mapping.xml");
-		mapper.setMappingFiles(mappingFileUrls);
-		return mapper;
+	@Bean
+	public MessageSource messageSource(){
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames(
+        	"i18n/frontend-application-messages",
+        	"i18n/frontend-system-messages"
+        );
+        return messageSource;
+	}
+
+	@Bean
+	public DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean(
+			@Value("classpath*:/META-INF/dozer/**/*-mapping.xml") Resource[] resources){
+        final DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean 
+        = new DozerBeanMapperFactoryBean();
+        dozerBeanMapperFactoryBean.setMappingFiles(resources);
+        return dozerBeanMapperFactoryBean;
 	}
 
 }

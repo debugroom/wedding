@@ -28,6 +28,9 @@ public class User implements Serializable {
 	@Column(name="authority_level")
 	private Integer authorityLevel;
 
+	@Column(name="is_bride_side")
+	private boolean isBrideSide;
+	
 	@Column(name="image_file_path")
 	private String imageFilePath;
 
@@ -40,8 +43,11 @@ public class User implements Serializable {
 	@Column(name="login_id")
 	private String loginId;
 
-	@Column(name="user_name")
-	private String userName;
+	@Column(name="first_name")
+	private String firstName;
+
+	@Column(name="last_name")
+	private String lastName;
 
 	@Version
 	private Integer ver;
@@ -117,12 +123,20 @@ public class User implements Serializable {
 		this.loginId = loginId;
 	}
 
-	public String getUserName() {
-		return this.userName;
+	public String getFirstName() {
+		return this.firstName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public Integer getVer() {
@@ -227,6 +241,14 @@ public class User implements Serializable {
 		notification.setUsr(null);
 
 		return notification;
+	}
+
+	public boolean isBrideSide() {
+		return isBrideSide;
+	}
+
+	public void setBrideSide(boolean isBrideSide) {
+		this.isBrideSide = isBrideSide;
 	}
 
 }

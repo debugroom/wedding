@@ -7,4 +7,8 @@ public interface ConnectPathHolder {
 	
 	public Map<String, List<String>> getPaths();
 
+	public Map<String, List<String>> getIpAddrs();
+	
+	public Map<String, List<String>> getPorts();
+	
 }

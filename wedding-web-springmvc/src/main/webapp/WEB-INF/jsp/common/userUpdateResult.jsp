@@ -5,7 +5,7 @@
         <table>
           <tbody>
             <c:choose>
-              <c:when test="${updateParam == 'userName'}">
+                <c:when test="${updateParam == 'userName'}">
                 <tr>
                   <th colspan="2">ユーザ名</th>
                 </tr>

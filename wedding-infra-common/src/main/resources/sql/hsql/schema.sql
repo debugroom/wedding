@@ -112,6 +112,8 @@ CREATE TABLE FNCTION
 	FUNCTION_NAME varchar(100),
 	-- URL
 	URL varchar(1024),
+	-- パス変数を持つ
+	HAS_PATHVARIABLES boolean,
 	-- 使用可能開始日時
 	USABLE_START_DATE timestamp,
 	-- 使用可能終了日時
@@ -250,6 +252,8 @@ CREATE TABLE MENU
 	MENU_NAME varchar(255),
 	-- URL
 	URL varchar(1024),
+	-- パス変数を持つ
+	HAS_PATHVARIABLES boolean,
 	-- 使用可能開始日時
 	USABLE_START_DATE timestamp,
 	-- 使用可能終了日時
@@ -477,14 +481,18 @@ CREATE TABLE USR
 (
 	-- ユーザID
 	USER_ID varchar(8) NOT NULL,
-	-- ユーザ名
-	USER_NAME varchar(512),
+	-- 苗字
+	LAST_NAME varchar(32),
+	-- 名前
+	FIRST_NAME varchar(32),
 	-- ログインID
 	LOGIN_ID varchar(32) UNIQUE,
 	-- 画像ファイルパス
 	IMAGE_FILE_PATH varchar(512),
 	-- 権限レベル
 	AUTHORITY_LEVEL int,
+	-- 花嫁側
+	IS_BRIDE_SIDE boolean,
 	-- 最終ログイン日時
 	LAST_LOGIN_DATE timestamp,
 	-- バージョン

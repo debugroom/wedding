@@ -1,2 +1,8 @@
 server:
   port: 8081
+  tomcat:
+    additional-tld-skip-patterns : "javacpp.jar, *javacv*.jar"
+image:
+  download:
+    root:
+      directory: /Users/kawabatakouhei/Documents/work/apps
