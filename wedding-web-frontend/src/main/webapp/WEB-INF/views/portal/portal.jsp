@@ -27,7 +27,20 @@
         <div class="panel">
           <div class="informationPanel">
             <div class="imgPanel">
-              <img src="${pageContext.request.contextPath}${portalResource.user.imageFilePath}" alt="" />
+              <c:choose>
+                <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"png")}'>
+                  <img src='/profile/image/<c:out value="${portalResource.user.userId}/xxxx.png" />'>
+                </c:when>
+                <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"jpg")}'>
+                  <img src='/profile/image/<c:out value="${portalResource.user.userId}/xxxx.jpg" />'>
+                </c:when>
+                <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"jpeg")}'>
+                  <img src='/profile/image/<c:out value="${portalResource.user.userId}/xxxx.jpg" />'>
+                </c:when>
+                <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"gif")}'>
+                  <img src='/profile/image/<c:out value="${portalResource.user.userId}/xxxx.gif" />'>
+                </c:when>
+              </c:choose>
             </div>
             <h2>${portalResource.user.lastName} ${portalResource.user.firstName} さん</h2>
             <p class="profile">前回ログイン日時：<fmt:formatDate value="${portalResource.user.lastLoginDate}" pattern="yyyy-MM-dd HH:mm:ss" /> </p>

@@ -40,6 +40,8 @@ public class User implements Serializable{
 	@Size(min=1, max=32)
 	@Pattern(regexp = "[a-zA-Z0-9¥.¥-]*")
 	private String loginId;
+	@NotNull
+	private boolean isBrideSide;
 	@Valid
 	private Address address;
 	@Valid

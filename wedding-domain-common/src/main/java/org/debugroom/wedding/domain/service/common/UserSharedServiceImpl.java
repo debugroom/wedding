@@ -80,57 +80,72 @@ public class UserSharedServiceImpl implements UserSharedService{
 		
 		if(!updateTargetUser.getFirstName().equals(user.getFirstName())){
 			updateTargetUser.setFirstName(user.getFirstName());
-			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			updateTargetUser.setLastUpdatedDate(DateUtil.getCurrentDate());
 			updateParamList.add("firstName");
 		}
 		
 		if(!updateTargetUser.getLastName().equals(user.getLastName())){
 			updateTargetUser.setLastName(user.getLastName());
-			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			updateTargetUser.setLastUpdatedDate(DateUtil.getCurrentDate());
 			updateParamList.add("lastName");
 		}
 		
 		if(!updateTargetUser.getLoginId().equals(user.getLoginId())){
 			updateTargetUser.setLoginId(user.getLoginId());
-			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			updateTargetUser.setLastUpdatedDate(DateUtil.getCurrentDate());
 			updateParamList.add("loginId");
 		}
 
 		if(!updateTargetUser.getImageFilePath().equals(user.getImageFilePath())){
 			updateTargetUser.setImageFilePath(user.getImageFilePath());
-			updateTargetUser.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			updateTargetUser.setLastUpdatedDate(DateUtil.getCurrentDate());
 			updateParamList.add("imageFile");
+		}
+
+		if(null != user.getAuthorityLevel()){
+			if(updateTargetUser.getAuthorityLevel().intValue() 
+				!= user.getAuthorityLevel().intValue()){
+				updateTargetUser.setAuthorityLevel(user.getAuthorityLevel());
+				updateTargetUser.setLastUpdatedDate(DateUtil.getCurrentDate());
+				updateParamList.add("authorityLevel");
+			}
+		}
+
+		if(updateTargetUser.isBrideSide() != user.isBrideSide()){
+			updateTargetUser.setBrideSide(user.isBrideSide());
+			updateTargetUser.setLastUpdatedDate(DateUtil.getCurrentDate());
+			updateParamList.add("isBrideSide");
 		}
 
 		if(!updateTargetUser.getAddress().getPostCd().equals(
 				user.getAddress().getPostCd())){
 			updateTargetUser.getAddress().setPostCd(user.getAddress().getPostCd());
-			updateTargetUser.getAddress().setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			updateTargetUser.getAddress().setLastUpdatedDate(DateUtil.getCurrentDate());
 			updateParamList.add("address.postCd");
 		}
 		
 		if(!updateTargetUser.getAddress().getAddress().equals(
 				user.getAddress().getAddress())){
 			updateTargetUser.getAddress().setAddress(user.getAddress().getAddress());
-			updateTargetUser.getAddress().setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			updateTargetUser.getAddress().setLastUpdatedDate(DateUtil.getCurrentDate());
 			updateParamList.add("address.address");
 		}
-
+		
 		if(null != user.getCredentials()){
 			for(Credential credential : user.getCredentials()){
 				// If credentialType equals "PASSWORD" and CredentialKey is not blank , null.
-				if(domainProperties.getCredentialTypePassword().equals(
+				if(domainProperties.getCredentialTypePasswordLogicalName().equals(
 					credential.getId().getCredentialType()) 
 					&& (!"".equals(credential.getCredentialKey()) 
 							&& credential.getCredentialKey() != null)){
 					for(Credential targetCredential : updateTargetUser.getCredentials()){
 						// If update target credentialType equals "PASSWORD"
-						if(domainProperties.getCredentialTypePassword().equals(
+						if(domainProperties.getCredentialTypePasswordLogicalName().equals(
 							targetCredential.getId().getCredentialType())){
 						// Set encode password. 
 							targetCredential.setCredentialKey(passwordEncoder.encode(
 								credential.getCredentialKey()));
-							targetCredential.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+							targetCredential.setLastUpdatedDate(DateUtil.getCurrentDate());
 							updateParamList.add(new StringBuilder()
 													.append("credentials#")
 													.append(targetCredential.getId().getCredentialType())
@@ -146,7 +161,7 @@ public class UserSharedServiceImpl implements UserSharedService{
 				if(paramEmail.getId().getEmailId() == targetEmail.getId().getEmailId()
 						&& !paramEmail.getEmail().equals(targetEmail.getEmail())){
 					targetEmail.setEmail(paramEmail.getEmail());
-					targetEmail.setLastUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+					targetEmail.setLastUpdatedDate(DateUtil.getCurrentDate());
 					updateParamList.add(new StringBuilder()
 												.append("emails#")
 												.append(targetEmail.getId().getEmailId())
@@ -175,9 +190,12 @@ public class UserSharedServiceImpl implements UserSharedService{
 
 	@Override
 	public String getNewUserId() {
+		User user = userRepository.findTopByOrderByUserIdDesc();
 		String sequence = new StringBuilder()
 								.append("00000000")
-								.append(userRepository.count())
+								.append(Integer.parseInt(
+										StringUtils.stripStart(
+												user.getUserId(), "0"))+1)
 								.toString();
 		return StringUtils.substring(sequence,
 				sequence.length()-8, sequence.length());
@@ -186,7 +204,7 @@ public class UserSharedServiceImpl implements UserSharedService{
 	@Override
 	public User saveUser(User user) throws BusinessException {
 		for(Credential credential : user.getCredentials()){
-			if(domainProperties.getCredentialTypePassword()
+			if(domainProperties.getCredentialTypePasswordLogicalName()
 					.equals(credential.getId().getCredentialType())){
 				credential.setCredentialKey(passwordEncoder
 						.encode(credential.getCredentialKey()));
@@ -208,6 +226,15 @@ public class UserSharedServiceImpl implements UserSharedService{
 		User deleteUser = userRepository.findOne(user.getUserId());
 		userRepository.delete(deleteUser);
 		return deleteUser;
+	}
+
+	@Override
+	public User getUserByLoginId(String loginId) throws BusinessException {
+		User user = userRepository.findOneByLoginId(loginId);
+		if(null == user){
+			throw new BusinessException("userSharedService.error.0004", loginId);
+		}
+		return user;
 	}
 
 }

@@ -35,6 +35,12 @@ h2{
        -moz-box-sizing : border-box;
     -webkit-box-sizing : border-box;
            -box-sizing : border-box;
+               display : flex; 
+            alignItems : center;
+}
+
+.imgPanel img{
+	width : 200px;
 }
 
 .profile:after {

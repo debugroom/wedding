@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Import;
 
 import org.debugroom.wedding.config.env.HSQLConfig;
 
-@Profile("dev")
+@Profile("LocalDev")
 @Import(HSQLConfig.class)
 @Configuration
-public class DevConfig {
+public class LocalDevConfig {
 }

@@ -2,6 +2,12 @@ server:
   port: 8081
   tomcat:
     additional-tld-skip-patterns : "javacpp.jar, *javacv*.jar"
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wedding
+    username: wedding_app
+    password: wedding_app
+    driverClassName: org.postgresql.Driver
 image:
   download:
     root:

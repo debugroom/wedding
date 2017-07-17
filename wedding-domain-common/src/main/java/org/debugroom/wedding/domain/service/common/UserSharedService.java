@@ -17,6 +17,8 @@ public interface UserSharedService {
 	
 	public User getUser(String userId) throws BusinessException;
 	
+	public User getUserByLoginId(String loginId) throws BusinessException;
+	
 	public UpdateResult<User> updateUser(User user) throws BusinessException;
 	
 	public List<User> getUsers();

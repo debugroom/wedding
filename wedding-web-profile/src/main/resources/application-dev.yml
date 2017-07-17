@@ -1,2 +1,8 @@
 server:
   port: 8083
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wedding
+    username: wedding_app
+    password: wedding_app
+    driverClassName: org.postgresql.Driver

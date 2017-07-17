@@ -43,6 +43,35 @@ public class UserRepositoryTest {
 		@RunWith(Theories.class)
 		@ContextConfiguration(classes = TestConfig.class)
 		@ActiveProfiles(profiles = {"jpa", "dev"})
+		public static class findTopByOrderByUserIdDescTest{
+			@Inject
+			UserRepository userRepository;
+			
+			@Before
+			public void setUp() throws Exception{
+				new TestContextManager(getClass()).prepareTestInstance(this);
+			}
+			
+			@DataPoints
+			public static Fixture[] fixture ={
+			};
+
+			@Theory
+			@Category(TestsWithDatabaseAccess.class)
+			public void normalTestCase1_findByTopOrderByUserIdDesc(){
+				User user = userRepository.findTopByOrderByUserIdDesc();
+				assertThat(user.getUserId(), is("00000021"));
+			}
+
+			@AllArgsConstructor
+			@Builder
+			public static class Fixture{
+			}
+		}
+
+		@RunWith(Theories.class)
+		@ContextConfiguration(classes = TestConfig.class)
+		@ActiveProfiles(profiles = {"jpa", "dev"})
 		public static class CountUserTest{
 			
 			@Inject

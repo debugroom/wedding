@@ -19,11 +19,13 @@ public class AddUserInfoInterceptor extends HandlerInterceptorAdapter{
             ModelAndView modelAndView) throws Exception {
 		log.info(this.getClass() + "#postHandle() called.");
 		if(null != modelAndView){
-			modelAndView.addObject(User
-				.builder()
-				.userId("00000000")
-				.authorityLevel(9)
-				.build());
+			if(null == modelAndView.getModel().get("user")){
+				modelAndView.addObject(User
+						.builder()
+						.userId("00000000")
+						.authorityLevel(9)
+						.build());
+			}
 		}
     }
 

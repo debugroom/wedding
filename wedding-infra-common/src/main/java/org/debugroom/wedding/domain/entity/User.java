@@ -5,6 +5,9 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -53,25 +56,38 @@ public class User implements Serializable {
 	private Integer ver;
 
 	//bi-directional one-to-one association to Address
-	@OneToOne(mappedBy="usr")
+	@OneToOne(mappedBy="usr", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private Address address;
 
 	//bi-directional many-to-one association to Affiliation
-	@OneToMany(mappedBy="usr")
+	@OneToMany(mappedBy="usr", fetch=FetchType.EAGER)
 	private Set<Affiliation> affiliations;
 
 	//bi-directional many-to-one association to Credential
-	@OneToMany(mappedBy="usr")
+	@OneToMany(mappedBy="usr", cascade=CascadeType.ALL)
 	private Set<Credential> credentials;
 
 	//bi-directional many-to-one association to Email
-	@OneToMany(mappedBy="usr")
+	@OneToMany(mappedBy="usr", cascade=CascadeType.ALL)
 	private Set<Email> emails;
 
 	//bi-directional many-to-one association to Notification
-	@OneToMany(mappedBy="usr")
+	@OneToMany(mappedBy="usr", fetch=FetchType.EAGER)
 	private Set<Notification> notifications;
 
+	//bi-directional many-to-many association to Group
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(
+		name="affiliation"
+		, joinColumns={
+			@JoinColumn(name="user_id", nullable=false)
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="group_id", nullable=false)
+			}
+		)
+	private Set<Group> grps;
+	
 	public User() {
 	}
 
@@ -251,4 +267,11 @@ public class User implements Serializable {
 		this.isBrideSide = isBrideSide;
 	}
 
+	public Set<Group> getGrps() {
+		return this.grps;
+	}
+
+	public void setGrps(Set<Group> grps) {
+		this.grps = grps;
+	}
 }

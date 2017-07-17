@@ -62,6 +62,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		ipAddrMap.put(properties.getProfileServiceName(), profileServiceIpAddrList);
 		profileServiceIpAddrList.add(properties.getProfileServiceAddr());
 
+		List<String> managementServiceIpAddrList = new ArrayList<String>();
+		ipAddrMap.put(properties.getManagementServiceName(), managementServiceIpAddrList);
+		managementServiceIpAddrList.add(properties.getManagementServiceAddr());
+
 		return ipAddrMap;
 	}
 
@@ -80,6 +84,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		List<String> profileServicePortList = new ArrayList<String>();
 		portMap.put(properties.getProfileServiceName(), profileServicePortList);
 		profileServicePortList.add(properties.getProfileServicePort());
+
+		List<String> managementServicePortList = new ArrayList<String>();
+		portMap.put(properties.getManagementServiceName(), managementServicePortList);
+		managementServicePortList.add(properties.getManagementServicePort());
 
 		return portMap;
 	}

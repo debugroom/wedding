@@ -1,6 +1,7 @@
 package org.debugroom.wedding.app.web.helper;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +20,9 @@ public class ImageUploadHelper implements FileUploadHelper{
 	private String imageUploadRootDirectory;
 	@Value("${image.upload.directory}")
 	private String imageUploadDirectory;
-	
+	@Value("${image.upload.file.name}")
+	private String imageUploadFileName;
+
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	@Override
@@ -37,7 +40,19 @@ public class ImageUploadHelper implements FileUploadHelper{
 				.append(uploadDirectoryContextPath)
 				.append(FILE_SEPARATOR)
 				.toString();
-		File uploadFile = new File(uploadDirectoryAbsolutePath, multipartFile.getOriginalFilename());
+		StringBuilder stringBuilder = new StringBuilder().append(imageUploadFileName);
+		switch (multipartFile.getContentType()) {
+			case MediaType.IMAGE_PNG_VALUE :
+				stringBuilder.append(".png");
+				break;
+			case MediaType.IMAGE_JPEG_VALUE :
+				stringBuilder.append(".jpg");
+				break;
+			case MediaType.IMAGE_GIF_VALUE :
+				stringBuilder.append(".gif");
+				break;
+		}
+		File uploadFile = new File(uploadDirectoryAbsolutePath, stringBuilder.toString());
 		try {
 			FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), uploadFile);
 		} catch (IOException e) {
@@ -46,7 +61,7 @@ public class ImageUploadHelper implements FileUploadHelper{
 		return new StringBuilder()
 				.append(uploadDirectoryContextPath)
 				.append("/")
-				.append(multipartFile.getOriginalFilename())
+				.append(stringBuilder.toString())
 				.toString();
 	}
 

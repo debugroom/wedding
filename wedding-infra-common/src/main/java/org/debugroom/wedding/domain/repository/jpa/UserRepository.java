@@ -27,4 +27,8 @@ public interface UserRepository extends JpaRepository<User, String>,
 	public List<User> findUsersByInfoIdAndIsAccessed(
 			@Param("infoId") String infoId, @Param("isAccessed") boolean isAccessed);
 	
+	public User findTopByOrderByUserIdDesc();
+
+	public User findOneByLoginId(String loginId);
+
 }

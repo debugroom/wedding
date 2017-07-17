@@ -9,8 +9,8 @@ import lombok.Data;
 @Component
 public class CommonDomainProperties {
 
-	@Value("${credential.type.password}")
-	private String credentialTypePassword;
+	@Value("${credential.type.password.logical.name}")
+	private String credentialTypePasswordLogicalName;
 
 	@Value("${password.expired.day.default}")
 	private String passwordExpiredDayDefault;

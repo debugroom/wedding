@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource(value = "classpath:/application-common.properties")
+@PropertySource({"classpath:/application-common.properties",
+	"classpath:/external.properties"})
 public class WebCommonConfig {
 }

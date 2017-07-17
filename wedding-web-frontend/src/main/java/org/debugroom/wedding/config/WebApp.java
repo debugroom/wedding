@@ -13,6 +13,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -20,6 +21,9 @@ import org.springframework.core.io.Resource;
 
 @Import(MvcConfig.class)
 @PropertySource(value = "classpath:/env.properties")
+@ComponentScan(basePackages = {"org.debugroom.wedding.external",
+		"org.debugroom.wedding.config"
+})
 @SpringBootApplication
 public class WebApp extends SpringBootServletInitializer{
 
@@ -37,6 +41,7 @@ public class WebApp extends SpringBootServletInitializer{
 	public MessageSource messageSource(){
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames(
+        	"i18n/common-application-messages",
         	"i18n/frontend-application-messages",
         	"i18n/frontend-system-messages"
         );

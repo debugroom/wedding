@@ -36,4 +36,13 @@ public class ServiceProperties {
 	@Value("${profile.service.port}")
 	private String profileServicePort;
 
+	@Value("${management.service.name}")
+	private String managementServiceName;
+	
+	@Value("${management.service.addr}")
+	private String managementServiceAddr;
+
+	@Value("${management.service.port}")
+	private String managementServicePort;
+
 }
