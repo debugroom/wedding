@@ -47,13 +47,4 @@ public class WebApp extends SpringBootServletInitializer{
         return messageSource;
 	}
 
-	@Bean
-	public DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean(
-			@Value("classpath*:/META-INF/dozer/**/*-mapping.xml") Resource[] resources){
-        final DozerBeanMapperFactoryBean dozerBeanMapperFactoryBean 
-        = new DozerBeanMapperFactoryBean();
-        dozerBeanMapperFactoryBean.setMappingFiles(resources);
-        return dozerBeanMapperFactoryBean;
-	}
-
 }

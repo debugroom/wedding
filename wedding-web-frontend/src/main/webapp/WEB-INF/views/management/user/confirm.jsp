@@ -49,8 +49,8 @@
                       <form:hidden path="lastName" />
                       <form:hidden path="firstName" />
                       <br>
-                      <form:errors path="firstName" cssStyle="color:red" />
-                      <form:errors path="lastName" cssStyle="color:red" />
+                      <form:errors path="firstName" cssClass="errorMessage" />
+                      <form:errors path="lastName" cssClass="errorMessage" />
                     </td>
                   </tr>
                   <tr>
@@ -80,7 +80,7 @@
                     <td>
                       <c:out value="${newUser.loginId}" />
                       <form:hidden path="loginId" /><br>
-                      <form:errors path="loginId" cssStyle="color:red" />
+                      <form:errors path="loginId" cssClass="errorMessage" />
                     </td>
                   </tr>
                   <tr>
@@ -88,14 +88,14 @@
                     <td>
                       <c:out value="${newUser.authorityLevel}" />
                       <form:hidden path="authorityLevel" /><br>
-                      <form:errors path="authorityLevel" cssStyle="color:red" />
+                      <form:errors path="authorityLevel" cssClass="errorMessage" />
                     </td>
                   </tr>
                   <tr>
                     <td><label for="credentials[0].credentialKey">パスワード</label></td>
                     <td>
                       **********<br>
-                      <form:errors path="credentials[0].credentialKey" cssStyle="color:red" />
+                      <form:errors path="credentials[0].credentialKey" cssClass="errorMessage"/>
                       <form:hidden path="credentials[0].credentialKey" />
                       <form:hidden path="credentials[1].credentialKey" />
                       <form:hidden path="credentials[0].id.credentialType" />
@@ -107,7 +107,7 @@
                     <td>
                       <c:out value="${newUser.address.postCd}" />
                       <form:hidden path="address.postCd" /><br>
-                      <form:errors path="address.postCd" cssStyle="color:red" />
+                      <form:errors path="address.postCd" cssClass="errorMessage" />
                     </td>
                   </tr>
                   <tr>
@@ -115,7 +115,7 @@
                     <td>
                       <c:out value="${newUser.address.address}" />
                       <form:hidden path="address.address" /><br>
-                      <form:errors path="address.address" cssStyle="color:red" />
+                      <form:errors path="address.address" cssClass="errorMessage" />
                     </td>
                   </tr>
                   <c:forEach items="${newUser.emails}" var="email" varStatus="status">
@@ -123,7 +123,7 @@
                       <td><label for="emails[${status.index}]">Email</label>${status.index+1} : </td>
                       <td>
                         <c:out value="${email.email}" /><br>
-                        <form:errors path="emails[${status.index}].email" cssStyle="color:red" />
+                        <form:errors path="emails[${status.index}].email" cssClass="errorMessage" />
                         <input id="emails[${status.index}].id.emailId" name="emails[${status.index}].id.emailId" type="hidden" value='<c:out value="${email.id.emailId}" />' />
                         <input id="emails[${status.index}].email" name="emails[${status.index}].email" type="hidden" value='<c:out value="${email.email}" />' />
                       </td>

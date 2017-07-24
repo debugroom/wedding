@@ -29,7 +29,7 @@
           <h2><c:out value="${information.title}" /></h2>
           最終更新日時：<fmt:formatDate value="${information.registratedDate}" pattern="yyyy/MM/dd HH:mm:ss" />
           <div id="messageBody" class="information-panel">
-            <c:import url="${information.infoRootPath}/${information.infoPagePath}"></c:import>
+            <c:import url="${information.infoRootPath}" charEncoding="UTF-8"></c:import>
           </div>
         </div>
       </div>

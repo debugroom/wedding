@@ -2,16 +2,20 @@ package org.debugroom.wedding.app.web.adapter.docker;
 
 import java.awt.image.BufferedImage;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Date;
 
 import javax.inject.Inject;
 
 import org.dozer.Mapper;
 import org.dozer.MappingException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,26 +48,44 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import org.debugroom.framework.common.exception.BusinessException;
-import org.debugroom.wedding.app.model.management.AddressSearchCriteria;
-import org.debugroom.wedding.app.model.management.AddressSearchCriteria.SearchAddress;
-import org.debugroom.wedding.app.model.management.NewUserForm.ConfirmUser;
-import org.debugroom.wedding.app.model.management.NewUserForm.SaveUser;
-import org.debugroom.wedding.app.model.management.AddressSearchResult;
-import org.debugroom.wedding.app.model.management.DeleteUserForm;
-import org.debugroom.wedding.app.model.management.EditUserForm;
-import org.debugroom.wedding.app.model.management.EditUserForm.GetUser;
-import org.debugroom.wedding.app.model.management.EditUserForm.UpdateUser;
-import org.debugroom.wedding.app.model.management.ImageParam;
-import org.debugroom.wedding.app.model.management.LoginIdSearchCriteria;
-import org.debugroom.wedding.app.model.management.LoginIdSearchResult;
-import org.debugroom.wedding.app.model.management.NewUserForm;
+import org.debugroom.wedding.app.model.UserSearchCriteria;
+import org.debugroom.wedding.app.model.UserSearchCriteria.GetNotInformationViewers;
+import org.debugroom.wedding.app.model.UserSearchResult;
 import org.debugroom.wedding.app.model.management.PageParam;
-import org.debugroom.wedding.app.model.management.UserPageImpl;
+import org.debugroom.wedding.app.model.management.information.DeleteInformationForm;
+import org.debugroom.wedding.app.model.management.information.Information.GetMessageBody;
+import org.debugroom.wedding.app.model.management.information.Information.UpdateInformation;
+import org.debugroom.wedding.app.model.management.information.InformationDetail;
+import org.debugroom.wedding.app.model.management.information.InformationDetailForm;
+import org.debugroom.wedding.app.model.management.information.InformationDraft;
+import org.debugroom.wedding.app.model.management.information.InformationFormResource;
+import org.debugroom.wedding.app.model.management.information.InformationPageImpl;
+import org.debugroom.wedding.app.model.management.information.InformationResource;
+import org.debugroom.wedding.app.model.management.information.UpdateInformationForm;
+import org.debugroom.wedding.app.model.management.information.UpdateInformationResult;
+import org.debugroom.wedding.app.model.management.information.NewInformationForm;
+import org.debugroom.wedding.app.model.management.information.InformationDetailForm.GetInformation;
+import org.debugroom.wedding.app.model.management.information.NewInformationForm.ConfirmInformation;
+import org.debugroom.wedding.app.model.management.information.NewInformationForm.SaveInformation;
+import org.debugroom.wedding.app.model.management.user.AddressSearchCriteria;
+import org.debugroom.wedding.app.model.management.user.AddressSearchResult;
+import org.debugroom.wedding.app.model.management.user.DeleteUserForm;
+import org.debugroom.wedding.app.model.management.user.EditUserForm;
+import org.debugroom.wedding.app.model.management.user.ImageParam;
+import org.debugroom.wedding.app.model.management.user.LoginIdSearchCriteria;
+import org.debugroom.wedding.app.model.management.user.LoginIdSearchResult;
+import org.debugroom.wedding.app.model.management.user.NewUserForm;
+import org.debugroom.wedding.app.model.management.user.UserPageImpl;
+import org.debugroom.wedding.app.model.management.user.AddressSearchCriteria.SearchAddress;
+import org.debugroom.wedding.app.model.management.user.EditUserForm.GetUser;
+import org.debugroom.wedding.app.model.management.user.EditUserForm.UpdateUser;
+import org.debugroom.wedding.app.model.management.user.NewUserForm.ConfirmUser;
+import org.debugroom.wedding.app.model.management.user.NewUserForm.SaveUser;
 import org.debugroom.wedding.app.model.portal.Information;
 import org.debugroom.wedding.app.model.portal.PortalResource;
 import org.debugroom.wedding.app.model.profile.EditProfileForm;
-import org.debugroom.wedding.app.model.profile.UpdateResult;
-import org.debugroom.wedding.app.web.EnvProperties;
+import org.debugroom.wedding.app.model.profile.UpdateUserResult;
+import org.debugroom.wedding.app.web.helper.InformationMessageBodyHelper;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
 import org.debugroom.wedding.app.web.helper.ImageUploadHelper;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
@@ -78,10 +100,6 @@ public class ServiceAdpaterController {
 	private static final String PROTOCOL = "http";
 	private static final String APP_NAME = "api/v1";
 
-	@ModelAttribute
-	public EditProfileForm setUpEditProfileForm(){
-		return EditProfileForm.builder().build();
-	}
 	@Inject
 	Mapper mapper;
 	
@@ -95,6 +113,9 @@ public class ServiceAdpaterController {
 	ImageDownloadHelper downloadHelper;
 	
 	@Inject
+	InformationMessageBodyHelper informationMessageBodyHelper;
+	
+	@Inject
 	AddressSearch addressSearch;
 	
 	@Inject
@@ -103,9 +124,14 @@ public class ServiceAdpaterController {
 	@Inject
 	MessageSource messageSource;
 	
-	@Inject
-	EnvProperties envProperties;
-	
+	@Value("${info.root.directory}")
+	private String infoRootDirectory;
+
+	@ModelAttribute
+	public EditProfileForm setUpEditProfileForm(){
+		return EditProfileForm.builder().build();
+	}
+
 	@ModelAttribute
 	public NewUserForm setUpNewUserForm(){
 		return NewUserForm.builder().build();
@@ -116,9 +142,26 @@ public class ServiceAdpaterController {
 		return EditUserForm.builder().build();
 	}
 
+	@ModelAttribute
+	public NewInformationForm setUpNewInformationForm(){
+		return NewInformationForm.builder().build();
+	}
+
+	@ModelAttribute
+	public InformationDetailForm setUpInformationDetailForm(){
+		return InformationDetailForm.builder().build();
+	}
+
 	@InitBinder(value={"editUserForm", "newUserForm"})
 	public void initBinder(WebDataBinder binder){
 		binder.addValidators(passwordEqualsValidator);
+	}
+
+	@InitBinder
+	public void initBinderForDate(WebDataBinder binder){
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
 
 	@RequestMapping(value="/login", method=RequestMethod.GET)
@@ -164,7 +207,16 @@ public class ServiceAdpaterController {
 					RequestBuilder.getGetRequest(provider.getPath(serviceName), 
 							APP_NAME, serviceName, null, pathVariableMap),
 					Information.class);
-			resultInformation.setInfoRootPath(envProperties.getInfoRootPath());
+			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+					.host(provider.getIpAddr("frontend"))
+					.port(provider.getPort("frontend"))
+					.path(new StringBuilder()
+							.append("/information/body/")
+							.append(information.getInfoId())
+							.toString())
+					.build();
+			resultInformation.setInfoRootPath(uriComponents.toString());
 			model.addAttribute(resultInformation);
 
 		} catch (RestClientException e) {
@@ -172,6 +224,30 @@ public class ServiceAdpaterController {
 			e.printStackTrace();
 		}
 		return "portal/information";
+	}
+
+	@RequestMapping(value="/information/body/{infoId}", method=RequestMethod.GET,
+			produces="text/html;charset=UTF-8")
+	@ResponseBody
+	public String infomationBody(@PathVariable String infoId){
+		String serviceName = "information";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+									.host(provider.getIpAddr(serviceName))
+									.port(provider.getPort(serviceName))
+									.path(new StringBuilder()
+											.append(APP_NAME)
+											.append("/information/")
+											.append(infoId)
+											.toString())
+									.build();
+		try {
+			return informationMessageBodyHelper.getMessageBody(restTemplate.getForObject(
+					uriComponents.toUri(), org.debugroom.wedding.domain.entity.Information.class));
+		} catch (RestClientException | BusinessException e) {
+			return "error";
+		}
 	}
 
 	@RequestMapping(value="/profile/{userId}", method=RequestMethod.GET)
@@ -227,7 +303,7 @@ public class ServiceAdpaterController {
 					RequestBuilder.getPathVariableHttpRequestURI(provider.getPath(serviceName), 
 							APP_NAME, serviceName, pathVariableMap), HttpMethod.PUT,
 					new HttpEntity<EditProfileForm>(editProfileForm), 
-					UpdateResult.class).getBody());
+					UpdateUserResult.class).getBody());
 		} catch (RestClientException | URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -454,7 +530,8 @@ public class ServiceAdpaterController {
 									.port(provider.getPort(serviceName))
 									.path(new StringBuilder()
 											.append(APP_NAME)
-											.append("/user/new")
+											.append("/user/")
+											.append(newUserForm.getUserId())
 											.toString())
 									.build();
 		try{
@@ -473,8 +550,10 @@ public class ServiceAdpaterController {
 					.toString();
 	}
 
-	@RequestMapping(method=RequestMethod.GET, value="/management/user/new/{userId}")
-	public String saveComplete(){
+	@RequestMapping(method=RequestMethod.GET, 
+			value="/management/user/new/{userId}",
+			params="complete")
+	public String saveUserComplete(){
 		return "management/user/saveComplete";
 	}
 
@@ -565,7 +644,7 @@ public class ServiceAdpaterController {
 			redirectAttributes.addFlashAttribute("updateResult", 
 					restTemplate.exchange(uriComponents.toUri(), 
 							HttpMethod.PUT, new HttpEntity<User>(user), 
-							UpdateResult.class).getBody());
+							UpdateUserResult.class).getBody());
 		} catch (Exception e){
 			//TODO Using Business Exception for optimistic rock error.
 			model.addAttribute("errorCode", "");
@@ -578,8 +657,10 @@ public class ServiceAdpaterController {
 					.toString();
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/management/edit/user/{userId}")
-	public String editComplete(){
+	@RequestMapping(method = RequestMethod.GET, 
+			value="/management/edit/user/{userId}",
+			params="complete")
+	public String editUserComplete(){
 		return "management/user/editComplete";
 	}
 
@@ -628,8 +709,453 @@ public class ServiceAdpaterController {
 
 	@RequestMapping(method=RequestMethod.GET, 
 			value="/management/user/delete/{userId}",params = "complete")
-	public String deleteComplete(){
+	public String deleteUserComplete(){
 		return "management/user/deleteComplete";
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/management/information/portal")
+	public String informationManagementPortal(@Validated PageParam pageParam, 
+			BindingResult bindingResult, Model model){
+		
+		if(bindingResult.hasErrors()){
+			return "common/error";
+		}
+
+		String serviceName = "management";
+		RestTemplate restTemplate = new RestTemplate();
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+	    params.set("page", Integer.toString(pageParam.getPage()));
+	    params.set("size", Integer.toString(pageParam.getSize()));
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/")
+												.append("information")
+												.toString())
+										.queryParams(params)
+										.build();
+		model.addAttribute("page", restTemplate.getForObject(
+				uriComponents.toUri(), InformationPageImpl.class));
+		return "management/information/portal";
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/management/information/new")
+	public String newInformationForm(Model model){
+		String serviceName = "management";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/information/form")
+												.toString())
+										.build();
+		model.addAttribute("users", restTemplate.getForObject(
+				uriComponents.toUri(), InformationFormResource.class).getUsers());
+		return "management/information/form";
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/management/information/draft/new")
+	public String newInformationDarft(
+			@Validated(ConfirmInformation.class) NewInformationForm newInformationForm,
+			BindingResult bindingResult, Model model, Locale locale){
+		
+		String serviceName = "management";
+		
+		if(bindingResult.hasErrors()){
+			model.addAttribute(newInformationForm);
+			model.addAttribute(
+					BindingResult.class.getName() + ".information", bindingResult);
+			return newInformationForm(model);
+		}
+
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/")
+												.append("information/draft/new")
+												.toString())
+										.build();
+		
+		InformationDraft informationDraft = restTemplate.postForObject(
+				uriComponents.toUri(), newInformationForm, InformationDraft.class);
+
+		try {
+
+			informationMessageBodyHelper.saveMessageBody(informationDraft, 
+					newInformationForm.getMessageBody());
+
+			uriComponentsBuilder = UriComponentsBuilder.newInstance();
+			uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+					.host(provider.getIpAddr("frontend"))
+					.port(provider.getPort("frontend"))
+					.path(new StringBuilder()
+							.append("/information/body/")
+							.append(informationDraft.getInformation().getInfoId())
+							.append("?temp&infoPagePath=")
+							.append(informationDraft.getInformation().getInfoPagePath())
+							.toString())
+					.build();
+		
+			informationDraft.setTempInfoUrl(uriComponents.toString());
+	
+			model.addAttribute(informationDraft);
+		} catch (BusinessException e) {
+			model.addAttribute("errorMessage", messageSource.getMessage(
+					e.getCode(), e.getArgs(), locale));
+			model.addAttribute(newInformationForm);
+			return "management/information/form";
+		}
+		
+		return "management/information/confirm";
+	}
+
+	@RequestMapping(value="/information/body/{infoId}", method=RequestMethod.GET,
+			produces="text/html;charset=UTF-8", params="temp")
+	@ResponseBody
+	public String infomationBody(@Validated(GetMessageBody.class)
+			org.debugroom.wedding.app.model.management.information.Information information){
+		try {
+			return informationMessageBodyHelper.getMessageBody(mapper.map(information, 
+					org.debugroom.wedding.domain.entity.Information.class));
+		} catch (MappingException | BusinessException e) {
+			return "error";
+		}
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/management/information/new")
+	public String saveInformation(
+			@Validated(SaveInformation.class) NewInformationForm newInformationForm,
+			BindingResult bindingResult, Model model, 
+			RedirectAttributes redirectAttributes, Locale locale){
+
+		String serviceName = "management";
+		InformationDraft informationDraft = 
+				mapper.map(newInformationForm, InformationDraft.class);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+					.host(provider.getIpAddr("frontend"))
+					.port(provider.getPort("frontend"))
+					.path(new StringBuilder()
+							.append("/information/body/")
+							.append(informationDraft.getInformation().getInfoId())
+							.append("?temp&infoPagePath=")
+							.append(informationDraft.getInformation().getInfoPagePath())
+							.toString())
+					.build();
+		informationDraft.setTempInfoUrl(uriComponents.toString());
+		
+		if(bindingResult.hasErrors()){
+			model.addAttribute(informationDraft);
+			model.addAttribute(BindingResult.class.getName() + ".informationDraft", bindingResult);
+		}
+
+		if(!"save".equals(newInformationForm.getType())){
+			model.addAttribute(newInformationForm);
+			return newInformationForm(model);
+		}
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/information/")
+												.append(informationDraft
+														.getInformation()
+														.getInfoId())
+												.toString())
+										.build();	
+		
+		try{
+			redirectAttributes.addFlashAttribute(
+				InformationResource
+					.builder()
+					.information(
+						restTemplate.postForObject(
+								uriComponents.toUri(), newInformationForm,
+								org.debugroom.wedding.domain.entity.Information.class))
+					.messageBodyUrl(informationDraft.getTempInfoUrl())
+					.build());
+			redirectAttributes.addFlashAttribute("users", 
+					newInformationForm.getCheckedUsers());
+		} catch (Exception e){
+			//TODO Using Business Exception for serverside error.
+			model.addAttribute("errorCode", "");
+			return "common/error";
+		}
+		return new StringBuilder()
+					.append("redirect:")
+					.append("?complete")
+					.toString();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,
+			value="management/information/new",
+			params="complete")
+	public String saveInformationComplete(){
+		return "management/information/saveComplete";
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/management/information/{infoId}")
+	public String getInformation(
+			@Validated(GetInformation.class) InformationDetailForm informationDetailForm, 
+			BindingResult bindingResult, Model model){
+		
+		if(bindingResult.hasErrors()){
+			return informationManagementPortal(
+					PageParam.builder().build(), bindingResult, model);
+		}
+
+		String serviceName = "management";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/information/")
+												.append(informationDetailForm.getInfoId())
+												.toString())
+										.build();
+
+		InformationDetail informationDetail = restTemplate.getForObject(
+				uriComponents.toUri(), InformationDetail.class);
+
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr("frontend"))
+										.port(provider.getPort("frontend"))
+										.path(new StringBuilder()
+												.append("/information/body/")
+												.append(informationDetailForm.getInfoId())
+												.toString())
+										.build();
+
+		informationDetail.setMessageBodyUrl(uriComponents.toString());
+
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr("frontend"))
+										.port(provider.getPort("frontend"))
+										.path(new StringBuilder()
+												.append("/search/users?type=not-information-viewers&infoId=")
+												.toString())
+										.build();
+
+		informationDetail.setNoAccessedUsersUrl(uriComponents.toString());
+		
+		model.addAttribute(informationDetail);
+		
+		if("detail".equals(informationDetailForm.getType())){
+			return "management/information/detail";
+		}else{
+			return "management/information/delete";
+		}
+
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/search/users", params="type")
+	public ResponseEntity<UserSearchResult> searchUsers(
+			@Validated(GetNotInformationViewers.class) UserSearchCriteria userSearchCriteria,
+			Errors errors, Locale locale){
+		
+		UserSearchResult userSearchResult = UserSearchResult.builder()
+				.infoId(userSearchCriteria.getInfoId())
+				.requestId(userSearchCriteria.getRequestId())
+				.folderId(userSearchCriteria.getFolderId())
+				.build();
+		if(errors.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			userSearchResult.setMessages(messages);
+			for(FieldError fieldError : errors.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userSearchResult);
+		}
+
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+	
+		switch (userSearchCriteria.getType()){
+		case "not-information-viewers" :
+			String serviceName = "management";
+			MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+			params.set("not-information-viewers", "");
+			params.set("infoId", userSearchCriteria.getInfoId());
+			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/users")
+												.toString())
+										.queryParams(params)
+										.build();
+			return ResponseEntity.status(HttpStatus.OK).body(restTemplate.getForObject(
+					uriComponents.toUri(), UserSearchResult.class));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userSearchResult);
+
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, value="/management/information/{information.infoId}")
+	public String updateInformation(
+			@Validated(UpdateInformation.class) UpdateInformationForm updateInformationForm,
+			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
+		
+		if(bindingResult.hasErrors()){
+			InformationDetail informationDetail = 
+					mapper.map(updateInformationForm, InformationDetail.class);
+			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+											.host(provider.getIpAddr("frontend"))
+											.port(provider.getPort("frontend"))
+											.path(new StringBuilder()
+													.append("/search/users?type=not-information-viewers&infoId=")
+													.toString())
+											.build();
+			informationDetail.setNoAccessedUsersUrl(uriComponents.toString());
+			uriComponentsBuilder = UriComponentsBuilder.newInstance();
+			uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+											.host(provider.getIpAddr("frontend"))
+											.port(provider.getPort("frontend"))
+											.path(new StringBuilder()
+													.append("/information/body/")
+													.append(informationDetail
+															.getInformation()
+															.getInfoId())
+													.toString())
+											.build();
+			informationDetail.setMessageBodyUrl(uriComponents.toString());
+			model.addAttribute(informationDetail);
+			model.addAttribute(BindingResult.class.getName() + ".informationDetail", bindingResult);
+			return "/management/information/detail";
+		}
+		
+		if(!"update".equals(updateInformationForm.getType())){
+			return informationManagementPortal(
+					PageParam.builder().page(0).size(10).build(), bindingResult, model);
+		}
+
+		String serviceName = "management";
+		RestTemplate restTemplate = new RestTemplate();
+
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/information/")
+												.append(updateInformationForm.getInformation().getInfoId())
+												.toString())
+										.build();	
+		
+		try{
+
+			UpdateInformationResult updateInformationResult = 
+					restTemplate.exchange(uriComponents.toUri(), HttpMethod.PUT, 
+							new HttpEntity<UpdateInformationForm>(updateInformationForm), 
+							UpdateInformationResult.class).getBody();
+			
+			updateInformationResult.setBeforeMessageBody(
+					informationMessageBodyHelper.getMessageBody(
+							updateInformationResult.getBeforeEntity().getInformation()));
+
+			String messageBody = updateInformationForm.getInformation().getMessageBody();
+
+			if(informationMessageBodyHelper.updateMessageBody(
+					updateInformationResult.getAfterEntity().getInformation(), messageBody)){
+				updateInformationResult.getUpdateParamList().add("messageBody");
+				updateInformationResult.setAfterMessageBody(messageBody);
+			}
+
+			redirectAttributes.addFlashAttribute("updateResult", updateInformationResult);
+		} catch (Exception e){
+			//TODO Using Business Exception for serverside error.
+			model.addAttribute("errorCode", "");
+			return "common/error";
+		}
+		return new StringBuilder().append("redirect:")
+				.append(updateInformationForm.getInformation().getInfoId())
+				.append("?complete")
+				.toString();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, 
+			value="/management/information/{information.infoId}", params="complete")
+	public String updatInformationComplete(){
+		return "management/information/updateComplete";
+	}
+
+	@RequestMapping(method=RequestMethod.POST,
+			value="/management/information/delete/{infoId}")
+	public String deleteConfirm(@Validated DeleteInformationForm deleteInformationForm,
+			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
+		
+		if(bindingResult.hasErrors()){
+			return "common/error";
+		}
+		
+		if(!"delete".equals(deleteInformationForm.getType())){
+			return informationManagementPortal(
+					PageParam.builder().page(0).size(10).build(), bindingResult, model);
+		}
+
+		String serviceName = "management";
+
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+									.host(provider.getIpAddr(serviceName))
+									.port(provider.getPort(serviceName))
+									.path(new StringBuilder()
+											.append(APP_NAME)
+											.append("/information/")
+											.append(deleteInformationForm.getInfoId())
+											.toString())
+									.build();
+		try{
+			InformationDetail informationDetail = InformationDetail
+					.builder()
+					.information(restTemplate.exchange(
+						uriComponents.toUri(), HttpMethod.DELETE, 
+						new HttpEntity<DeleteInformationForm>(deleteInformationForm), 
+						org.debugroom.wedding.domain.entity.Information.class).getBody())
+					.build();
+			informationDetail.setMessageBody(informationMessageBodyHelper
+					.getMessageBody(informationDetail.getInformation()));
+			redirectAttributes.addFlashAttribute(informationDetail);
+		} catch (Exception e){
+			//TODO Using Business Exception for serverside error.
+			model.addAttribute("errorCode", "");
+			return "common/error";
+		}
+		return new StringBuilder()
+					.append("redirect:")
+					.append(deleteInformationForm.getInfoId())
+					.append("?complete")
+					.toString();
+	}
+
+	@RequestMapping(method=RequestMethod.GET, 
+			value="/management/information/delete/{infoId}", params="complete")
+	public String deleteInformationComplete(){
+		return "management/information/deleteComplete";
 	}
 
 }

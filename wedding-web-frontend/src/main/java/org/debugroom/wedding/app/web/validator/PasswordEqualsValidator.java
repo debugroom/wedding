@@ -1,15 +1,14 @@
 package org.debugroom.wedding.app.web.validator;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.debugroom.wedding.app.model.management.user.EditUserForm;
+import org.debugroom.wedding.app.model.management.user.NewUserForm;
+import org.debugroom.wedding.app.model.management.user.EditUserForm.UpdateUser;
+import org.debugroom.wedding.app.model.management.user.NewUserForm.ConfirmUser;
+import org.debugroom.wedding.app.model.management.user.NewUserForm.SaveUser;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.SmartValidator;
-
-import org.debugroom.wedding.app.model.management.EditUserForm;
-import org.debugroom.wedding.app.model.management.EditUserForm.UpdateUser;
-import org.debugroom.wedding.app.model.management.NewUserForm;
-import org.debugroom.wedding.app.model.management.NewUserForm.ConfirmUser;
-import org.debugroom.wedding.app.model.management.NewUserForm.SaveUser;
 
 @Component
 public class PasswordEqualsValidator implements SmartValidator{

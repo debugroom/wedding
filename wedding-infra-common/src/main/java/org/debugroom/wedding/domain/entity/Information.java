@@ -42,7 +42,7 @@ public class Information implements Serializable {
 	private Integer ver;
 
 	//bi-directional many-to-one association to Notification
-	@OneToMany(mappedBy="information")
+	@OneToMany(mappedBy="information", orphanRemoval=true, cascade=CascadeType.ALL)
 	private Set<Notification> notifications;
 
 	public Information() {

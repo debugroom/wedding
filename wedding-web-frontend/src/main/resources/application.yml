@@ -5,3 +5,6 @@ image:
   download:
     root:
       directory: /tmp
+info:
+  root:
+    directory: /tmp

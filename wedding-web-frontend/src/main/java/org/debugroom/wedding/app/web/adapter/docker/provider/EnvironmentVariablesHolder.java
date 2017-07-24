@@ -19,6 +19,14 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 	public Map<String, List<String>> getPaths() {
 		Map<String, List<String>> pathMap = new HashMap<String, List<String>>();
 
+		List<String> frontendServicePathList = new ArrayList<String>();
+		pathMap.put(properties.getFrontendServiceName(), frontendServicePathList);
+		frontendServicePathList.add(new StringBuilder()
+				.append(properties.getFrontendServiceAddr())
+				.append(":")
+				.append(properties.getFrontendServicePort())
+				.toString());
+
 		List<String> portalServicePathList = new ArrayList<String>();
 		pathMap.put(properties.getPortalServiceName(), portalServicePathList);
 		portalServicePathList.add(new StringBuilder()
@@ -50,6 +58,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 	public Map<String, List<String>> getIpAddrs() {
 		Map<String, List<String>> ipAddrMap = new HashMap<String, List<String>>();
 		
+		List<String> frontendServiceIpAddrList = new ArrayList<String>();
+		ipAddrMap.put(properties.getFrontendServiceName(), frontendServiceIpAddrList);
+		frontendServiceIpAddrList.add(properties.getFrontendServiceAddr());
+
 		List<String> portalServiceIpAddrList = new ArrayList<String>();
 		ipAddrMap.put(properties.getPortalServiceName(), portalServiceIpAddrList);
 		portalServiceIpAddrList.add(properties.getPortalServiceAddr());
@@ -72,6 +84,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 	@Override
 	public Map<String, List<String>> getPorts() {
 		Map<String, List<String>> portMap = new HashMap<String, List<String>>();
+
+		List<String> frontendServicePortList = new ArrayList<String>();
+		portMap.put(properties.getFrontendServiceName(), frontendServicePortList);
+		frontendServicePortList.add(properties.getFrontendServicePort());
 
 		List<String> portalServicePortList = new ArrayList<String>();
 		portMap.put(properties.getPortalServiceName(), portalServicePortList);

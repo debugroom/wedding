@@ -12,3 +12,6 @@ image:
   download:
     root:
       directory: /Users/kawabatakouhei/Documents/work/apps
+info:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps

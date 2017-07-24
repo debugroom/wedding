@@ -48,8 +48,8 @@
                     <form:input class="short" path="lastName" />
                     <form:input class="short" path="firstName" />
                     <br>(半角全角英数字日本語50文字以内)
-                    <br><form:errors path="lastName" cssStyle="color:red" />
-                        <form:errors path="firstName" cssStyle="color:red" />
+                    <br><form:errors path="lastName" cssClass="errorMessage"/>
+                        <form:errors path="firstName" cssClass="errorMessage" />
                   </td>
                 </tr>
                 <tr>
@@ -63,7 +63,7 @@
                     <button id="confirm-loginId-button" name="confirm-loginId-button" 
                     class="middle-button" type="button" value="/search/user?loginId=">ID確認</button>
                     <br>(半角英数字32文字以内)
-                    <br><form:errors path="loginId" cssStyle="color:red" />
+                    <br><form:errors path="loginId" cssClass="errorMessage"/>
                   </td>
                 </tr>
                 <tr>
@@ -75,7 +75,7 @@
                   <td>
                     <form:input type="file" path="newImageFile" />
                     <br>(10MBまで)
-                    <br><form:errors path="newImageFile" cssStyle="color:red" />
+                    <br><form:errors path="newImageFile" cssClass="errorMessage" />
                   </td>
                 </tr>
                 <tr>
@@ -87,7 +87,7 @@
                   <td>
                     <form:input class="micro" path="authorityLevel" />
                     <br>(0-9の半角数字)
-                    <br><form:errors path="authorityLevel" cssStyle="color:red" />
+                    <br><form:errors path="authorityLevel" cssClass="errorMessage"/>
                   </td>
                 </tr>
                 <tr>
@@ -97,7 +97,7 @@
                   <td>
                     <form:input class="middle" path="credentials[0].credentialKey" type="password" />
                     <form:hidden path="credentials[0].id.credentialType" value="PASSWORD" />
-                    <form:errors path="credentials[0].credentialKey" cssStyle="color:red" />
+                    <form:errors path="credentials[0].credentialKey" cssClass="errorMessage" />
                     <br>(半角英数字32文字以内)
                   </td>
                 </tr>
@@ -108,7 +108,7 @@
                     確認のため、再入力してください。
                     <br><form:input class="middle" path="credentials[1].credentialKey" type="password" />
                     <form:hidden path="credentials[1].id.credentialType" value="PASSWORD" />
-                    <br><form:errors path="credentials[1].credentialKey" cssStyle="color:red" />
+                    <br><form:errors path="credentials[1].credentialKey" cssClass="errorMessage" />
                   </td>
                 </tr>
                 <tr>
@@ -122,7 +122,7 @@
                     (7桁の半角数字でXXX-YYYY形式)
                     <button id="get-address-button" name="get-address-button" 
                     class="middle-button" type="button" value="/address/">住所取得</button>
-                    <br><form:errors path="address.postCd" cssStyle="color:red" />
+                    <br><form:errors path="address.postCd" cssClass="errorMessage"/>
                   </td>
                 </tr>
                 <tr>
@@ -134,7 +134,7 @@
                   <td>
                     <form:input class="long" path="address.address" />
                     <br>(半角全角英数字日本語256文字以内)
-                    <br><form:errors path="address.address" cssStyle="color:red" />
+                    <br><form:errors path="address.address" cssClass="errorMessage" />
                   </td>
                 </tr>
                 <tr>
@@ -147,7 +147,7 @@
                     <form:input class="long" type="email" path="emails[0].email" />
                     <form:hidden path="emails[0].id.emailId" value="0"/>
                     <br>(半角英数字256文字以内)
-                    <br><form:errors path="emails[0].email" cssStyle="color:red" />
+                    <br><form:errors path="emails[0].email" cssClass="errorMessage" />
                   </td>
                 </tr>
                 <tr>
@@ -159,7 +159,7 @@
                     <form:input class="long" type="email" path="emails[1].email" />
                     <form:hidden path="emails[1].id.emailId" value="1"/>
                     <br>(半角英数字256文字以内)
-                    <br><form:errors path="emails[1].email" cssStyle="color:red" />
+                    <br><form:errors path="emails[1].email" cssClass="errorMessage" />
                   </td>
                 </tr>
                 <tr>
@@ -171,7 +171,7 @@
                   <td>
                     <form:radiobutton path="BrideSide" label="新婦側" value="true"/>
                     <form:radiobutton path="BrideSide" label="新郎側" value="false"/>
-                    <br><form:errors path="BrideSide" cssStyle="color:red" />
+                    <br><form:errors path="BrideSide" cssClass="errorMessage" />
                   </td>
                 </tr>
               </tbody>

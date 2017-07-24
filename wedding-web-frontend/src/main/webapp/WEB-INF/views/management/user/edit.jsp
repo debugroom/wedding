@@ -55,8 +55,8 @@
                         <c:out value="${editUser.lastName}" /> <c:out value="${editUser.firstName}" />
                       </div>
                       <form:hidden path="firstName" /><form:hidden path="lastName" />
-                      <form:errors path="firstName" cssStyle="color:red" />
-                      <form:errors path="lastName" cssStyle="color:red" />
+                      <form:errors path="firstName" cssClass="errorMessage"/>
+                      <form:errors path="lastName" cssClass="errorMessage" />
                     </td>
                     <td><button id="lastName-button" name="lastName-button" type="button" value="lastName">変更</button></td>
                   </tr>
@@ -88,7 +88,7 @@
                     <td>
                       <c:out value="${editUser.loginId}" />
                       <form:hidden path="loginId" /><br>
-                      <form:errors path="loginId" cssStyle="color:red" />
+                      <form:errors path="loginId" cssClass="errorMessage" />
                     </td>
                     <td><button id="loginId-button" name="loginId-button" type="button" value="loginId">変更</button></td>
                   </tr>
@@ -97,7 +97,7 @@
                     <td>
                       <c:out value="${editUser.authorityLevel}" />
                       <form:hidden path="authorityLevel" /><br>
-                      <form:errors path="authorityLevel" cssStyle="color:red" />
+                      <form:errors path="authorityLevel" cssClass="errorMessage"/>
                     </td>
                     <td><button id="authorityLevel-button" name="authorityLevel-button" type="button" value="authorityLevel">変更</button></td>
                   </tr>
@@ -105,7 +105,7 @@
                     <td><label for="credentials[0].credentialKey">パスワード</label></td>
                     <td>
                       **********<br>
-                      <form:errors path="credentials[0].credentialKey" cssStyle="color:red" />
+                      <form:errors path="credentials[0].credentialKey" cssClass="errorMessage" />
                       <input id="credentials[0].credentialKey" name="credentials[0].credentialKey" type="hidden" value=""/>
                       <input id="credentials[0].id.credentialType" name="credentials[0].id.credentialType" type="hidden" value="PASSWORD"/>
                       <input id="credentials[1].credentialKey" name="credentials[1].credentialKey" type="hidden" value=""/>
@@ -118,7 +118,7 @@
                     <td>
                     <c:out value="${editUser.address.postCd}" />
                     <form:hidden path="address.postCd" /><br>
-                    <form:errors path="address.postCd" cssStyle="color:red" /></td>
+                    <form:errors path="address.postCd" cssClass="errorMessage" /></td>
                     <td><button id="address.postCd-button" name="address.postCd-button" type="button" value="address.postCd">変更</button></td>
                   </tr>
                   <tr>
@@ -126,7 +126,7 @@
                     <td>
                       <c:out value="${editUser.address.address}" />
                       <form:hidden path="address.address" /><br>
-                      <form:errors path="address.address" cssStyle="color:red" />
+                      <form:errors path="address.address" cssClass="errorMessage"/>
                     </td>
                     <td><button id="address.address-button" name="address.address-button" type="button" value="address.address">変更</button></td>
                   </tr>
@@ -135,7 +135,7 @@
                       <td><label for="emails[${status.index}]">Email</label>${status.index+1} : </td>
                       <td>
                         <c:out value="${email.email}" /><br>
-                        <form:errors path="emails[${status.index}].email" cssStyle="color:red" />
+                        <form:errors path="emails[${status.index}].email" cssClass="errorMessage"/>
                         <input id="emails[${status.index}].id.emailId" name="emails[${status.index}].id.emailId" type="hidden" value="<c:out value='${email.id.emailId}' />" />
                         <input id="emails[${status.index}].email" name="emails[${status.index}].email" type="hidden" value='<c:out value="${email.email}" />' />
                       </td>

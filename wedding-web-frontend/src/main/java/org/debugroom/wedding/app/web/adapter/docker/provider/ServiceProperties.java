@@ -9,6 +9,15 @@ import lombok.Data;
 @Component
 public class ServiceProperties {
 
+	@Value("${frontend.service.name}")
+	private String frontendServiceName;
+	
+	@Value("${frontend.service.addr}")
+	private String frontendServiceAddr;
+
+	@Value("${frontend.service.port}")
+	private String frontendServicePort;
+
 	@Value("${portal.service.name}")
 	private String portalServiceName;
 	

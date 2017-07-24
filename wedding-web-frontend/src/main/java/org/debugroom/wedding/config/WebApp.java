@@ -20,7 +20,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 
 @Import(MvcConfig.class)
-@PropertySource(value = "classpath:/env.properties")
 @ComponentScan(basePackages = {"org.debugroom.wedding.external",
 		"org.debugroom.wedding.config"
 })

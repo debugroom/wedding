@@ -34,7 +34,7 @@ INSERT INTO MENU VALUES ('4000', 'アトラクション', '/attraction', false, 
 INSERT INTO MENU VALUES ('8000', 'プロフィール編集', '/profile', true, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 1, 0, '2015-01-01 00:00:00.0');
 INSERT INTO MENU VALUES ('9000', 'ユーザ管理', '/management/user/portal', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO MENU VALUES ('9010', 'グループ管理', '/management/group/portal', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
-INSERT INTO MENU VALUES ('9020', 'インフォメーション管理', '/management/infomation/portal', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
+INSERT INTO MENU VALUES ('9020', 'インフォメーション管理', '/management/information/portal', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO MENU VALUES ('9030', '依頼管理', '/management/request/portal', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO MENU VALUES ('0000', '共通', '', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 9, 0, '2015-01-01 00:00:00.0');
 
@@ -68,11 +68,11 @@ INSERT INTO FNCTION VALUES ('9010', '9010', 'グループ管理ポータル', '/
 INSERT INTO FNCTION VALUES ('9010', '9011', 'グループ作成', '/management/group/new', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO FNCTION VALUES ('9010', '9012', 'グループ編集', '/management/group/edit', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO FNCTION VALUES ('9010', '9013', 'グループ削除', '/management/group/delete', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
-INSERT INTO FNCTION VALUES ('9020', '9020', 'インフォメーション管理ポータル', '/management/infomation/portal', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
-INSERT INTO FNCTION VALUES ('9020', '9021', 'インフォメーション作成', '/management/infomation/new', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
-INSERT INTO FNCTION VALUES ('9020', '9022', 'インフォメーション変更', '/management/infomation/edit', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
-INSERT INTO FNCTION VALUES ('9020', '9023', 'インフォメーション削除', '/management/infomation/delete', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
-INSERT INTO FNCTION VALUES ('9020', '9024', 'インフォメーション閲覧状況確認', '/management/infomation/confirm/access', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
+INSERT INTO FNCTION VALUES ('9020', '9020', 'インフォメーション管理ポータル', '/management/information/portal', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
+INSERT INTO FNCTION VALUES ('9020', '9021', 'インフォメーション作成', '/management/information/new', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
+INSERT INTO FNCTION VALUES ('9020', '9022', 'インフォメーション変更', '/management/information/edit', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
+INSERT INTO FNCTION VALUES ('9020', '9023', 'インフォメーション削除', '/management/information/delete', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
+INSERT INTO FNCTION VALUES ('9020', '9024', 'インフォメーション閲覧状況確認', '/management/information/confirm/access', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO FNCTION VALUES ('9030', '9030', '依頼管理ポータル', '/request/status', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO FNCTION VALUES ('9030', '9031', '依頼作成', 'request/new', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
 INSERT INTO FNCTION VALUES ('9030', '9032', '依頼変更', '/request/edit', false, '2015-01-01 00:00:00.0', '9999-12-31 00:00:00.0', 8, 0, '2015-01-01 00:00:00.0');
