@@ -43,4 +43,32 @@
             <b>excludeUsers</b>
         </field>
     </mapping>
+    <mapping>
+        <class-a>org.debugroom.wedding.app.model.management.information.Information</class-a>
+        <class-b>org.debugroom.wedding.domain.model.management.InformationDraft</class-b>
+        <field>
+            <a>infoId</a>
+            <b>information.infoId</b>
+        </field>
+        <field>
+            <a>infoPagePath</a>
+            <b>information.infoPagePath</b>
+        </field>
+        <field>
+            <a>title</a>
+            <b>information.title</b>
+        </field>
+        <field>
+            <a>registratedDate</a>
+            <b>information.registratedDate</b>
+        </field>
+        <field>
+            <a>releaseDate</a>
+            <b>information.releaseDate</b>
+        </field>
+        <field>
+            <a>checkedUsers</a>
+            <b>viewUsers</b>
+        </field>
+    </mapping>
 </mappings>

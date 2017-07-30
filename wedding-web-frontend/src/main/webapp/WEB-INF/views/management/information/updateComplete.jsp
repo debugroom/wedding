@@ -25,6 +25,7 @@
       </div>
       <div class="flex-item-2">
        <div class="panel">
+         <p>以下の通り、インフォメーションが変更されました。</p>
          <div class="diffPanel">
            <c:forEach items="${updateResult.updateParamList}" var="updateParam" varStatus="status">
              <c:choose>

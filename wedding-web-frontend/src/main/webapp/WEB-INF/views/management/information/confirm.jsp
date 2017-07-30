@@ -57,16 +57,16 @@
                   <tr>
                     <td><form:label path="information.registratedDate">登録日時</form:label></td>
                     <td>
-                      <c:out value="${informationDraft.information.registratedDate}" />
-                      <input type="hidden" name="registratedDate" value="<c:out value='${informationDraft.information.registratedDate}' />" /><br/>
+                      <fmt:formatDate value="${informationDraft.information.registratedDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                      <input type="hidden" name="registratedDate" value='<fmt:formatDate value="${informationDraft.information.registratedDate}" pattern="yyyy/MM/dd hh:mm:ss" />' /><br/>
                       <form:errors path="information.registratedDate" cssClass="errorMessage" />
                     </td>
                   </tr>
                   <tr>
                     <td><form:label path="information.releaseDate">公開日時</form:label></td>
                     <td>
-                      <c:out value="${informationDraft.information.releaseDate}" />
-                      <input type="hidden" name="releaseDate" value="<c:out value='${informationDraft.information.releaseDate}' />" /><br/>
+                      <fmt:formatDate value="${informationDraft.information.releaseDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                      <input type="hidden" name="releaseDate" value='<fmt:formatDate value="${informationDraft.information.releaseDate}" pattern="yyyy/MM/dd hh:mm:ss" />'  /><br/>
                       <form:errors path="information.releaseDate" cssClass="errorMessage" />
                     </td>
                   </tr>

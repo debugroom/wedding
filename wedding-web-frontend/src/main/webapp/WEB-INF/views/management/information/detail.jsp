@@ -63,7 +63,7 @@
                     <td>
                       <fmt:formatDate value="${informationDetail.information.registratedDate}" pattern="yyyy/MM/dd hh:mm:ss" />
                       <form:errors path="information.registratedDate" cssClass="errorMessage"/>
-                      <input id="information.registratedDate" name="information.registratedDate" type="hidden" value='<fmt:formatDate value="${informationDetail.information.registratedDate}" pattern="yyyy-MM-dd HH:mm:ss" />'>
+                      <input id="information.registratedDate" name="information.registratedDate" type="hidden" value='<fmt:formatDate value="${informationDetail.information.registratedDate}" pattern="yyyy/MM/dd HH:mm:ss" />'>
                     </td>
                     <td></td>
                   </tr>
@@ -72,7 +72,7 @@
                     <td>
                       <fmt:formatDate value="${informationDetail.information.releaseDate}" pattern="yyyy/MM/dd hh:mm:ss" />
                       <form:errors path="information.releaseDate" cssClass="errorMessage"/>
-                      <input id="information.releaseDate" name="information.releaseDate" type="hidden" value='<fmt:formatDate value="${informationDetail.information.releaseDate}" pattern="yyyy-MM-dd HH:mm:ss" />'>
+                      <input id="information.releaseDate" name="information.releaseDate" type="hidden" value='<fmt:formatDate value="${informationDetail.information.releaseDate}" pattern="yyyy/MM/dd HH:mm:ss" />'>
                     </td>
                     <td><button id="information.releaseDate-button" name="information.releaseDate-button" type="button" value="information.releaseDate">変更</button></td>
                   </tr>
@@ -81,7 +81,7 @@
                     <td>
                       <fmt:formatDate value="${informationDetail.information.lastUpdatedDate}" pattern="yyyy/MM/dd hh:mm:ss" />
                       <form:errors path="information.lastUpdatedDate" cssClass="errorMessage"/>
-                      <input id="information.lastUpdatedDate" name="information.lastUpdatedDate" type="hidden" value='<fmt:formatDate value="${informationDetail.information.lastUpdatedDate}" pattern="yyyy-MM-dd HH:mm:ss" />'>
+                      <input id="information.lastUpdatedDate" name="information.lastUpdatedDate" type="hidden" value='<fmt:formatDate value="${informationDetail.information.lastUpdatedDate}" pattern="yyyy/MM/dd HH:mm:ss" />'>
                     </td>
                     <td></td>
                   </tr>

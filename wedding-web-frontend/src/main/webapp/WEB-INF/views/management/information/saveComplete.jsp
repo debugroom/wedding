@@ -39,11 +39,15 @@
                   </tr>
                   <tr>
                     <td>登録日時</td>
-                    <td><c:out value="${informationResource.information.registratedDate}" /></td>
+                    <td>
+                      <fmt:formatDate value="${informationResource.information.registratedDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                    </td>
                   </tr>
                   <tr>
                     <td>公開日時</td>
-                    <td><c:out value="${informationResource.information.releaseDate}" /></td>
+                    <td>
+                      <fmt:formatDate value="${informationResource.information.releaseDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -53,7 +57,7 @@
                 <c:import url="${informationResource.messageBodyUrl}"></c:import>
               </div>
               <h3>閲覧ユーザ</h3>
-              <table>
+              <table class="userTable">
                 <tbody>
                   <tr>
                     <th>No</th>
@@ -77,7 +81,7 @@
               <button class="alternative-first-button" type="button"
                   onclick="location.href='/management/information/new'" >続けて新規作成する</button>
               <button class="alternative-last-button" type="button"
-                  onclick="location.href='/management/information/portal'" >インフォーメーション一覧に戻る</button>
+                  onclick="location.href='/management/information/portal'" >一覧に戻る</button>
             </div>
           </div>
         </div>

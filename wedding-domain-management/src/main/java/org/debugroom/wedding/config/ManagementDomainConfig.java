@@ -10,7 +10,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
 
 @Configuration
-@ComponentScan(basePackages = {"org.debugroom.wedding.domain.service.management"})
+@ComponentScan(basePackages = {
+		"org.debugroom.wedding.domain.service.management",
+		"org.debugroom.wedding.config.infra"
+})
 @PropertySource("classpath:/management-domain.properties")
 public class ManagementDomainConfig {
 

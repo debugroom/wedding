@@ -33,7 +33,7 @@
                     <th>No</th>
                     <th>ID</th>
                     <th>タイトル</th>
-                    <th>公開日時</th>
+                    <th>公開日時</th>
                     <th>アクション</th>
                   </tr>
                   <c:forEach items="${page.content}" var="information" varStatus="status">
@@ -41,7 +41,7 @@
                     <td>${status.index + 1}</td>
                     <td><c:out value="${information.infoId}" /></td>
                     <td><c:out value="${information.title}" /></td>
-                    <td><fmt:formatDate value="${information.releaseDate}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+                    <td><fmt:formatDate value="${information.releaseDate}" pattern="yyyy/MM/dd HH:mm:ss" /></td>
                     <td>
                       <form id="information_${information.infoId}" action="${pageContext.request.contextPath}/management/information/${information.infoId}" >
                         <button id="edit-delete-button-${information.infoId}" name="type" type="submit" value="detail" >詳細</button>

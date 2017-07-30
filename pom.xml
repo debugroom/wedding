@@ -27,5 +27,6 @@
   	<module>wedding-infra-management</module>
   	<module>wedding-domain-management</module>
   	<module>wedding-web-management</module>
+  	<module>wedding-infra-profile</module>
   </modules>
 </project>

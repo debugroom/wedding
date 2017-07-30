@@ -43,7 +43,7 @@
               </c:choose>
             </div>
             <h2>${portalResource.user.lastName} ${portalResource.user.firstName} さん</h2>
-            <p class="profile">前回ログイン日時：<fmt:formatDate value="${portalResource.user.lastLoginDate}" pattern="yyyy-MM-dd HH:mm:ss" /> </p>
+            <p class="profile">前回ログイン日時：<fmt:formatDate value="${portalResource.user.lastLoginDate}" pattern="yyyy/MM/dd HH:mm:ss" /> </p>
             <h3>お知らせ</h3>
             <table>
               <thead>
@@ -55,7 +55,7 @@
               <tbody>
               <c:forEach var="information" items="${portalResource.informationList}" varStatus="status">
                 <tr>
-                  <td><fmt:formatDate value="${portalResource.user.lastLoginDate}" pattern="yyyy-MM-dd" /> </td>
+                  <td><fmt:formatDate value="${portalResource.user.lastLoginDate}" pattern="yyyy/MM/dd" /> </td>
                   <td><a href="${pageContext.request.contextPath}/information/${information.infoId}"><c:out value="${information.title}"/></a></td>
                 </tr>
               </c:forEach>

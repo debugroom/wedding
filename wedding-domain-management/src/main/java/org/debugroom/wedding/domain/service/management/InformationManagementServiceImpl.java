@@ -30,8 +30,9 @@ import org.debugroom.wedding.domain.model.management.InformationDetail;
 import org.debugroom.wedding.domain.model.management.InformationDraft;
 import org.debugroom.wedding.domain.repository.jpa.InformationRepository;
 import org.debugroom.wedding.domain.repository.jpa.NotificationRepository;
-import org.debugroom.wedding.domain.repository.jpa.UserRepository;
 import org.debugroom.wedding.domain.repository.jpa.spec.FindNotViewInformationUsersByInfoId;
+import org.debugroom.wedding.domain.repository.jpa.spec.FindUsersByInfoIdAndIsAccessed;
+import org.debugroom.wedding.domain.repository.jpa.UserRepository;
 import org.debugroom.wedding.domain.service.common.DateUtil;
 import org.debugroom.wedding.domain.service.common.UserSharedService;
 
@@ -65,10 +66,12 @@ public class InformationManagementServiceImpl implements InformationManagementSe
 	@Override
 	public InformationDetail getInformationDetail(String infoId) {
 		Information information = informationRepository.findOne(infoId);
-		List<User> accessedUsers = userRepository
-				.findUsersByInfoIdAndIsAccessed(infoId, true);
-		List<User> noAccessedUsers = userRepository
-				.findUsersByInfoIdAndIsAccessed(infoId, false);
+		List<User> accessedUsers = 
+				userRepository.findAll(FindUsersByInfoIdAndIsAccessed.builder()
+				.infoId(infoId).isAccessed(true).build());
+		List<User> noAccessedUsers = 
+				userRepository.findAll(FindUsersByInfoIdAndIsAccessed.builder()
+				.infoId(infoId).isAccessed(false).build());
 		return InformationDetail.builder()
 				.information(information)
 				.accessedUsers(accessedUsers)

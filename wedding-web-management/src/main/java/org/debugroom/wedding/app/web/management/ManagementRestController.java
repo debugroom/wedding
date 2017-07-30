@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,13 +22,17 @@ import org.dozer.Mapper;
 import org.dozer.MappingException;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.management.information.InformationFormResource;
-import org.debugroom.wedding.app.model.management.information.UserSearchResult;
+import org.debugroom.wedding.app.model.management.request.RequestFormResource;
+import org.debugroom.wedding.domain.entity.management.Request;
 import org.debugroom.wedding.domain.entity.Information;
 import org.debugroom.wedding.domain.entity.User;
 import org.debugroom.wedding.domain.model.common.UpdateResult;
 import org.debugroom.wedding.domain.model.management.InformationDetail;
 import org.debugroom.wedding.domain.model.management.InformationDraft;
+import org.debugroom.wedding.domain.model.management.RequestDetail;
+import org.debugroom.wedding.domain.model.management.RequestDraft;
 import org.debugroom.wedding.domain.service.management.InformationManagementService;
+import org.debugroom.wedding.domain.service.management.RequestManagementService;
 import org.debugroom.wedding.domain.service.management.UserManagementService;
 
 @RestController
@@ -42,6 +47,9 @@ public class ManagementRestController {
 	
 	@Inject
 	InformationManagementService informationManagementService;
+	
+	@Inject
+	RequestManagementService requestManagementService;
 	
 	@RequestMapping(method=RequestMethod.GET, value="/users")
 	public Page<User> getUsers(@PageableDefault(
@@ -131,11 +139,23 @@ public class ManagementRestController {
 
 	@RequestMapping(method=RequestMethod.GET, value="/users", 
 			params="not-information-viewers")
-	public UserSearchResult getNotInformationViewers(
-			@RequestParam("infoId") String infoId){
-		return UserSearchResult.builder()
+	public org.debugroom.wedding.app.model.management.information.UserSearchResult 
+		getNotInformationViewers(@RequestParam("infoId") String infoId){
+		return org.debugroom.wedding.app.model.management.information.UserSearchResult
+				.builder()
 				.infoId(infoId)
 				.users(informationManagementService.getNoViewers(infoId))
+				.build();
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/users",
+			params="not-request-users")
+	public org.debugroom.wedding.app.model.management.request.UserSearchResult 
+		getNotRequestUsers(@RequestParam("requestId") String requestId){
+		return org.debugroom.wedding.app.model.management.request.UserSearchResult
+				.builder()
+				.requestId(requestId)
+				.users(requestManagementService.getNotRequestUsers(requestId))
 				.build();
 	}
 
@@ -147,10 +167,59 @@ public class ManagementRestController {
 				mapper.map(informationDraft, InformationDraft.class));
 	}
 
-	@RequestMapping(method=RequestMethod.DELETE, value="/information/{info}")
+	@RequestMapping(method=RequestMethod.DELETE, value="/information/{infoId}")
 	public Information deleteInformation(@RequestBody 
 			org.debugroom.wedding.app.model.management.information.Information information){
 		return informationManagementService.deleteInformation(information.getInfoId());
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/requests")
+	public Page<Request> getRequests(@PageableDefault(
+			page=0, size=10, direction=Direction.ASC, sort={"requestId"}) Pageable pageable){
+		return requestManagementService.getReqesutsUsingPage(pageable);
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/request/form")
+	public RequestFormResource getRequestForm(){
+		return RequestFormResource.builder().users(
+				requestManagementService.getUsers()).build();
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/request/draft/new")
+	public RequestDraft createRequestDraft(@RequestBody
+			org.debugroom.wedding.app.model.management.request.Request request){
+		return requestManagementService.createRequestDraft(
+				mapper.map(request, RequestDraft.class));
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/request/{requestId}")
+	public Request saveRequest(@RequestBody
+			org.debugroom.wedding.app.model.management.request.Request request){
+		return requestManagementService.saveRequest(
+				mapper.map(request, RequestDraft.class));
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/request/body/{requestId}",
+			produces = "text/html; charset=UTF-8")
+	public String getReqeustBody(@PathVariable String requestId){
+		return requestManagementService.getRequest(requestId).getRequestContents();
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/request/{requestId}")
+	public RequestDetail getRequestDetail(@PathVariable String requestId){
+		return requestManagementService.getRequestDetail(requestId);
+	}
+
+	@RequestMapping(method=RequestMethod.PUT, value="/request/{requestId}")
+	public UpdateResult<RequestDetail> updateRequest(@RequestBody
+			org.debugroom.wedding.app.model.management.request.RequestDraft requestDraft){
+		return requestManagementService.updateRequest(
+				mapper.map(requestDraft, RequestDraft.class));
+	}
+
+	@RequestMapping(method=RequestMethod.DELETE, value="/request/{requestId}")
+	public Request deleteRequest(@PathVariable String requestId){
+		return requestManagementService.deleteRequest(requestId);
 	}
 
 }

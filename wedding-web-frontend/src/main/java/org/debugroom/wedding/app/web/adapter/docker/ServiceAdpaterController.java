@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -18,10 +19,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,7 +48,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.UserSearchCriteria;
-import org.debugroom.wedding.app.model.UserSearchCriteria.GetNotInformationViewers;
 import org.debugroom.wedding.app.model.UserSearchResult;
 import org.debugroom.wedding.app.model.management.PageParam;
 import org.debugroom.wedding.app.model.management.information.DeleteInformationForm;
@@ -67,6 +65,18 @@ import org.debugroom.wedding.app.model.management.information.NewInformationForm
 import org.debugroom.wedding.app.model.management.information.InformationDetailForm.GetInformation;
 import org.debugroom.wedding.app.model.management.information.NewInformationForm.ConfirmInformation;
 import org.debugroom.wedding.app.model.management.information.NewInformationForm.SaveInformation;
+import org.debugroom.wedding.app.model.management.request.DeleteRequestForm;
+import org.debugroom.wedding.app.model.management.request.NewRequestForm;
+import org.debugroom.wedding.app.model.management.request.NewRequestForm.ConfirmRequest;
+import org.debugroom.wedding.app.model.management.request.NewRequestForm.SaveRequest;
+import org.debugroom.wedding.app.model.management.request.Request;
+import org.debugroom.wedding.app.model.management.request.RequestDetail;
+import org.debugroom.wedding.app.model.management.request.RequestDetailForm;
+import org.debugroom.wedding.app.model.management.request.RequestDraft;
+import org.debugroom.wedding.app.model.management.request.RequestFormResource;
+import org.debugroom.wedding.app.model.management.request.RequestPageImpl;
+import org.debugroom.wedding.app.model.management.request.UpdateRequestForm;
+import org.debugroom.wedding.app.model.management.request.UpdateRequestResult;
 import org.debugroom.wedding.app.model.management.user.AddressSearchCriteria;
 import org.debugroom.wedding.app.model.management.user.AddressSearchResult;
 import org.debugroom.wedding.app.model.management.user.DeleteUserForm;
@@ -152,6 +162,16 @@ public class ServiceAdpaterController {
 		return InformationDetailForm.builder().build();
 	}
 
+	@ModelAttribute
+	public NewRequestForm setUpNewRequestForm(){
+		return NewRequestForm.builder().build();
+	}
+
+	@ModelAttribute
+	public RequestDetailForm setUpRequestDetailForm(){
+		return RequestDetailForm.builder().build();
+	}
+
 	@InitBinder(value={"editUserForm", "newUserForm"})
 	public void initBinder(WebDataBinder binder){
 		binder.addValidators(passwordEqualsValidator);
@@ -159,7 +179,7 @@ public class ServiceAdpaterController {
 
 	@InitBinder
 	public void initBinderForDate(WebDataBinder binder){
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
@@ -903,7 +923,7 @@ public class ServiceAdpaterController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,
-			value="management/information/new",
+			value="/management/information/new",
 			params="complete")
 	public String saveInformationComplete(){
 		return "management/information/saveComplete";
@@ -970,8 +990,7 @@ public class ServiceAdpaterController {
 	
 	@RequestMapping(method=RequestMethod.GET, value="/search/users", params="type")
 	public ResponseEntity<UserSearchResult> searchUsers(
-			@Validated(GetNotInformationViewers.class) UserSearchCriteria userSearchCriteria,
-			Errors errors, Locale locale){
+			@Validated UserSearchCriteria userSearchCriteria, Errors errors, Locale locale){
 		
 		UserSearchResult userSearchResult = UserSearchResult.builder()
 				.infoId(userSearchCriteria.getInfoId())
@@ -990,13 +1009,15 @@ public class ServiceAdpaterController {
 		RestTemplate restTemplate = new RestTemplate();
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
 	
+		String serviceName = null;
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		UriComponents uriComponents = null;
 		switch (userSearchCriteria.getType()){
-		case "not-information-viewers" :
-			String serviceName = "management";
-			MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-			params.set("not-information-viewers", "");
-			params.set("infoId", userSearchCriteria.getInfoId());
-			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+			case "not-information-viewers" :
+				serviceName = "management";
+				params.set("not-information-viewers", "");
+				params.set("infoId", userSearchCriteria.getInfoId());
+				uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
 										.host(provider.getIpAddr(serviceName))
 										.port(provider.getPort(serviceName))
 										.path(new StringBuilder()
@@ -1005,7 +1026,22 @@ public class ServiceAdpaterController {
 												.toString())
 										.queryParams(params)
 										.build();
-			return ResponseEntity.status(HttpStatus.OK).body(restTemplate.getForObject(
+				return ResponseEntity.status(HttpStatus.OK).body(restTemplate.getForObject(
+					uriComponents.toUri(), UserSearchResult.class));
+			case "not-request-users" :
+				serviceName = "management";
+				params.set("not-request-users", "");
+				params.set("requestId", userSearchCriteria.getRequestId());
+				uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/users")
+												.toString())
+										.queryParams(params)
+										.build();
+				return ResponseEntity.status(HttpStatus.OK).body(restTemplate.getForObject(
 					uriComponents.toUri(), UserSearchResult.class));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userSearchResult);
@@ -1016,7 +1052,12 @@ public class ServiceAdpaterController {
 	public String updateInformation(
 			@Validated(UpdateInformation.class) UpdateInformationForm updateInformationForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
-		
+			
+		if(!"update".equals(updateInformationForm.getType())){
+			return informationManagementPortal(
+					PageParam.builder().page(0).size(10).build(), bindingResult, model);
+		}
+	
 		if(bindingResult.hasErrors()){
 			InformationDetail informationDetail = 
 					mapper.map(updateInformationForm, InformationDetail.class);
@@ -1044,11 +1085,6 @@ public class ServiceAdpaterController {
 			model.addAttribute(informationDetail);
 			model.addAttribute(BindingResult.class.getName() + ".informationDetail", bindingResult);
 			return "/management/information/detail";
-		}
-		
-		if(!"update".equals(updateInformationForm.getType())){
-			return informationManagementPortal(
-					PageParam.builder().page(0).size(10).build(), bindingResult, model);
 		}
 
 		String serviceName = "management";
@@ -1156,6 +1192,391 @@ public class ServiceAdpaterController {
 			value="/management/information/delete/{infoId}", params="complete")
 	public String deleteInformationComplete(){
 		return "management/information/deleteComplete";
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/management/request/portal")
+	public String requestManagementPortal(@Validated PageParam pageParam,
+			BindingResult bindingResult, Model model){
+		
+		if(bindingResult.hasErrors()){
+			return "common/error";
+		}
+		
+		String serviceName = "management";
+		RestTemplate restTemplate = new RestTemplate();
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+	    params.set("page", Integer.toString(pageParam.getPage()));
+	    params.set("size", Integer.toString(pageParam.getSize()));
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/")
+												.append("requests")
+												.toString())
+										.queryParams(params)
+										.build();
+		Page<Request> page = restTemplate.getForObject(uriComponents.toUri(), RequestPageImpl.class);
+		model.addAttribute("page", page);
+
+		return "management/request/portal";
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value="/management/request/new")
+	public String newRequestForm(Model model){
+		String serviceName = "management";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/form")
+												.toString())
+										.build();
+		model.addAttribute("users", restTemplate.getForObject(
+				uriComponents.toUri(), RequestFormResource.class).getUsers());
+		return "management/request/form";
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value="/management/request/draft/new")
+	public String newRequestDraft(
+			@Validated(ConfirmRequest.class) NewRequestForm newRequestForm,
+			BindingResult bindingResult, Model model, Locale locale){
+
+		String serviceName = "management";
+		
+		if(bindingResult.hasErrors()){
+			model.addAttribute(newRequestForm);
+			model.addAttribute(
+					BindingResult.class.getName() + ".request", bindingResult);
+			return newRequestForm(model);
+		}
+
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/draft/new")
+												.toString())
+										.build();
+
+		RequestDraft requestDraft = restTemplate.postForObject(
+				uriComponents.toUri(), newRequestForm, RequestDraft.class);
+		requestDraft.getRequest().setRequestContents(newRequestForm.getRequestContents());
+		model.addAttribute(requestDraft);
+		
+		return "management/request/confirm";
+
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/management/request/new")
+	public String saveRequest(@Validated(SaveRequest.class) NewRequestForm newRequestForm,
+			BindingResult bindingResult, Model model,
+			RedirectAttributes redirectAttributes, Locale locale){
+		
+		if(bindingResult.hasErrors()){
+			model.addAttribute("requestDraft", mapper.map(newRequestForm, RequestDraft.class));
+			model.addAttribute(BindingResult.class.getName() + ".requestDraft", bindingResult);
+			return "management/request/confirm";
+		}
+		
+		if(!"save".equals(newRequestForm.getType())){
+			model.addAttribute(newRequestForm);
+			return newRequestForm(model);
+		}
+		
+		String serviceName = "management";
+	
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/")
+												.append(newRequestForm.getRequestId())
+												.toString())
+										.build();
+
+		Request request = restTemplate.postForObject(
+				uriComponents.toUri(), newRequestForm, Request.class);
+		
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+											.host(provider.getIpAddr(serviceName))
+											.port(provider.getPort(serviceName))
+											.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/body/")
+												.append(newRequestForm.getRequestId())
+												.toString())
+										.build();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+
+		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
+
+		String requestContents = restTemplate.exchange(uriComponents.toUri(), 
+				HttpMethod.GET, httpEntity, String.class).getBody();
+		request.setRequestContents(requestContents);
+
+		redirectAttributes.addFlashAttribute(request);
+		redirectAttributes.addFlashAttribute("users", newRequestForm.getCheckedUsers());
+
+		return "redirect:new?complete";
+
+	}
+
+	@RequestMapping(method=RequestMethod.GET, 
+			value="/management/request/new", params="complete")
+	public String saveRequestComplete(){
+		return "management/request/saveComplete";
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/management/request/{requestId}")
+	public String getRequest(@Validated RequestDetailForm requestDetailForm,
+			BindingResult bindingResult, Model model){
+		
+		if(bindingResult.hasErrors()){
+			return requestManagementPortal(
+					PageParam.builder().page(0).size(10).build(), bindingResult, model);
+		}
+		
+		String serviceName = "management";
+		
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/")
+												.append(requestDetailForm.getRequestId())
+												.toString())
+										.build();
+		RequestDetail requestDetail = restTemplate.getForObject(
+				uriComponents.toUri(), RequestDetail.class);
+
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/body/")
+												.append(requestDetailForm.getRequestId())
+												.toString())
+										.build();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+
+		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
+
+		requestDetail.getRequest().setRequestContents(
+				restTemplate.exchange(uriComponents.toUri(), 
+				HttpMethod.GET, httpEntity, String.class).getBody());
+		
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr("frontend"))
+										.port(provider.getPort("frontend"))
+										.path(new StringBuilder()
+												.append("/search/users?type=not-request-users&requestId=")
+												.toString())
+										.build();
+		
+		requestDetail.setNotRequestUsersUrl(uriComponents.toString());
+		
+		model.addAttribute(requestDetail);
+		
+		if("detail".equals(requestDetailForm.getType())){
+			return "management/request/detail";
+		}else{
+			return "management/request/delete";
+		}
+		
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, value="/management/request/{requestId}")
+	public String updateRequest(@Validated UpdateRequestForm updateRequestForm,
+			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
+			
+		if(!"update".equals(updateRequestForm.getType())){
+			return requestManagementPortal(
+					PageParam.builder().page(0).size(10).build(), bindingResult, model);
+		}
+
+
+		if(bindingResult.hasErrors()){
+			RequestDetail requestDetail = mapper.map(updateRequestForm, RequestDetail.class);
+			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr("frontend"))
+										.port(provider.getPort("frontend"))
+										.path(new StringBuilder()
+												.append("/search/users?type=not-request-users&requestId=")
+												.toString())
+										.build();
+			requestDetail.setNotRequestUsersUrl(uriComponents.toString());
+			model.addAttribute(requestDetail);
+			model.addAttribute(BindingResult.class.getName() + ".requestDetail", bindingResult);
+			return "/management/request/detail";
+		}
+
+		String serviceName = "management";
+		RestTemplate restTemplate = new RestTemplate();
+
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/body/")
+												.append(updateRequestForm.getRequest().getRequestId())
+												.toString())
+										.build();	
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+
+		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
+
+		String beforeRequestContents = restTemplate.exchange(uriComponents.toUri(), 
+				HttpMethod.GET, httpEntity, String.class).getBody();
+	
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/")
+												.append(updateRequestForm.getRequest().getRequestId())
+												.toString())
+										.build();	
+		
+		try{
+
+			UpdateRequestResult updateRequestResult = 
+					restTemplate.exchange(uriComponents.toUri(), HttpMethod.PUT, 
+							new HttpEntity<UpdateRequestForm>(updateRequestForm), 
+							UpdateRequestResult.class).getBody();
+
+			updateRequestResult.getBeforeEntity().getRequest()
+				.setRequestContents(beforeRequestContents);
+			updateRequestResult.getAfterEntity().getRequest()
+				.setRequestContents(updateRequestForm.getRequest().getRequestContents());
+
+			redirectAttributes.addFlashAttribute("updateResult", updateRequestResult);
+
+		} catch (Exception e){
+			//TODO Using Business Exception for serverside error.
+			model.addAttribute("errorCode", "");
+			return "common/error";
+		}
+		
+		return new StringBuilder().append("redirect:")
+				.append(updateRequestForm.getRequest().getRequestId())
+				.append("?complete")
+				.toString();
+
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, 
+			value="/management/request/{requestId}", params="complete")
+	public String updateRequestComplete(){
+		return "management/request/updateComplete";
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/management/request/delete/{requestId}")
+	public String deleteConfirm(@Validated DeleteRequestForm deleteRequestForm,
+			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
+		
+		if(bindingResult.hasErrors()){
+			return "common/error";
+		}
+		
+		if(!"delete".equals(deleteRequestForm.getType())){
+			return requestManagementPortal(
+					PageParam.builder().page(0).size(10).build(), bindingResult, model);
+		}
+		
+		String serviceName = "management";
+
+		RestTemplate restTemplate = new RestTemplate();
+		
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/request/body/")
+												.append(deleteRequestForm.getRequestId())
+												.toString())
+										.build();	
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+
+		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
+
+		String deleteRequestContents = restTemplate.exchange(uriComponents.toUri(), 
+				HttpMethod.GET, httpEntity, String.class).getBody();
+
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+									.host(provider.getIpAddr(serviceName))
+									.port(provider.getPort(serviceName))
+									.path(new StringBuilder()
+											.append(APP_NAME)
+											.append("/request/")
+											.append(deleteRequestForm.getRequestId())
+											.toString())
+									.build();
+		try{
+			RequestDetail requestDetail = RequestDetail
+					.builder()
+					.request(restTemplate.exchange(
+						uriComponents.toUri(), HttpMethod.DELETE, 
+						new HttpEntity<DeleteRequestForm>(deleteRequestForm), 
+						org.debugroom.wedding.app.model.management.request.Request.class)
+						.getBody())
+					.build();
+			requestDetail.getRequest().setRequestContents(deleteRequestContents);
+			redirectAttributes.addFlashAttribute(requestDetail);
+		
+		} catch (Exception e){
+			//TODO Using Business Exception for serverside error.
+			model.addAttribute("errorCode", "");
+			return "common/error";
+		}
+
+		return new StringBuilder()
+					.append("redirect:")
+					.append(deleteRequestForm.getRequestId())
+					.append("?complete")
+					.toString();
+
+	}
+
+	@RequestMapping(method=RequestMethod.GET,
+			value="/management/request/delete/{requestId}",
+			params="complete")
+	public String deleteComplete(){
+		return "management/request/deleteComplete";
 	}
 
 }

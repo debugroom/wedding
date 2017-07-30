@@ -53,11 +53,11 @@ public class NewInformationForm implements Serializable{
 	private String title;
 	
 	@NotNull(groups = {SaveInformation.class})
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	private Date registratedDate;
 
 	@NotNull(groups = {ConfirmInformation.class, SaveInformation.class})
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	@Future(groups = {ConfirmInformation.class, SaveInformation.class})
 	private Date releaseDate;
 

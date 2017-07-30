@@ -39,15 +39,15 @@ public class Information implements Serializable{
 	@Size(min=1, max=256, groups={UpdateInformation.class})
 	private String title;
 	@NotNull(groups={UpdateInformation.class})
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	@Past(groups={UpdateInformation.class})
 	private Date registratedDate;
 	@NotNull(groups={UpdateInformation.class})
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	private Date releaseDate;
 	@NotNull(groups={UpdateInformation.class})
 	@Past(groups={UpdateInformation.class})
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	private Date lastUpdatedDate;
 	private String messageBody;
 	

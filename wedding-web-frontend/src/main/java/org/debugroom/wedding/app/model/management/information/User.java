@@ -24,18 +24,15 @@ public class User implements Serializable{
 	public User(){
 	}
 	
-	@NotNull
 	@Size(min=8, max=8, 
 		groups= {ConfirmInformation.class, SaveInformation.class, UpdateInformation.class})
 	@Pattern(regexp= "[0-9]*", groups= {ConfirmInformation.class, SaveInformation.class})
 	private String userId;
 	
-	@NotNull
 	@Size(min=1, max=50, 
 		groups= {ConfirmInformation.class, SaveInformation.class, UpdateInformation.class})
 	private String firstName;
 	
-	@NotNull
 	@Size(min=1, max=50, 
 		groups= {ConfirmInformation.class, SaveInformation.class, UpdateInformation.class})
 	private String lastName;
