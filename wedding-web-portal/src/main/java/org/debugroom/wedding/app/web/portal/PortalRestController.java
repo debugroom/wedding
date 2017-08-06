@@ -43,6 +43,12 @@ public class PortalRestController {
 				.build();
 	}
 	
+	@RequestMapping(method=RequestMethod.GET, value="/profile/{userId}")
+	@ResponseStatus(HttpStatus.OK)
+	public User getProfile(@PathVariable String userId) throws BusinessException{
+		return portalService.getUser(userId);
+	}
+
 	@RequestMapping(method=RequestMethod.GET, value="/information/{infoId}")
 	@ResponseStatus(HttpStatus.OK)
 	public Information information(@Validated Information information){

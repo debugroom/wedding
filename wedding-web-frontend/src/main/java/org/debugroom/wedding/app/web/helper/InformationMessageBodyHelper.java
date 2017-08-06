@@ -15,7 +15,7 @@ import org.debugroom.wedding.domain.entity.Information;
 public class InformationMessageBodyHelper {
 
 	@Value("${info.root.directory}")
-	private String infoPageRootDirectory;
+	private String infoRootDirectory;
 	
 	public void saveMessageBody(InformationDraft informationDraft, String messsageBody) 
 			throws BusinessException{
@@ -30,7 +30,7 @@ public class InformationMessageBodyHelper {
 				.toString();
 		
 		File file = new File(new StringBuilder()
-				.append(infoPageRootDirectory)
+				.append(infoRootDirectory)
 				.append(java.io.File.separator)
 				.append(inforPagePath)
 				.toString());
@@ -47,12 +47,12 @@ public class InformationMessageBodyHelper {
 	public String getMessageBody(Information information) throws BusinessException{
 		
 		File file = new File(new StringBuilder()
-				.append(infoPageRootDirectory)
+				.append(infoRootDirectory)
 				.append(java.io.File.separator)
 				.append(information.getInfoPagePath())
 				.toString());
 		try {
-			if(!StringUtils.startsWith(file.getCanonicalPath(), infoPageRootDirectory)){
+			if(!StringUtils.startsWith(file.getCanonicalPath(), infoRootDirectory)){
 				throw new BusinessException("createInformationMessageBodyHelper.error.0003", 
 						null, information.getInfoPagePath());
 			}
@@ -72,7 +72,7 @@ public class InformationMessageBodyHelper {
 			String oldMessageBody = getMessageBody(information);
 			if(!newMessageBody.equals(oldMessageBody)){
 				File file = new File(new StringBuilder()
-						.append(infoPageRootDirectory)
+						.append(infoRootDirectory)
 						.append(java.io.File.separator)
 						.append(information.getInfoPagePath())
 						.toString());

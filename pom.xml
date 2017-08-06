@@ -28,5 +28,8 @@
   	<module>wedding-domain-management</module>
   	<module>wedding-web-management</module>
   	<module>wedding-infra-profile</module>
+  	<module>wedding-infra-gallery</module>
+  	<module>wedding-domain-gallery</module>
+  	<module>wedding-web-gallery</module>
   </modules>
 </project>

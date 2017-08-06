@@ -54,4 +54,13 @@ public class ServiceProperties {
 	@Value("${management.service.port}")
 	private String managementServicePort;
 
+	@Value("${gallery.service.name}")
+	private String galleryServiceName;
+	
+	@Value("${gallery.service.addr}")
+	private String galleryServiceAddr;
+
+	@Value("${gallery.service.port}")
+	private String galleryServicePort;
+
 }

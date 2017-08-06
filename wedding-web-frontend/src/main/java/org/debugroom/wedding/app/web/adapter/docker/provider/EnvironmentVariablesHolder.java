@@ -51,7 +51,24 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 				.append(properties.getProfileServicePort())
 				.toString());
 
+		List<String> managementServicePathList = new ArrayList<String>();
+		pathMap.put(properties.getManagementServiceName(), managementServicePathList);
+		managementServicePathList.add(new StringBuilder()
+				.append(properties.getManagementServiceAddr())
+				.append(":")
+				.append(properties.getManagementServicePort())
+				.toString());
+
+		List<String> galleryServicePathList = new ArrayList<String>();
+		pathMap.put(properties.getGalleryServiceName(), galleryServicePathList);
+		galleryServicePathList.add(new StringBuilder()
+				.append(properties.getGalleryServiceAddr())
+				.append(":")
+				.append(properties.getGalleryServicePort())
+				.toString());
+
 		return pathMap;
+
 	}
 
 	@Override
@@ -77,6 +94,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		List<String> managementServiceIpAddrList = new ArrayList<String>();
 		ipAddrMap.put(properties.getManagementServiceName(), managementServiceIpAddrList);
 		managementServiceIpAddrList.add(properties.getManagementServiceAddr());
+
+		List<String> galleryServiceIpAddrList = new ArrayList<String>();
+		ipAddrMap.put(properties.getGalleryServiceName(),galleryServiceIpAddrList);
+		galleryServiceIpAddrList.add(properties.getGalleryServiceAddr());
 
 		return ipAddrMap;
 	}
@@ -105,7 +126,12 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		portMap.put(properties.getManagementServiceName(), managementServicePortList);
 		managementServicePortList.add(properties.getManagementServicePort());
 
+		List<String> galleryServicePortList = new ArrayList<String>();
+		portMap.put(properties.getGalleryServiceName(), galleryServicePortList);
+		galleryServicePortList.add(properties.getGalleryServicePort());
+
 		return portMap;
+
 	}
 
 }

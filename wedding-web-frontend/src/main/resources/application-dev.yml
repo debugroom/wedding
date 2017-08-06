@@ -8,10 +8,13 @@ spring:
     username: wedding_app
     password: wedding_app
     driverClassName: org.postgresql.Driver
-image:
-  download:
-    root:
-      directory: /Users/kawabatakouhei/Documents/work/apps
+profile:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps
 info:
   root:
     directory: /Users/kawabatakouhei/Documents/work/apps
+gallery:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps/gallery
+    

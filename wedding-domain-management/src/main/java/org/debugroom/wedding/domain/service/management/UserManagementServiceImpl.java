@@ -9,7 +9,7 @@ import org.dozer.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.entity.Credential;
 import org.debugroom.wedding.domain.entity.Email;
@@ -19,6 +19,7 @@ import org.debugroom.wedding.domain.service.common.CommonDomainProperties;
 import org.debugroom.wedding.domain.service.common.DateUtil;
 import org.debugroom.wedding.domain.service.common.UserSharedService;
 
+@Transactional
 @Service("userManagementService")
 public class UserManagementServiceImpl implements UserManagementService{
 

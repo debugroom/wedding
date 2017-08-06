@@ -29,7 +29,6 @@ public class UserSearchCriteria implements Serializable{
 	@Size(min = 12, max = 12)
 	@Pattern(regexp = "[0-9]*")
 	private String folderId;
-	@NotNull
 	@Size(min=1, max=1024)
 	@Pattern(regexp = "[-¥.¥_¥/a-zA-Z0-9]*")
 	private String type;

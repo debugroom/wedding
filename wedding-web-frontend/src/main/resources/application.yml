@@ -1,10 +1,38 @@
 spring:
   profiles:
     active: dev,jpa
-image:
-  download:
-    root:
-      directory: /tmp
+profile:
+  root:
+    directory: /tmp
+  directory: resource/app/img/profile
+  image:
+    file:
+      name: image
 info:
   root:
     directory: /tmp
+gallery:
+  root:
+    directory: /tmp/gallery
+  image:
+    original:
+      directory: image/original
+      file:
+        name: image
+    thumbnail:
+      directory: image/thumbnail
+      file:
+        name: image-thumbnail
+      width:  100
+      height: 75
+  movie:
+    original:
+      directory: movie/original
+      file:
+        name: movie
+    thumbnail:
+      directory: movie/thumbnail
+      file:
+        name: movie-thumbnail
+      width:  100
+      height: 75

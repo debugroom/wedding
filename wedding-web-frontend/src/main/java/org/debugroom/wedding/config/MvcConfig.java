@@ -1,7 +1,9 @@
 package org.debugroom.wedding.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.debugroom.wedding.app.web.interceptor.AddUserInfoInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +14,9 @@ import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.accept.MappingMediaTypeFileExtensionResolver;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -58,6 +62,20 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
         list.add(MediaType.IMAGE_PNG);
         list.add(MediaType.APPLICATION_OCTET_STREAM);
         return list;
+    }
+    
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+    	configurer.defaultContentType(MediaType.APPLICATION_JSON);
+    	configurer.mediaType("xml", MediaType.APPLICATION_XML);
+    	configurer.mediaType("json", MediaType.APPLICATION_JSON);
+    	configurer.mediaType("jpeg", MediaType.IMAGE_JPEG);
+    	configurer.mediaType("jpg", MediaType.IMAGE_JPEG);
+    	configurer.mediaType("png", MediaType.IMAGE_PNG);
+    	configurer.mediaType("gif", MediaType.IMAGE_GIF);
+    	configurer.mediaType("mpeg", MediaType.APPLICATION_OCTET_STREAM);
+    	configurer.mediaType("mp4", MediaType.APPLICATION_OCTET_STREAM);
+    	configurer.mediaType("wmv", MediaType.APPLICATION_OCTET_STREAM);
     }
 
 	@Override

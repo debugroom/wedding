@@ -16,4 +16,6 @@ public interface PortalService {
 	
 	public Request getRequest(String requestId);
 
+	public User getUser(String userId) throws BusinessException;
+	
 }

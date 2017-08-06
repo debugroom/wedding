@@ -31,6 +31,8 @@
           <div id="messageBody" class="information-panel">
             <c:import url="${information.infoRootPath}" charEncoding="UTF-8"></c:import>
           </div>
+          <button class="main-button" type="button"
+                  onclick="location.href='/portal/${user.userId}'" >ポータルに戻る</button>
         </div>
       </div>
     </div>

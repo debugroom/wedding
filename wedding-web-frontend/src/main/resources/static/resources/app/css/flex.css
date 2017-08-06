@@ -36,21 +36,81 @@ tbody > tr:nth-child(odd) > td{
 	display : -webkit-flex;
 	display : -moz-flex;
 	display : flex;
+	justify-content: center;
 }
 
 #flex-container .flex-item-1{
 	           width : 250px;
 }
+
 #flex-container .flex-item-2{
 	           width : auto;
-	    -webkit-flex : 1 0 500px;
-	       -moz-flex : 1 0 500px;
-	            flex : 1 0 500px;
+	    -webkit-flex : 1 0 900px;
+	       -moz-flex : 1 0 900px;
+	            flex : 1 0 900px;
+}
+
+@media screen and (min-width:480px) { 
+}
+
+@media screen and (min-width:768px) and ( max-width:1024px) {
+.panel {
+	             width : auto;
+	            margin : 0 50px 50px 50px;
+	           padding : 0 20px 0;
+	            border : solid 1px #aaaaaa;
+	     border-radius : 10px;
+	-webkit-box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
+	       -box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
+            background : -webkit-linear-gradient(top, #ffffff 0%, #dddddd 50%, #ffffff 100%); 
+            background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+}
+}
+
+@media screen and (min-width:1024px) {
+
+.panel {
+	             width : 900px;
+	            margin : 0 50px 50px 50px;
+	           padding : 0 20px 0;
+	            border : solid 1px #aaaaaa;
+	     border-radius : 10px;
+	-webkit-box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
+	       -box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
+            background : -webkit-linear-gradient(top, #ffffff 0%, #dddddd 50%, #ffffff 100%); 
+            background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+}
+}
+
+.headerPanel{
+	text-align: left;
+}
+
+.headerPanel img{
+	width: 30%;
+	margin : 20px;
+}
+
+.warningMessage {
+	color : #ff0000;
+}
+
+.errorMessage {
+	color : #ff0000;
+}
+
+.successMessage {
+	color : #118102;
 }
 
 .menu {
     width           : 250px;
-    float           : left;
     padding         : 0;
     margin          : 0;
     list-style-type : none;
@@ -125,13 +185,17 @@ tbody > tr:nth-child(odd) > td{
     background: linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
 }
 
+.lined-menu{
+    text-align: center;
+}
+
 .lined-menu ul{
-       margin : 50px 50px 0px;
+       margin : 0px 50px 0px;
        padding : 0px;
 }
 
 .lined-menu li{
-    width      : 150px;
+    width      : 120px;
     margin     : 0;
     padding    : 0;
     display    : inline-block;
@@ -141,9 +205,9 @@ tbody > tr:nth-child(odd) > td{
 
 .lined-menu li a {
     color : #000000;
-    font-size : 12px;
+    font-size : 9px;
     padding : 10px 0px ;
-    width      : 150px;
+    width      : 120px;
     display : inline-block;
     text-decoration : none;
     /*全体のグラデーション*/
@@ -276,39 +340,4 @@ tbody > tr:nth-child(odd) > td{
     background: -o-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
     background: -ms-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
     background: linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
-}
-
-.panel {
-	            margin : 0 50px 50px 50px;
-	           padding : 0 20px 0;
-	            border : solid 1px #aaaaaa;
-	     border-radius : 10px;
-	-webkit-box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
-	       -box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
-            background : -webkit-linear-gradient(top, #ffffff 0%, #dddddd 50%, #ffffff 100%); 
-            background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
-            background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
-            background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
-            background :         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
-}
-
-.headerPanel{
-	text-align: right;
-}
-
-.headerPanel img{
-	width: 30%;
-	margin : 20px;
-}
-
-.warningMessage {
-	color : #ff0000;
-}
-
-.errorMessage {
-	color : #ff0000;
-}
-
-.successMessage {
-	color : #118102;
 }

@@ -14,33 +14,33 @@ import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 
 @Component
-public class ImageUploadHelper implements FileUploadHelper{
+public class ProfileImageUploadHelper implements FileUploadHelper{
 
-	@Value("${image.upload.root.directory}")
-	private String imageUploadRootDirectory;
-	@Value("${image.upload.directory}")
-	private String imageUploadDirectory;
-	@Value("${image.upload.file.name}")
-	private String imageUploadFileName;
+	@Value("${profile.root.directory}")
+	private String profileRootDirectory;
+	@Value("${profile.directory}")
+	private String profileDirectory;
+	@Value("${profile.image.file.name}")
+	private String profileImageFileName;
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	@Override
 	public String saveFile(MultipartFile multipartFile, String userId) throws BusinessException {
 		String uploadDirectoryContextPath = new StringBuilder()
-				.append(imageUploadDirectory)
+				.append(profileDirectory)
 				.append(FILE_SEPARATOR)
 				.append(userId)
 				.append(FILE_SEPARATOR)
 				.append(UUID.randomUUID().toString())
 				.toString();
 		String uploadDirectoryAbsolutePath = new StringBuilder()
-				.append(imageUploadRootDirectory)
+				.append(profileRootDirectory)
 				.append(FILE_SEPARATOR)
 				.append(uploadDirectoryContextPath)
 				.append(FILE_SEPARATOR)
 				.toString();
-		StringBuilder stringBuilder = new StringBuilder().append(imageUploadFileName);
+		StringBuilder stringBuilder = new StringBuilder().append(profileImageFileName);
 		switch (multipartFile.getContentType()) {
 			case MediaType.IMAGE_PNG_VALUE :
 				stringBuilder.append(".png");
@@ -60,7 +60,7 @@ public class ImageUploadHelper implements FileUploadHelper{
 		}
 		return new StringBuilder()
 				.append(uploadDirectoryContextPath)
-				.append("/")
+				.append(FILE_SEPARATOR)
 				.append(stringBuilder.toString())
 				.toString();
 	}

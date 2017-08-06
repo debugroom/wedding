@@ -13,7 +13,9 @@ import org.debugroom.wedding.domain.repository.jpa.InformationRepository;
 import org.debugroom.wedding.domain.repository.jpa.portal.RequestRepository;
 import org.debugroom.wedding.domain.service.common.UserSharedService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service("portalService")
 public class PortalServiceImpl implements PortalService{
 
@@ -48,6 +50,11 @@ public class PortalServiceImpl implements PortalService{
 	@Override
 	public Request getRequest(String requestId) {
 		return requestRepository.findOne(requestId);
+	}
+
+	@Override
+	public User getUser(String userId) throws BusinessException {
+		return userSharedService.getUser(userId);
 	}
 
 }

@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.debugroom</groupId>
     <artifactId>wedding-boot-parent</artifactId>
-    <relativePath>./weding-boot-parent</relativePath>
+    <relativePath>../wedding-boot-parent</relativePath>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>wedding-domain-management</artifactId>

@@ -1,6 +1,7 @@
 package org.debugroom.wedding.app.web.adapter.docker;
 
 import java.awt.image.BufferedImage;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import org.dozer.Mapper;
 import org.dozer.MappingException;
@@ -37,11 +39,13 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -49,6 +53,24 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.UserSearchCriteria;
 import org.debugroom.wedding.app.model.UserSearchResult;
+import org.debugroom.wedding.app.model.gallery.CreateFolderForm;
+import org.debugroom.wedding.app.model.gallery.CreateFolderForm.CreateFolder;
+import org.debugroom.wedding.app.model.gallery.CreateFolderResult;
+import org.debugroom.wedding.app.model.gallery.DeleteFolderForm;
+import org.debugroom.wedding.app.model.gallery.DeleteFolderResult;
+import org.debugroom.wedding.app.model.gallery.DeleteMediaForm;
+import org.debugroom.wedding.app.model.gallery.DeleteMediaResult;
+import org.debugroom.wedding.app.model.gallery.Folder;
+import org.debugroom.wedding.app.model.gallery.GalleryPortalResource;
+import org.debugroom.wedding.app.model.gallery.Media;
+import org.debugroom.wedding.app.model.gallery.Movie;
+import org.debugroom.wedding.app.model.gallery.Photo;
+import org.debugroom.wedding.app.model.gallery.PhotoSearchResult;
+import org.debugroom.wedding.app.model.gallery.UpdateFolderForm;
+import org.debugroom.wedding.app.model.gallery.UpdateFolderForm.UpdateFolder;
+import org.debugroom.wedding.app.model.gallery.UpdateFolderResult;
+import org.debugroom.wedding.app.model.gallery.UploadFileForm;
+import org.debugroom.wedding.app.model.gallery.UploadFileResult;
 import org.debugroom.wedding.app.model.management.PageParam;
 import org.debugroom.wedding.app.model.management.information.DeleteInformationForm;
 import org.debugroom.wedding.app.model.management.information.Information.GetMessageBody;
@@ -96,8 +118,9 @@ import org.debugroom.wedding.app.model.portal.PortalResource;
 import org.debugroom.wedding.app.model.profile.EditProfileForm;
 import org.debugroom.wedding.app.model.profile.UpdateUserResult;
 import org.debugroom.wedding.app.web.helper.InformationMessageBodyHelper;
+import org.debugroom.wedding.app.web.helper.GalleryContentsUploadHelper;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
-import org.debugroom.wedding.app.web.helper.ImageUploadHelper;
+import org.debugroom.wedding.app.web.helper.ProfileImageUploadHelper;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
 import org.debugroom.wedding.app.web.validator.PasswordEqualsValidator;
@@ -117,13 +140,16 @@ public class ServiceAdpaterController {
 	ConnectPathProvider provider;
 	
 	@Inject
-	ImageUploadHelper uploadHelper;
+	ProfileImageUploadHelper uploadHelper;
 	
 	@Inject
 	ImageDownloadHelper downloadHelper;
 	
 	@Inject
 	InformationMessageBodyHelper informationMessageBodyHelper;
+
+	@Inject
+	GalleryContentsUploadHelper galleryContentsUploadHelper;
 	
 	@Inject
 	AddressSearch addressSearch;
@@ -195,7 +221,7 @@ public class ServiceAdpaterController {
 		return serviceName;
 	}
 	
-	@RequestMapping(value="/portal/{userId}", method=RequestMethod.GET)
+	@RequestMapping(value="/portal/{userId:[0-9]+}", method=RequestMethod.GET)
 	public String portal(@PathVariable String userId, Model model) 
 			throws URISyntaxException{
 		String serviceName = "portal";
@@ -215,7 +241,37 @@ public class ServiceAdpaterController {
 		return "portal/portal";
 	}
 	
-	@RequestMapping(value="/information/{infoId}", method=RequestMethod.GET)
+
+	@RequestMapping(method = RequestMethod.GET,
+			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif",
+			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE},
+			value = "/portal/image/{userId:[0-9]+}/{imageFileExtension}")
+	@ResponseBody
+	public ResponseEntity<BufferedImage> getPortalImage(@PathVariable String userId){
+		String serviceName = "portal";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+									.host(provider.getIpAddr(serviceName))
+									.port(provider.getPort(serviceName))
+									.path(new StringBuilder()
+											.append(APP_NAME)
+											.append("/profile/")
+											.append("{userId}")
+											.toString())
+									.build()
+									.expand(userId);
+		User user = restTemplate.getForObject(uriComponents.toUri(),User.class);
+		BufferedImage image = null;
+		try {
+			image = downloadHelper.getProfileImage(user);
+		} catch (BusinessException e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+		return ResponseEntity.ok().body(image);
+	}
+
+	@RequestMapping(value="/information/{infoId:[0-9]+}", method=RequestMethod.GET)
 	public String information(@Validated Information information, Model model) 
 			throws URISyntaxException{
 		String serviceName = "information";
@@ -246,7 +302,7 @@ public class ServiceAdpaterController {
 		return "portal/information";
 	}
 
-	@RequestMapping(value="/information/body/{infoId}", method=RequestMethod.GET,
+	@RequestMapping(value="/information/body/{infoId:[0-9]+}", method=RequestMethod.GET,
 			produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String infomationBody(@PathVariable String infoId){
@@ -270,7 +326,7 @@ public class ServiceAdpaterController {
 		}
 	}
 
-	@RequestMapping(value="/profile/{userId}", method=RequestMethod.GET)
+	@RequestMapping(value="/profile/{userId:[0-9]+}", method=RequestMethod.GET)
 	public String profile(@PathVariable String userId, Model model){
 		String serviceName = "profile";
 		Map<Integer, String> pathVariableMap = new HashMap<Integer, String>();
@@ -290,7 +346,7 @@ public class ServiceAdpaterController {
 		return "profile/portal";
 	}
 
-	@RequestMapping(value="/profile/{userId}", method=RequestMethod.POST)
+	@RequestMapping(value="/profile/{userId:[0-9]+}", method=RequestMethod.POST)
 	public String profile(@PathVariable String userId, 
 			@Validated EditProfileForm editProfileForm, 
 			BindingResult bindingResult, Model model, Locale locale){
@@ -334,7 +390,7 @@ public class ServiceAdpaterController {
 	@RequestMapping(method = RequestMethod.GET,
 			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif",
 			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE},
-			value = "/profile/image/{userId}/{imageFileExtension}")
+			value = "/profile/image/{userId:[0-9]+}/{imageFileExtension}")
 	@ResponseBody
 	public ResponseEntity<BufferedImage> getProfileImage(@PathVariable String userId){
 		String serviceName = "profile";
@@ -357,7 +413,7 @@ public class ServiceAdpaterController {
 		try {
 			image = downloadHelper.getProfileImage(user);
 		} catch (BusinessException e) {
-			ResponseEntity.badRequest().body(null);
+			return ResponseEntity.badRequest().body(null);
 		}
 		return ResponseEntity.ok().body(image);
 	
@@ -466,7 +522,7 @@ public class ServiceAdpaterController {
 		return ResponseEntity.status(HttpStatus.OK).body(addressSearchResult);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/image/{userId}/{imageFileExtension}")
+	@RequestMapping(method = RequestMethod.GET, value="/image/{userId:[0-9]+}/{imageFileExtension}")
 	@ResponseBody
 	public ResponseEntity<BufferedImage> image(@Validated ImageParam imageParam, 
 			BindingResult bindingResult){
@@ -524,7 +580,7 @@ public class ServiceAdpaterController {
 		return "management/user/confirm";
 	}
 
-	@RequestMapping(method=RequestMethod.POST, value="/management/user/new/{userId}")
+	@RequestMapping(method=RequestMethod.POST, value="/management/user/new/{userId:[0-9]+}")
 	public String saveUser(@Validated(SaveUser.class) NewUserForm newUserForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 		
@@ -571,13 +627,13 @@ public class ServiceAdpaterController {
 	}
 
 	@RequestMapping(method=RequestMethod.GET, 
-			value="/management/user/new/{userId}",
+			value="/management/user/new/{userId:[0-9]+}",
 			params="complete")
 	public String saveUserComplete(){
 		return "management/user/saveComplete";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="/management/user/{userId}")
+	@RequestMapping(method = RequestMethod.GET, value="/management/user/{userId:[0-9]+}")
 	public String getUser(@Validated(GetUser.class) EditUserForm editUserForm,
 			Errors errors, Model model){
 		
@@ -617,7 +673,7 @@ public class ServiceAdpaterController {
 		
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="/management/edit/user/{userId}")
+	@RequestMapping(method = RequestMethod.POST, value="/management/edit/user/{userId:[0-9]+}")
 	public String updateUser(@Validated(UpdateUser.class) EditUserForm editUserForm,
 			BindingResult bindingResult, Model model, 
 			RedirectAttributes redirectAttributes, Locale locale){
@@ -678,13 +734,13 @@ public class ServiceAdpaterController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, 
-			value="/management/edit/user/{userId}",
+			value="/management/edit/user/{userId:[0-9]+}",
 			params="complete")
 	public String editUserComplete(){
 		return "management/user/editComplete";
 	}
 
-	@RequestMapping(method=RequestMethod.POST, value="/management/user/delete/{userId}")
+	@RequestMapping(method=RequestMethod.POST, value="/management/user/delete/{userId:[0-9]+}")
 	public String deleteConfirm(@Validated DeleteUserForm deleteUserForm,
 			BindingResult bindingResult, Model model, 
 			RedirectAttributes redirectAttributes){
@@ -728,7 +784,7 @@ public class ServiceAdpaterController {
 	}
 
 	@RequestMapping(method=RequestMethod.GET, 
-			value="/management/user/delete/{userId}",params = "complete")
+			value="/management/user/delete/{userId:[0-9]+}",params = "complete")
 	public String deleteUserComplete(){
 		return "management/user/deleteComplete";
 	}
@@ -839,7 +895,7 @@ public class ServiceAdpaterController {
 		return "management/information/confirm";
 	}
 
-	@RequestMapping(value="/information/body/{infoId}", method=RequestMethod.GET,
+	@RequestMapping(value="/information/body/{infoId:[0-9]+}", method=RequestMethod.GET,
 			produces="text/html;charset=UTF-8", params="temp")
 	@ResponseBody
 	public String infomationBody(@Validated(GetMessageBody.class)
@@ -929,7 +985,7 @@ public class ServiceAdpaterController {
 		return "management/information/saveComplete";
 	}
 
-	@RequestMapping(method=RequestMethod.GET, value="/management/information/{infoId}")
+	@RequestMapping(method=RequestMethod.GET, value="/management/information/{infoId:[0-9]+}")
 	public String getInformation(
 			@Validated(GetInformation.class) InformationDetailForm informationDetailForm, 
 			BindingResult bindingResult, Model model){
@@ -1048,7 +1104,7 @@ public class ServiceAdpaterController {
 
 	}
 	
-	@RequestMapping(method=RequestMethod.POST, value="/management/information/{information.infoId}")
+	@RequestMapping(method=RequestMethod.POST, value="/management/information/{information.infoId:[0-9]+}")
 	public String updateInformation(
 			@Validated(UpdateInformation.class) UpdateInformationForm updateInformationForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
@@ -1133,13 +1189,13 @@ public class ServiceAdpaterController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET, 
-			value="/management/information/{information.infoId}", params="complete")
+			value="/management/information/{information.infoId:[0-9]+}", params="complete")
 	public String updatInformationComplete(){
 		return "management/information/updateComplete";
 	}
 
 	@RequestMapping(method=RequestMethod.POST,
-			value="/management/information/delete/{infoId}")
+			value="/management/information/delete/{infoId:[0-9]+}")
 	public String deleteConfirm(@Validated DeleteInformationForm deleteInformationForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 		
@@ -1189,7 +1245,7 @@ public class ServiceAdpaterController {
 	}
 
 	@RequestMapping(method=RequestMethod.GET, 
-			value="/management/information/delete/{infoId}", params="complete")
+			value="/management/information/delete/{infoId:[0-9]+}", params="complete")
 	public String deleteInformationComplete(){
 		return "management/information/deleteComplete";
 	}
@@ -1342,7 +1398,7 @@ public class ServiceAdpaterController {
 		return "management/request/saveComplete";
 	}
 
-	@RequestMapping(method=RequestMethod.GET, value="/management/request/{requestId}")
+	@RequestMapping(method=RequestMethod.GET, value="/management/request/{requestId:[0-9]+}")
 	public String getRequest(@Validated RequestDetailForm requestDetailForm,
 			BindingResult bindingResult, Model model){
 		
@@ -1408,7 +1464,7 @@ public class ServiceAdpaterController {
 		
 	}
 	
-	@RequestMapping(method=RequestMethod.POST, value="/management/request/{requestId}")
+	@RequestMapping(method=RequestMethod.POST, value="/management/request/{requestId:[0-9]+}")
 	public String updateRequest(@Validated UpdateRequestForm updateRequestForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 			
@@ -1495,12 +1551,12 @@ public class ServiceAdpaterController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET, 
-			value="/management/request/{requestId}", params="complete")
+			value="/management/request/{requestId:[0-9]+}", params="complete")
 	public String updateRequestComplete(){
 		return "management/request/updateComplete";
 	}
 
-	@RequestMapping(method=RequestMethod.POST, value="/management/request/delete/{requestId}")
+	@RequestMapping(method=RequestMethod.POST, value="/management/request/delete/{requestId:[0-9]+}")
 	public String deleteConfirm(@Validated DeleteRequestForm deleteRequestForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 		
@@ -1573,10 +1629,475 @@ public class ServiceAdpaterController {
 	}
 
 	@RequestMapping(method=RequestMethod.GET,
-			value="/management/request/delete/{requestId}",
+			value="/management/request/delete/{requestId:[0-9]+}",
 			params="complete")
 	public String deleteComplete(){
 		return "management/request/deleteComplete";
 	}
 
+	
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/{userId:[0-9]+}")
+	public String gallery(@PathVariable String userId, Model model){
+
+		String serviceName = "gallery";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/portal/")
+												.append(userId)
+												.toString())
+										.build();
+		model.addAttribute(restTemplate.getForObject(uriComponents.toUri(), 
+				GalleryPortalResource.class));
+		return "gallery/portal";
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/photo-thumbnail/{photoId:[0-9]+}",
+			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif",
+			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE })
+	@ResponseBody
+	public ResponseEntity<BufferedImage> getPhotoThumbnail(
+			@Validated Photo photo, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "gallery";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/photo/")
+												.append(photo.getPhotoId())
+												.toString())
+										.build();
+		Photo target = restTemplate.getForObject(uriComponents.toUri(), Photo.class);
+		BufferedImage image = null;
+		try {
+			image = downloadHelper.getGalleryThumbnailImage(target);
+		} catch (BusinessException e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+		return ResponseEntity.ok().body(image);
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/photo/{photoId:[0-9]+}/{fileName}",
+			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif")
+	@ResponseBody
+	public ResponseEntity<BufferedImage> getPhoto(
+			@Validated Photo photo, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "gallery";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/photo/")
+												.append(photo.getPhotoId())
+												.toString())
+										.build();
+		Photo target = restTemplate.getForObject(uriComponents.toUri(), Photo.class);		
+		
+		BufferedImage image = null;
+		try {
+			image = downloadHelper.getGalleryImage(target);
+		} catch (BusinessException e) {
+			return ResponseEntity.ok().body(null);
+		}
+		// TODO Springの不具合の可能性あり。設定方法を改めて検証する。レスポンスヘッダにコンテンツタイプをセットしても、
+		//　　HttpEntityMethodProcessor.handleReturnValue()内で上書きされる。
+		// AbstractMessageConverterMethodProcessor.writeWithMessageConverters()のselectedMediaTypeを設定するロジックがおかしい？
+		/*
+		 * 	for (MediaType mediaType : mediaTypes) {
+			    if (mediaType.isConcrete()) {
+				    selectedMediaType = mediaType;
+				    break;                                   <----コンテンツタイプが設定されていればそちらを優先すべき？
+			    }
+			    else if (mediaType.equals(MediaType.ALL) || mediaType.equals(MEDIA_TYPE_APPLICATION)) {
+				    selectedMediaType = MediaType.APPLICATION_OCTET_STREAM;
+				    break;
+			    }
+		    }
+		 * 
+		 */
+		// 暫定手段として、リクエストパスに拡張子を含めて、ContentNegotiationConfigurerで拡張子のメディアタイプが
+		// 選ばれるようにconfigureContentNegotiationをオーバライドして設定しておく
+	    ResponseEntity<BufferedImage> entity =  ResponseEntity.ok().headers(downloadHelper.getHeaders(target)).body(image);
+	    return entity;
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/photographs/{folderId}")
+	public ResponseEntity<PhotoSearchResult> getPhotographs(@Validated Folder folder,
+			BindingResult bindingResult){
+		
+		PhotoSearchResult photoSearchResult = mapper.map(folder, PhotoSearchResult.class);
+		
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			photoSearchResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(photoSearchResult);
+		}
+
+		String serviceName = "gallery";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/folder/")
+												.append(folder.getFolderId())
+												.append("/photographs")
+												.toString())
+										.build();
+
+		Photo[] photographs = restTemplate.getForObject(uriComponents.toUri(), Photo[].class);
+		photoSearchResult.setPhotographs(Arrays.asList(photographs));
+		
+		photoSearchResult.setRequestContextPath(getFrontendServerUri().toString());
+	
+		return ResponseEntity.status(HttpStatus.OK).body(photoSearchResult);
+
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/folder/viewers/{folderId}")
+	public ResponseEntity<UserSearchResult> getFolderViewers(
+			@Validated UserSearchCriteria userSearchCriteria, BindingResult bindingResult){
+		
+		UserSearchResult userSearchResult = mapper.map(
+				userSearchCriteria, UserSearchResult.class);
+		
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			userSearchResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userSearchResult);
+		}
+
+		String serviceName = "gallery";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/folder/")
+												.append(userSearchCriteria.getFolderId())
+												.append("/viewers")
+												.toString())
+										.build();
+		
+		User[] users = restTemplate.getForObject(uriComponents.toUri(), User[].class);
+		userSearchResult.setUsers(Arrays.asList(users));
+
+		return ResponseEntity.status(HttpStatus.OK).body(userSearchResult);
+
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/folder/no-viewers/{folderId}")
+	public ResponseEntity<UserSearchResult> getFolderNoViewers(
+			@Validated UserSearchCriteria userSearchCriteria, BindingResult bindingResult){
+		
+		UserSearchResult userSearchResult = mapper.map(
+				userSearchCriteria, UserSearchResult.class);
+		
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			userSearchResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userSearchResult);
+		}
+
+		String serviceName = "gallery";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/folder/")
+												.append(userSearchCriteria.getFolderId())
+												.append("/no-viewers")
+												.toString())
+										.build();
+
+		User[] users = restTemplate.getForObject(uriComponents.toUri(), User[].class);
+		userSearchResult.setUsers(Arrays.asList(users));
+
+		return ResponseEntity.status(HttpStatus.OK).body(userSearchResult);
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, value="/gallery/folder/new",
+			consumes={MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<CreateFolderResult> createFolder(
+			@Validated(CreateFolder.class) @RequestBody CreateFolderForm createFolderForm,
+			BindingResult bindingResult){
+		
+		CreateFolderResult createFolderResult = mapper.map(
+				createFolderForm,  CreateFolderResult.class);
+		
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			createFolderResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(createFolderResult);
+		}
+
+		String serviceName = "gallery";
+	
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/folder/new")
+												.toString())
+										.build();
+
+		//TODO setUserId form http session.
+		createFolderForm.setUserId("00000001");
+		
+		createFolderResult.setFolder(restTemplate.postForObject(
+				uriComponents.toUri(), createFolderForm, Folder.class));
+
+		createFolderResult.setRequestContextPath(getFrontendServerUri().toString());
+		
+		return ResponseEntity.status(HttpStatus.OK).body(createFolderResult);
+		
+	}
+
+	@RequestMapping(method=RequestMethod.PUT, value="/gallery/folders/{folderId}")
+	public ResponseEntity<UpdateFolderResult> updateFolder(
+			@Validated(UpdateFolder.class) @RequestBody UpdateFolderForm updateFolderForm,
+			BindingResult bindingResult){
+		
+		UpdateFolderResult updateFolderResult = 
+				mapper.map(updateFolderForm, UpdateFolderResult.class);
+
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			updateFolderResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(updateFolderResult);
+		}
+		
+		String serviceName = "gallery";
+	
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/folder/")
+												.append(updateFolderForm.getFolder().getFolderId())
+												.toString())
+										.build();
+
+		//TODO setUserId form http session.
+		updateFolderForm.setUserId("00000001");
+		
+		updateFolderResult.setFolder(restTemplate.exchange(uriComponents.toUri(), 
+				HttpMethod.PUT, new HttpEntity<UpdateFolderForm>(updateFolderForm), 
+				Folder.class).getBody());
+
+		updateFolderResult.setRequestContextPath(getFrontendServerUri().toString());
+		
+		return ResponseEntity.status(HttpStatus.OK).body(updateFolderResult);
+
+	}
+
+	@RequestMapping(method=RequestMethod.DELETE, value="/gallery/folders/{folderId}")
+	public ResponseEntity<DeleteFolderResult> deleteFolder(
+			@Validated DeleteFolderForm deleteFolderForm, BindingResult bindingResult){
+		
+		DeleteFolderResult deleteFolderResult = 
+				mapper.map(deleteFolderForm, DeleteFolderResult.class);
+		
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			deleteFolderResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(deleteFolderResult);
+		}
+	
+		String serviceName = "gallery";
+
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+									.host(provider.getIpAddr(serviceName))
+									.port(provider.getPort(serviceName))
+									.path(new StringBuilder()
+											.append(APP_NAME)
+											.append("/folder/")
+											.append(deleteFolderForm.getFolderId())
+											.toString())
+									.build();
+
+		deleteFolderResult.setFolder(restTemplate.exchange(uriComponents.toUri(), 
+				HttpMethod.DELETE, new HttpEntity<DeleteFolderForm>(deleteFolderForm), 
+				Folder.class).getBody());
+		
+		return ResponseEntity.status(HttpStatus.OK).body(deleteFolderResult);
+		
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,
+			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif",
+			value = "/gallery/media/{mediaId:[0-9]+}/{fileName:[0-9a-zA-Z.]+}")
+	public String getMedia(@PathVariable String mediaId, @PathVariable String fileName){
+		String mediaType = downloadHelper.getMediaType(fileName);
+		return new StringBuilder()
+				.append("forward:/gallery/")
+				.append(mediaType)
+				.append("/")
+				.append(mediaId)
+				.append("/")
+				.append(fileName)
+				.toString();
+	}	
+
+	@RequestMapping(method=RequestMethod.POST, value="/gallery/upload")
+	public ResponseEntity<UploadFileResult> uploadFile(
+			@Validated UploadFileForm uploadFileForm, BindingResult bindingResult){
+		
+		UploadFileResult uploadFileResult = new UploadFileResult();
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			uploadFileResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uploadFileResult);
+		}
+		
+		MultipartFile multipartFile = uploadFileForm.getUploadFile();
+		
+		try {
+			//TODO get Userid from session.
+			Media media = galleryContentsUploadHelper.createMedia(
+					multipartFile, "00000001", uploadFileForm.getFolderId());
+
+			String serviceName = "gallery";
+
+			RestTemplate restTemplate = new RestTemplate();
+			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+									.host(provider.getIpAddr(serviceName))
+									.port(provider.getPort(serviceName))
+									.path(new StringBuilder()
+											.append(APP_NAME)
+											.append("/media/new")
+											.toString())
+									.build();
+			uploadFileResult.setMedia(restTemplate.postForObject(
+					uriComponents.toUri(), media, Media.class));
+			uploadFileResult.setRequestContextPath(getFrontendServerUri().toString());
+		} catch (BusinessException e) {
+			List<String> messages = new ArrayList<String>();
+			uploadFileResult.setMessages(messages);
+			messages.add(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uploadFileResult);
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(uploadFileResult);
+	}
+	
+	@RequestMapping(method=RequestMethod.DELETE, value="/gallery/media",
+			consumes={MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<DeleteMediaResult> deleteMedia(@RequestBody 
+			@Validated DeleteMediaForm deleteMediaForm, BindingResult bindingResult){
+		
+		DeleteMediaResult deleteMediaResult = new DeleteMediaResult();
+		
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			deleteMediaResult.setMessages(messages);
+			for(FieldError fieldError: bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(deleteMediaResult);
+		}
+
+		String serviceName = "gallery";
+
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = null;
+		UriComponents uriComponents = null;
+		
+		List<Photo> photographs = new ArrayList<Photo>();
+		deleteMediaResult.setPhotographs(photographs);
+		List<Movie> movies = new ArrayList<Movie>();
+		deleteMediaResult.setMovies(movies);
+		for(Photo photo : deleteMediaForm.getPhotographs()){
+			uriComponentsBuilder = UriComponentsBuilder.newInstance();
+			uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+									.host(provider.getIpAddr(serviceName))
+									.port(provider.getPort(serviceName))
+									.path(new StringBuilder()
+											.append(APP_NAME)
+											.append("/photo/")
+											.append(photo.getPhotoId())
+											.toString())
+									.build();
+			photographs.add(restTemplate.exchange(
+					uriComponents.toUri(), HttpMethod.DELETE, null, Photo.class).getBody());
+		}
+		for(Movie movie: deleteMediaForm.getMovies()){
+			uriComponentsBuilder = UriComponentsBuilder.newInstance();
+			uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+									.host(provider.getIpAddr(serviceName))
+									.port(provider.getPort(serviceName))
+									.path(new StringBuilder()
+											.append(APP_NAME)
+											.append("/movie/")
+											.append(movie.getMovieId())
+											.toString())
+									.build();
+			movies.add(restTemplate.exchange(
+					uriComponents.toUri(), HttpMethod.DELETE, null, Movie.class).getBody());
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(deleteMediaResult);
+	}
+	
+	private URI getFrontendServerUri(){
+		String serviceName = "frontend";
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+								.host(provider.getIpAddr(serviceName))
+								.port(provider.getPort(serviceName))
+								.build();
+		return uriComponents.toUri();
+	}
 }
