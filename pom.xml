@@ -7,29 +7,7 @@
   <packaging>pom</packaging>
   <name>wedding</name>
   <modules>
-  	<module>wedding-parent</module>
-  	<module>wedding-web-springmvc</module>
-  	<module>wedding-common</module>
-  	<module>wedding-domain</module>
-  	<module>wedding-env</module>
-  	<module>wedding-infra-jpa</module>
-  	<module>wedding-batch</module>
-  	<module>wedding-boot-parent</module>
-  	<module>wedding-infra-common</module>
-  	<module>wedding-domain-common</module>
-  	<module>wedding-web-common</module>
-  	<module>wedding-domain-portal</module>
-  	<module>wedding-infra-portal</module>
-  	<module>wedding-web-portal</module>
-  	<module>wedding-web-frontend</module>
-  	<module>wedding-domain-profile</module>
-  	<module>wedding-web-profile</module>
-  	<module>wedding-infra-management</module>
-  	<module>wedding-domain-management</module>
-  	<module>wedding-web-management</module>
-  	<module>wedding-infra-profile</module>
-  	<module>wedding-infra-gallery</module>
-  	<module>wedding-domain-gallery</module>
-  	<module>wedding-web-gallery</module>
+  	<module>wedding-monolithic</module>
+  	<module>wedding-microservice</module>
   </modules>
 </project>
