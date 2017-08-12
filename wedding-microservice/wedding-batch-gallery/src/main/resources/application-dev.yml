@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wedding
+    username: wedding_app
+    password: wedding_app
+    driverClassName: org.postgresql.Driver
+gallery:
+  download:
+    work:
+      root:
+        directory: /Users/kawabatakouhei/Documents/work/apps
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps/gallery

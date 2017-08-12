@@ -26,5 +26,7 @@
     <module>wedding-infra-gallery</module>
     <module>wedding-domain-gallery</module>
     <module>wedding-web-gallery</module>
+    <module>wedding-batch-gallery</module>
+    <module>wedding-batch-common</module>
   </modules>
 </project>
