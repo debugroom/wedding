@@ -14,10 +14,13 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.item.ExecutionContext;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.debugroom.wedding.app.batch.gallery.model.DownloadMedia;
+import org.debugroom.wedding.app.web.gallery.helper.BatchArgsCreateHelper;
 import org.debugroom.wedding.domain.service.common.DateUtil;
 
 @RestController
@@ -28,15 +31,28 @@ public class BatchLauncherController {
 	JobLauncher jobLauncher;
 	
 	@Inject
+	BatchArgsCreateHelper batchArgsCreateHelper;
+	
+	@Inject
 	Job job;
 	
-	@RequestMapping(value="/gallery/batch", method=RequestMethod.GET)
-	public String executeBatch() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException{
+	@RequestMapping(value="/gallery/archive", method=RequestMethod.POST)
+	public String createArchiveBatch(@RequestBody DownloadMedia downloadMedia) 
+			throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException{
 		Map<String, JobParameter> map = new HashMap<String, JobParameter>();
+		String photoIdsArg = batchArgsCreateHelper.getPhotoArgs(downloadMedia);
+		String movieIdsArg = batchArgsCreateHelper.getMovieArgs(downloadMedia);
+		if(!"".equals(photoIdsArg)){
+			map.put("photoIds", new JobParameter(photoIdsArg));
+		}
+		if(!"".equals(movieIdsArg)){
+			map.put("movieIds", new JobParameter(movieIdsArg));
+		}
 		map.put("time", new JobParameter(DateUtil.getCurrentDate()));
 		JobParameters jobParameters = new JobParameters(map);
 		JobExecution jobExecution = jobLauncher.run(job, jobParameters);
-		return jobExecution.getExitStatus().getExitCode();
+		ExecutionContext jobExecutionContext = jobExecution.getExecutionContext();
+		return jobExecutionContext.getString("accessKey");
 	}
 
 }

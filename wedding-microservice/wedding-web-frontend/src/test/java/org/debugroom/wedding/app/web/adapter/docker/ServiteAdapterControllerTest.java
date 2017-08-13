@@ -1,5 +1,8 @@
 package org.debugroom.wedding.app.web.adapter.docker;
 
+import org.debugroom.wedding.app.model.gallery.DownloadMediaForm;
+import org.debugroom.wedding.app.model.gallery.Movie;
+import org.debugroom.wedding.app.model.gallery.Photo;
 import org.debugroom.wedding.config.WebApp;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,8 +59,31 @@ public class ServiteAdapterControllerTest {
 		.andReturn();
 		
 		log.info(mvcResult.getResponse().getHeader("content-type"));
-		
 
+	}
+	
+	@Test
+	public void testDownloadMedia() throws Exception{
+		List<Photo> photographs = new ArrayList<Photo>();
+		List<Movie> movies = new ArrayList<Movie>();
+		DownloadMediaForm downloadMedia = 
+				DownloadMediaForm.builder().photographs(photographs).movies(movies).build();
+		photographs.add(Photo.builder().photoId("0000000000").build());
+		photographs.add(Photo.builder().photoId("0000000001").build());
+		photographs.add(Photo.builder().photoId("0000000002").build());
+		movies.add(Movie.builder().movieId("0000000000").build());
+		movies.add(Movie.builder().movieId("0000000001").build());
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String requestJsonString = objectMapper.writerWithDefaultPrettyPrinter()
+				.writeValueAsString(downloadMedia);
+		
+		MvcResult mvcResult = mockMvc.perform(post("/gallery/media")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(requestJsonString.getBytes()))
+				.andExpect(status().is3xxRedirection())
+				.andDo(print())
+				.andReturn();
 	}
 
 }

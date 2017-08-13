@@ -100,7 +100,7 @@ function getFolderDetail(){
 		$("#detailPanel").append($('<div class="alternative-button">' 
 				+ '<button id="download-button" class="alternative-first-button" value="' 
 				+ data.requestContextPath
-				+ "/gallery/archive"
+				+ "/gallery/media"
 				+ '" disabled="true">ダウンロードする</button>'
 	 			+ '<button id="delete-button" class="alternative-last-button" value="'
 				+ data.requestContextPath
@@ -582,22 +582,43 @@ function uploadFiles(){
 function downloadContents(){
 	var selectedContents = $(".selectedContents");
 	if(selectedContents.length != 0){
-		var media = [];
+		var photographs = [];
+		var movies = [];
+		var photoCount = 0;
+		var movieCount = 0;
+		for(var i = 0; i < selectedContents.length ; i++){
+			var photoId = $(selectedContents[i]).data("photoId");
+			var movieId = $(selectedContents[i]).data("movieId");
+			if(photoId != null){
+				photographs[photoCount] = { "photoId" : photoId };
+				photoCount++;
+			}
+			if(movieId != null){
+				movies[movieCount] = { "movieId" : movieId };
+				movieCount++;
+			}
+		}
+		var media = { "photographs" : photographs, "movies" : movies };
 		for(var i = 0; i < selectedContents ; i++){
-			media[i] = { "mediaId" : $(selectedContents[i].data("photoId")) }
+			photo[i] = { "photoId" : $(selectedContents[i].data("photoId")) }
 		}
 		var form = {
 			"media" : media
 		}
 		$.ajax({
 			type : "post",
-			url : $(this).value,
-			data : JSON.stringify(),
+			url : $(this).val(),
+			data : JSON.stringify(media),
 			dataType : "json",
-			success : function(data){
-				
-			}
-		})
+			contentType : 'application/json',
+		}).then(
+				function(data){
+					window.location = data.responseText;
+				},
+				function(data){
+					window.location = data.responseText;
+				}
+		);
 	}
 }
 

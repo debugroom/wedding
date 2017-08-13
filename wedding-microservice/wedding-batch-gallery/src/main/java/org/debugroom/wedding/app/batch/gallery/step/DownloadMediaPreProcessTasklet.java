@@ -53,48 +53,67 @@ public class DownloadMediaPreProcessTasklet implements Tasklet{
 				.append(galleryBatchProperties.getGalleryDownloadDirectory())
 				.toString();
 		
+		String randomString = UUID.randomUUID().toString();
 		String downloadDirectoryPath = fileSystemSharedService.createDirectory(
-				path, UUID.randomUUID().toString());
+				path, randomString);
 		
 		String downloadPhotoList = stepExecution.getJobParameters().getString("photoIds");
-		String downloadMovieList = stepExecution.getJobParameters().getString("movieIds");
 
-		File downloadPhotoListFile = new File(new StringBuilder()
+		if(downloadPhotoList != null){
+			
+			File downloadPhotoListFile = new File(new StringBuilder()
 				.append(downloadDirectoryPath)
 				.append(java.io.File.separator)
 				.append(galleryBatchProperties.getGalleryDownloadWorkPhotoFilename())
 				.toString());
-		File downloadMovieListFile = new File(new StringBuilder()
+
+			BufferedWriter downloadPhotoListWriter = null;
+			try{
+				downloadPhotoListWriter = new BufferedWriter(
+						new FileWriter(downloadPhotoListFile));
+				downloadPhotoListWriter.write(
+					StringUtils.replace(downloadPhotoList, ",",  System.lineSeparator()));
+				downloadPhotoListWriter.flush();
+			} catch(IOException e){
+				throw new SystemException("downloadMediaPreProcessTasklet.error.0001", e);
+			}finally{
+				downloadPhotoListWriter.close();
+			}
+
+			jobExecutionContext.put("downloadPhotoListFilename", new StringBuilder()
+				.append("file:").append(downloadPhotoListFile.getAbsolutePath()).toString());
+
+		}
+
+		String downloadMovieList = stepExecution.getJobParameters().getString("movieIds");
+		
+		if(downloadMovieList != null){
+			
+			File downloadMovieListFile = new File(new StringBuilder()
 				.append(downloadDirectoryPath)
 				.append(java.io.File.separator)
 				.append(galleryBatchProperties.getGalleryDownloadWorkMovieFilename())
 				.toString());
 		
-		BufferedWriter downloadPhotoListWriter = null;
-		BufferedWriter downloadMovieListWriter = null;
-		try{
-			
-		downloadPhotoListWriter = new BufferedWriter(new FileWriter(downloadPhotoListFile));
-		downloadMovieListWriter = new BufferedWriter(new FileWriter(downloadMovieListFile));
+			BufferedWriter downloadMovieListWriter = null;
+			try{
+				downloadMovieListWriter = new BufferedWriter(new FileWriter(downloadMovieListFile));
+				downloadMovieListWriter.write(
+					StringUtils.replace(downloadMovieList, ",",  System.lineSeparator()));
+				downloadMovieListWriter.flush();
+			} catch(IOException e){
+				throw new SystemException("downloadMediaPreProcessTasklet.error.0001", e);
+			}finally{
+				downloadMovieListWriter.close();
+			}
 
-		downloadPhotoListWriter.write(StringUtils.replace(downloadPhotoList, ",",  System.lineSeparator()));
-		downloadMovieListWriter.write(StringUtils.replace(downloadMovieList, ",",  System.lineSeparator()));
-
-		downloadPhotoListWriter.flush();
-		downloadMovieListWriter.flush();
-
-		} catch(IOException e){
-			throw new SystemException("downloadMediaPreProcessTasklet.error.0001", e);
-		}finally{
-			downloadPhotoListWriter.close();
-			downloadMovieListWriter.close();
+			jobExecutionContext.put("downloadMovieListFilename", new StringBuilder()
+				.append("file:").append(downloadMovieListFile.getAbsolutePath()).toString());
+		
 		}
 
+		jobExecutionContext.put("accessKey", randomString);
 		jobExecutionContext.put("downloadDirectoryPath", downloadDirectoryPath);
-		jobExecutionContext.put("downloadPhotoListFilename", new StringBuilder()
-				.append("file:").append(downloadPhotoListFile.getAbsolutePath()).toString());
-		jobExecutionContext.put("downloadMovieListFilename", new StringBuilder()
-				.append("file:").append(downloadMovieListFile.getAbsolutePath()).toString());
 
 		return RepeatStatus.FINISHED;
 

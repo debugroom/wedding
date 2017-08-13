@@ -36,6 +36,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +52,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.app.FileDownloadException;
 import org.debugroom.wedding.app.model.UserSearchCriteria;
 import org.debugroom.wedding.app.model.UserSearchResult;
 import org.debugroom.wedding.app.model.gallery.CreateFolderForm;
@@ -60,6 +62,7 @@ import org.debugroom.wedding.app.model.gallery.DeleteFolderForm;
 import org.debugroom.wedding.app.model.gallery.DeleteFolderResult;
 import org.debugroom.wedding.app.model.gallery.DeleteMediaForm;
 import org.debugroom.wedding.app.model.gallery.DeleteMediaResult;
+import org.debugroom.wedding.app.model.gallery.DownloadMediaForm;
 import org.debugroom.wedding.app.model.gallery.Folder;
 import org.debugroom.wedding.app.model.gallery.GalleryPortalResource;
 import org.debugroom.wedding.app.model.gallery.Media;
@@ -2089,6 +2092,60 @@ public class ServiceAdpaterController {
 					uriComponents.toUri(), HttpMethod.DELETE, null, Movie.class).getBody());
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(deleteMediaResult);
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, value="/gallery/media",
+			consumes={MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<String> downloadMedia(@RequestBody @Validated DownloadMediaForm downloadMediaForm, 
+			BindingResult bindingResult, RedirectAttributes redirectAttributes) 
+					throws FileDownloadException{
+		
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			throw new FileDownloadException(messages);
+		}
+		
+		String serviceName = "gallery-batch";
+		
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(new StringBuilder()
+						.append(APP_NAME)
+						.append("/gallery/archive")
+						.toString())
+				.build();
+		
+		String accessKey = restTemplate.postForObject(
+				uriComponents.toUri(), downloadMediaForm, String.class);
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+	    params.set("accessKey", accessKey);
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(new StringBuilder()
+						.append(APP_NAME)
+						.append("/gallery/archive")
+						.toString())
+				.queryParams(params)
+				.build();
+		
+
+		return ResponseEntity.ok().body(uriComponents.toString());
+
+	}
+	
+	@ExceptionHandler(FileDownloadException.class)
+	public ResponseEntity<List<String>> handleBindingResultError(
+			final FileDownloadException exception){
+		return new ResponseEntity<List<String>>(exception.getMessages(), 
+				HttpStatus.BAD_REQUEST);
 	}
 	
 	private URI getFrontendServerUri(){

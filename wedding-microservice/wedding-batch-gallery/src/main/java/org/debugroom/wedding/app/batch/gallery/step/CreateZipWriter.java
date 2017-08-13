@@ -92,13 +92,13 @@ public class CreateZipWriter implements ItemWriter<Photo>{
 		byte[] buffer = new byte[1024];
 		
 		try{
+			File zipFilePath = new File(new StringBuilder()
+					.append(downloadDirectoryPath.getAbsolutePath())
+					.append(java.io.File.separator)
+					.append(galleryBatchProperties.getGalleryDownloadFilename())
+					.toString());
 			zipOutputStream = new ZipOutputStream(new BufferedOutputStream(
-					new FileOutputStream(new File(
-							new StringBuilder()
-							.append(downloadDirectoryPath.getAbsolutePath())
-							.append(java.io.File.separator)
-							.append(galleryBatchProperties.getGalleryDownloadFilename())
-							.toString()))));
+					new FileOutputStream(zipFilePath)));
 			for(File file : findFilenameMatchingRegex("photo-[.0-9a-z]+", downloadDirectoryPath)){
 				ZipEntry entry = new ZipEntry(file.getName());
 				zipOutputStream.putNextEntry(entry);
@@ -109,6 +109,7 @@ public class CreateZipWriter implements ItemWriter<Photo>{
 				}
 				file.delete();
 			}
+			jobExecutionContext.put("downloadFilePath", zipFilePath.getAbsolutePath());
 
 		}catch (IOException e){
 		}finally{

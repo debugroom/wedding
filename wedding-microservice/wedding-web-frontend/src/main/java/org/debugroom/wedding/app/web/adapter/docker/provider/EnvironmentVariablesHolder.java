@@ -67,6 +67,14 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 				.append(properties.getGalleryServicePort())
 				.toString());
 
+		List<String> galleryBatchServicePathList = new ArrayList<String>();
+		pathMap.put(properties.getGalleryBatchServiceName(), galleryBatchServicePathList);
+		galleryServicePathList.add(new StringBuilder()
+				.append(properties.getGalleryBatchServiceAddr())
+				.append(":")
+				.append(properties.getGalleryBatchServicePort())
+				.toString());
+
 		return pathMap;
 
 	}
@@ -99,6 +107,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		ipAddrMap.put(properties.getGalleryServiceName(),galleryServiceIpAddrList);
 		galleryServiceIpAddrList.add(properties.getGalleryServiceAddr());
 
+		List<String> galleryBatchServiceIpAddrList = new ArrayList<String>();
+		ipAddrMap.put(properties.getGalleryBatchServiceName(),galleryBatchServiceIpAddrList);
+		galleryBatchServiceIpAddrList.add(properties.getGalleryBatchServiceAddr());
+
 		return ipAddrMap;
 	}
 
@@ -129,6 +141,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		List<String> galleryServicePortList = new ArrayList<String>();
 		portMap.put(properties.getGalleryServiceName(), galleryServicePortList);
 		galleryServicePortList.add(properties.getGalleryServicePort());
+
+		List<String> galleryBatchServicePortList = new ArrayList<String>();
+		portMap.put(properties.getGalleryBatchServiceName(), galleryBatchServicePortList);
+		galleryBatchServicePortList.add(properties.getGalleryBatchServicePort());
 
 		return portMap;
 

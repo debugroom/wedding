@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 @Import({BatchAppConfig.class, MvcConfig.class, SecurityConfig.class})
-@ComponentScan({"org.debugroom.wedding.app.web.gallery.listener"})
+@ComponentScan({"org.debugroom.wedding.app.batch.gallery"})
 @SpringBootApplication
 public class WebApp extends SpringBootServletInitializer{
 
