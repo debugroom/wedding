@@ -13,20 +13,11 @@
     <module>wedding-infra-common</module>
     <module>wedding-domain-common</module>
     <module>wedding-web-common</module>
-    <module>wedding-domain-portal</module>
-    <module>wedding-infra-portal</module>
-    <module>wedding-web-portal</module>
-    <module>wedding-web-frontend</module>
-    <module>wedding-domain-profile</module>
-    <module>wedding-web-profile</module>
-    <module>wedding-infra-management</module>
-    <module>wedding-domain-management</module>
-    <module>wedding-web-management</module>
-    <module>wedding-infra-profile</module>
-    <module>wedding-infra-gallery</module>
-    <module>wedding-domain-gallery</module>
-    <module>wedding-web-gallery</module>
-    <module>wedding-batch-gallery</module>
     <module>wedding-batch-common</module>
+    <module>wedding-frontend</module>
+    <module>wedding-gallery</module>
+    <module>wedding-management</module>
+    <module>wedding-profile</module>
+    <module>wedding-portal</module>
   </modules>
 </project>
