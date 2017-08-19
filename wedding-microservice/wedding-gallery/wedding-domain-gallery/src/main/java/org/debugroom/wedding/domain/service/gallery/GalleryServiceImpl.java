@@ -16,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.entity.gallery.Folder;
 import org.debugroom.wedding.domain.entity.gallery.Movie;
+import org.debugroom.wedding.domain.entity.gallery.MovieRelatedFolder;
+import org.debugroom.wedding.domain.entity.gallery.MovieRelatedFolderPK;
 import org.debugroom.wedding.domain.entity.gallery.Photo;
 import org.debugroom.wedding.domain.entity.gallery.PhotoRelatedFolder;
 import org.debugroom.wedding.domain.entity.gallery.PhotoRelatedFolderPK;
@@ -32,7 +34,9 @@ import org.debugroom.wedding.domain.repository.jpa.spec.gallery.FindFolderUsersB
 import org.debugroom.wedding.domain.repository.jpa.spec.gallery.FindNotFolderUsersByFolderId;
 import org.debugroom.wedding.domain.repository.jpa.spec.gallery.FindRelatedFolderByUserId;
 import org.debugroom.wedding.domain.repository.jpa.spec.gallery.FindRelatedFolderWithViewablePhotoByUserId;
+import org.debugroom.wedding.domain.repository.jpa.spec.gallery.FindRelatedMovieByFolderId;
 import org.debugroom.wedding.domain.repository.jpa.spec.gallery.FindRelatedPhotoByFolderId;
+import org.debugroom.wedding.domain.repository.jpa.spec.gallery.FindViewableMovieByUserId;
 import org.debugroom.wedding.domain.repository.jpa.spec.gallery.FindViewablePhotoByUserId;
 import org.debugroom.wedding.domain.service.common.DateUtil;
 
@@ -71,8 +75,9 @@ public class GalleryServiceImpl implements GalleryService{
 
 	@Override
 	public List<Movie> getMovies(String userId) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		return movieRepository.findAll(
+				FindViewableMovieByUserId.builder()
+				.userId(userId).build());
 	}
 
 	@Override
@@ -91,6 +96,12 @@ public class GalleryServiceImpl implements GalleryService{
 	@Override
 	public List<Photo> getPhotographsByFolder(Folder folder) {
 		return photoRepository.findAll(FindRelatedPhotoByFolderId.builder()
+				.folderId(folder.getFolderId()).build());
+	}
+
+	@Override
+	public List<Movie> getMoviesByFolder(Folder folder){
+		return movieRepository.findAll(FindRelatedMovieByFolderId.builder()
 				.folderId(folder.getFolderId()).build());
 	}
 
@@ -196,7 +207,6 @@ public class GalleryServiceImpl implements GalleryService{
 	@Retryable(value={DataIntegrityViolationException.class},
 	maxAttempts=10000, backoff=@Backoff(delay=500))
 	public Media saveMedia(Media media) throws BusinessException {
-		// TODO 自動生成されたメソッド・スタブ
 		switch(media.getMediaType()){
 			case PHOTOGRAPH:
 				Photo photo = Photo.builder()
@@ -208,12 +218,13 @@ public class GalleryServiceImpl implements GalleryService{
 				media.setMediaId(photo.getPhotoId());
 				break;
 			case MOVIE:
-				Movie movie = saveMovie(Movie.builder()
+				Movie movie = Movie.builder()
 						.filePath(media.getFilePath())
-						.build());
+						.thumbnailFilePath(media.getThumbnailFilePath())
+						.movieRelatedFolders(new HashSet<MovieRelatedFolder>())
+						.build();
+				saveMovie(movie, media.getFolderId());
 				media.setMediaId(movie.getMovieId());
-				break;
-			case ZIP:
 				break;
 			default:
 				break;
@@ -224,7 +235,6 @@ public class GalleryServiceImpl implements GalleryService{
 	@Override
 	public synchronized Photo savePhotograph(Photo photo, String folderId) 
 			throws BusinessException {
-		// TODO Add retry logic for multiple update.
 		String newPhotoId = getNewPhotoId();
 		photo.setPhotoId(newPhotoId);
 		photo.setLastUpdatedDate(DateUtil.getCurrentDate());
@@ -243,21 +253,21 @@ public class GalleryServiceImpl implements GalleryService{
 
 	@Override
 	@Transactional
-	public Movie saveMovie(Movie movie) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
-	}
-
-	@Override
-	public void createPhotoThumbnail(Photo photo, Media media) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
-
-	@Override
-	public Media createDownloadZipFile(List<Media> mediaList) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	public Movie saveMovie(Movie movie, String folderId) {
+		String newMovieId = getNewMovieId();
+		movie.setMovieId(newMovieId);
+		movie.setLastUpdatedDate(DateUtil.getCurrentDate());
+		movie.setIsControled(false);
+		movie.addMovieRelatedFolder(
+				MovieRelatedFolder.builder()
+				.id(MovieRelatedFolderPK.builder()
+						.folderId(folderId)
+						.movieId(newMovieId)
+						.build())
+				.lastUpdatedDate(DateUtil.getCurrentDate())
+				.ver(0)
+				.build());
+		return movieRepository.saveAndFlush(movie);
 	}
 
 	@Override
@@ -282,6 +292,28 @@ public class GalleryServiceImpl implements GalleryService{
 		return randomPhotographs;
 	}
 
+	@Override
+	public List<Movie> getRandomMovies(User user){
+		List<Movie> movies = getMovies(user.getUserId());
+		List<Movie> randomMovies = new ArrayList<Movie>();
+		if(0 != movies.size()){
+			Random random = new Random();
+			Map<Integer, Object> duplicateMap = new HashMap<Integer, Object>();
+			for(int i = 0; i < properties.getNumberOfMovieForGallery(); i++){
+				int randomNumber = random.nextInt(movies.size());
+				if(duplicateMap.containsKey(randomNumber)){
+					if(duplicateMap.size() != movies.size()){
+						i--;
+					}
+				}else{
+					randomMovies.add(movies.get(randomNumber));
+					duplicateMap.put(randomNumber, null);
+				}
+			}
+		}
+		return randomMovies;
+	}
+
 	private String getNewFolderId(){
 		Folder folder = folderRepository.findTopByOrderByFolderIdDesc();
 		String sequence = new StringBuilder()
@@ -299,6 +331,17 @@ public class GalleryServiceImpl implements GalleryService{
 								.append("0000000000")
 								.append(Integer.parseInt(StringUtils.stripStart(
 										photo.getPhotoId(), "0"))+1)
+								.toString();
+		return StringUtils.substring(
+				sequence, sequence.length()-10, sequence.length());
+	}
+
+	private String getNewMovieId(){
+		Movie movie = movieRepository.findTopByMovieIdLikeOrderByMovieIdDesc("0%");
+		String sequence = new StringBuilder()
+								.append("0000000000")
+								.append(Integer.parseInt(StringUtils.stripStart(
+										movie.getMovieId(), "0"))+1)
 								.toString();
 		return StringUtils.substring(
 				sequence, sequence.length()-10, sequence.length());

@@ -72,4 +72,13 @@ public class ServiceProperties {
 	@Value("${gallery.batch.service.port}")
 	private String galleryBatchServicePort;
 
+	@Value("${gallery.distribution.service.name}")
+	private String galleryDistributionServiceName;
+	
+	@Value("${gallery.distribution.service.addr}")
+	private String galleryDistributionServiceAddr;
+
+	@Value("${gallery.distribution.service.port}")
+	private String galleryDistributionServicePort;
+
 }

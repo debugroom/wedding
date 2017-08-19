@@ -13,6 +13,9 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.common.web.MediaType;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
@@ -44,6 +47,12 @@ public class GalleryContentsUploadHelper implements FileUploadHelper{
 	private int galleryImageThumbnailWidth; 
 	@Value("${gallery.image.thumbnail.height}")
 	private int galleryImageThumbnailHeight; 
+	@Value("${gallery.movie.thumbnail.width}")
+	private int galleryMovieThumbnailWidth; 
+	@Value("${gallery.movie.thumbnail.height}")
+	private int galleryMovieThumbnailHeight; 
+	@Value("${gallery.movie.thumbnail.frame.start}")
+	private int galleryMovieThumbnailFrameStart;
 
 	private static final String FILE_SEPALATOR = System.getProperty("file.separator");
 
@@ -85,6 +94,11 @@ public class GalleryContentsUploadHelper implements FileUploadHelper{
 				case MP4_VIDEO:
 					mediaBuilder
 						.extension(AppConsts.MP4_VIDEO_EXTENSION)
+						.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.MOVIE);
+					break;
+				case QUICKTIME_VIDEO:
+					mediaBuilder
+						.extension(AppConsts.QUICKTIME_VIDEO_EXTENSION)
 						.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.MOVIE);
 					break;
 				case WMV:
@@ -146,18 +160,51 @@ public class GalleryContentsUploadHelper implements FileUploadHelper{
 				.append(thumbnailImageFilePath)
 				.toString();
 		
+		File file = new File(thumbnailImageAbsolutePath);
 		try {
-			bufferedImage.getGraphics().drawImage(
+			switch(mediaType){
+			case PHOTOGRAPH:
+				bufferedImage.getGraphics().drawImage(
 					ImageIO.read(new File(mediaFilePath)).getScaledInstance(
 							galleryImageThumbnailWidth, galleryImageThumbnailHeight, Image.SCALE_SMOOTH),
 					0, 0, null);
-			File file = new File(thumbnailImageAbsolutePath);
-			if(file.getParentFile().mkdirs() && file.createNewFile()){
-				ImageIO.write(bufferedImage, media.getExtension(), file);
-			}else{
-				throw new BusinessException("galleryContentsUploadHelper.error.0003", null, media.getOriginalFilename());
+				if(file.getParentFile().mkdirs() && file.createNewFile()){
+					ImageIO.write(bufferedImage, media.getExtension(), file);
+				}else{
+					throw new BusinessException("galleryContentsUploadHelper.error.0003", null, media.getOriginalFilename());
+				}
+					break;
+			case MOVIE:
+				FFmpegFrameGrabber ffmpegFrameGrabber = new FFmpegFrameGrabber(new File(mediaFilePath));
+				Java2DFrameConverter java2DFrameConverter = new Java2DFrameConverter();
+				
+				ffmpegFrameGrabber.start();
+				
+				int count = 0;
+				
+				while(ffmpegFrameGrabber.getFrameNumber() < ffmpegFrameGrabber.getLengthInFrames()){
+					if(galleryMovieThumbnailFrameStart < count){
+						bufferedImage = java2DFrameConverter.convert(ffmpegFrameGrabber.grab());
+						if(bufferedImage == null){
+							continue;
+						}
+						if(file.getParentFile().mkdirs() && file.createNewFile()){
+							ImageIO.write(bufferedImage, "jpg", file);
+						}else{
+							throw new BusinessException("galleryContentsUploadHelper.error.0003", null, media.getOriginalFilename());
+						}
+						ffmpegFrameGrabber.stop();
+						ffmpegFrameGrabber.release();
+						break;
+					}
+					count++;
+				}
+				break;
+			default:
 			}
 		} catch (IOException e) {
+			throw new BusinessException("galleryContentsUploadHelper.error.0002", e, media.getOriginalFilename());
+		} catch (FrameGrabber.Exception e) {
 			throw new BusinessException("galleryContentsUploadHelper.error.0002", e, media.getOriginalFilename());
 		}
 		media.setThumbnailFilePath(thumbnailImageFilePath);

@@ -1,7 +1,7 @@
 server:
   port: 8081
   tomcat:
-    additional-tld-skip-patterns : "javacpp.jar, *javacv*.jar"
+    additional-tld-skip-patterns : "javacpp.jar, *javacv*.jar, ffmpeg-*.jar"
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/wedding

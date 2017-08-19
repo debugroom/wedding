@@ -45,15 +45,15 @@ public class Folder implements Serializable {
 	private User usr;
 
 	//bi-directional many-to-one association to GroupFolder
-	@OneToMany(mappedBy="folder", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="folder")
 	private Set<GroupFolder> groupFolders;
 
 	//bi-directional many-to-one association to MovieRelatedFolder
-	@OneToMany(mappedBy="folder", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="folder", cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<MovieRelatedFolder> movieRelatedFolders;
 
 	//bi-directional many-to-one association to PhotoRelatedFolder
-	@OneToMany(mappedBy="folder", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="folder", cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<PhotoRelatedFolder> photoRelatedFolders;
 
 	//bi-directional many-to-one association to UserRelatedFolder
@@ -112,6 +112,7 @@ public class Folder implements Serializable {
 		this.usr = usr;
 	}
 
+	@JsonIgnore
 	public Set<GroupFolder> getGroupFolders() {
 		return this.groupFolders;
 	}
@@ -134,6 +135,7 @@ public class Folder implements Serializable {
 		return groupFolder;
 	}
 
+	@JsonIgnore
 	public Set<MovieRelatedFolder> getMovieRelatedFolders() {
 		return this.movieRelatedFolders;
 	}
@@ -156,6 +158,7 @@ public class Folder implements Serializable {
 		return movieRelatedFolder;
 	}
 
+	@JsonIgnore
 	public Set<PhotoRelatedFolder> getPhotoRelatedFolders() {
 		return this.photoRelatedFolders;
 	}
@@ -178,6 +181,7 @@ public class Folder implements Serializable {
 		return photoRelatedFolder;
 	}
 
+	@JsonIgnore
 	public Set<UserRelatedFolder> getUserRelatedFolders() {
 		return this.userRelatedFolders;
 	}

@@ -17,7 +17,8 @@ public class InfraConfig {
         cacheManager.setCaches(Arrays.asList(
                 new ConcurrentMapCache("menus"),
                 new ConcurrentMapCache("existUser"),
-                new ConcurrentMapCache("photo")));
+                new ConcurrentMapCache("photo"),
+                new ConcurrentMapCache("movie")));
         return cacheManager;
     }
 

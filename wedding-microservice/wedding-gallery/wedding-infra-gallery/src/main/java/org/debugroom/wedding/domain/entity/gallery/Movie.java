@@ -5,6 +5,9 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -102,6 +105,7 @@ public class Movie implements Serializable {
 		this.ver = ver;
 	}
 
+	@JsonIgnore
 	public Set<GroupVisibleMovie> getGroupVisibleMovies() {
 		return this.groupVisibleMovies;
 	}
@@ -124,6 +128,7 @@ public class Movie implements Serializable {
 		return groupVisibleMovy;
 	}
 
+	@JsonIgnore
 	public Set<MovieRelatedFolder> getMovieRelatedFolders() {
 		return this.movieRelatedFolders;
 	}
@@ -146,6 +151,7 @@ public class Movie implements Serializable {
 		return movieRelatedFolder;
 	}
 
+	@JsonIgnore
 	public Set<MovieRelatedUser> getMovieRelatedUsers() {
 		return this.movieRelatedUsers;
 	}

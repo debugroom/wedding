@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: dev,jpa
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 10000000000
+      max-request-size: 10000000000
 profile:
   root:
     directory: /tmp
@@ -36,3 +41,5 @@ gallery:
         name: movie-thumbnail
       width:  100
       height: 75
+      frame:
+        start: 100

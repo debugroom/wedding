@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.common.exception.SystemException;
+import org.debugroom.wedding.app.model.gallery.Movie;
 import org.debugroom.wedding.app.model.gallery.Photo;
 import org.debugroom.wedding.domain.entity.User;
 
@@ -70,6 +71,18 @@ public class ImageDownloadHelper {
 			case "wmv":
 				path =  "movie";
 				break;
+			case "mov":
+				path =  "movie";
+				break;
+			case "MOV":
+				path =  "movie";
+				break;
+			case "avi":
+				path =  "movie";
+				break;
+			case "m4v":
+				path =  "movie";
+				break;
 		}
 		return path;
 	}
@@ -106,6 +119,18 @@ public class ImageDownloadHelper {
 		return getImage(rootPath, thumbnailImagePath);
 	}
 	
+	public BufferedImage getGalleryThumbnailImage(Movie movie) throws BusinessException{
+		String rootPath = new StringBuilder()
+				.append(galleryRootDirectory)
+				.toString();
+		String thumbnailImagePath = new StringBuilder()
+				.append(rootPath)
+				.append(FILE_SEPALATOR)
+				.append(movie.getThumbnailFilePath())
+				.toString();
+		return getImage(rootPath, thumbnailImagePath);
+	}
+
 	public BufferedImage getGalleryImage(Photo photo) throws BusinessException {
 		String rootPath = new StringBuilder()
 									.append(galleryRootDirectory)

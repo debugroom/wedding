@@ -12,4 +12,7 @@ public class GalleryDomainProperties {
 	@Value("${number.of.photo.for.gallery}")
 	private int numberOfPhotoForGallery;
 
+	@Value("${number.of.movie.for.gallery}")
+	private int numberOfMovieForGallery;
+	
 }

@@ -9,7 +9,7 @@ public class AppConsts {
 	public static final String BMP_EXTENSION = "bmp";
 	public static final String MP4_VIDEO_EXTENSION = "mp4";
 	public static final String MPEG_VIDEO_EXTENSION = "mpeg";
-	public static final String QUICKTIME_VIDEO_EXTENSION = "mov";
+	public static final String QUICKTIME_VIDEO_EXTENSION = "MOV";
 	public static final String WMV_VIDEO_EXTENSION = "wmv";
 	
 }

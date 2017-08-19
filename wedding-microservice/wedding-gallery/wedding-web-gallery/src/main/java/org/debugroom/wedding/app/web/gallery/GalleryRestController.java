@@ -40,6 +40,7 @@ public class GalleryRestController {
 		User inputUser = mapper.map(user, User.class);
 		return GalleryPortalResource.builder()
 				.randomPhotographs(galleryService.getRandomPhotographs(inputUser))
+				.randomMovies(galleryService.getRandomMovies(inputUser))
 				.folders(galleryService.getFolders(inputUser))
 				.build();
 	}
@@ -52,6 +53,12 @@ public class GalleryRestController {
 	@RequestMapping(method=RequestMethod.GET, value="/folder/{folderId}/photographs")
 	public List<Photo> getPhotoGraphsByFolderId(@PathVariable String folderId){
 		return galleryService.getPhotographsByFolder(
+				Folder.builder().folderId(folderId).build());
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/folder/{folderId}/movies")
+	public List<Movie> getMoviesByFoleder(@PathVariable String folderId){
+		return galleryService.getMoviesByFolder(
 				Folder.builder().folderId(folderId).build());
 	}
 
@@ -101,6 +108,11 @@ public class GalleryRestController {
 		return galleryService.deletePhotograph(photoId);
 	}
 	
+	@RequestMapping(method=RequestMethod.GET, value="/movie/{movieId}")
+	public Movie getMovie(@PathVariable String movieId){
+		return galleryService.getMovie(movieId);
+	}
+
 	@RequestMapping(method=RequestMethod.DELETE, value="/movie/{movieId}")
 	public Movie deleteMovie(@PathVariable String movieId){
 		return galleryService.deleteMovie(movieId);

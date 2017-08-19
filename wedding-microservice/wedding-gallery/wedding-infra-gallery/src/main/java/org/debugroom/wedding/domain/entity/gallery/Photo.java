@@ -5,6 +5,9 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -40,7 +43,7 @@ public class Photo implements Serializable {
 	private Integer ver;
 
 	//bi-directional many-to-one association to GroupVisiblePhoto
-	@OneToMany(mappedBy="photo", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="photo")
 	private Set<GroupVisiblePhoto> groupVisiblePhotos;
 
 	//bi-directional many-to-one association to PhotoRelatedFolder
@@ -48,7 +51,7 @@ public class Photo implements Serializable {
 	private Set<PhotoRelatedFolder> photoRelatedFolders;
 
 	//bi-directional many-to-one association to PhotoRelatedUser
-	@OneToMany(mappedBy="photo", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="photo")
 	private Set<PhotoRelatedUser> photoRelatedUsers;
 
 	public Photo() {
@@ -102,6 +105,7 @@ public class Photo implements Serializable {
 		this.ver = ver;
 	}
 
+	@JsonIgnore
 	public Set<GroupVisiblePhoto> getGroupVisiblePhotos() {
 		return this.groupVisiblePhotos;
 	}
@@ -124,6 +128,7 @@ public class Photo implements Serializable {
 		return groupVisiblePhoto;
 	}
 
+	@JsonIgnore
 	public Set<PhotoRelatedFolder> getPhotoRelatedFolders() {
 		return this.photoRelatedFolders;
 	}
@@ -146,6 +151,7 @@ public class Photo implements Serializable {
 		return photoRelatedFolder;
 	}
 
+	@JsonIgnore
 	public Set<PhotoRelatedUser> getPhotoRelatedUsers() {
 		return this.photoRelatedUsers;
 	}

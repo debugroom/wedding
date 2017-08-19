@@ -67,6 +67,7 @@ import org.debugroom.wedding.app.model.gallery.Folder;
 import org.debugroom.wedding.app.model.gallery.GalleryPortalResource;
 import org.debugroom.wedding.app.model.gallery.Media;
 import org.debugroom.wedding.app.model.gallery.Movie;
+import org.debugroom.wedding.app.model.gallery.MovieSearchResult;
 import org.debugroom.wedding.app.model.gallery.Photo;
 import org.debugroom.wedding.app.model.gallery.PhotoSearchResult;
 import org.debugroom.wedding.app.model.gallery.UpdateFolderForm;
@@ -1778,6 +1779,41 @@ public class ServiceAdpaterController {
 
 	}
 
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/movies/{folderId}")
+	public ResponseEntity<MovieSearchResult> getMovies(@Validated Folder folder,
+			BindingResult bindingResult){
+		
+		MovieSearchResult movieSearchResult = mapper.map(folder, MovieSearchResult.class);
+
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			movieSearchResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(movieSearchResult);
+		}
+		
+		String serviceName = "gallery";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/folder/")
+												.append(folder.getFolderId())
+												.append("/movies")
+												.toString())
+										.build();		
+		Movie[] movies = restTemplate.getForObject(uriComponents.toUri(), Movie[].class);
+		movieSearchResult.setMovies(Arrays.asList(movies));
+		movieSearchResult.setRequestContextPath(getFrontendServerUri().toString());
+		return ResponseEntity.status(HttpStatus.OK).body(movieSearchResult);
+		
+	}
+
 	@RequestMapping(method=RequestMethod.GET, value="/gallery/folder/viewers/{folderId}")
 	public ResponseEntity<UserSearchResult> getFolderViewers(
 			@Validated UserSearchCriteria userSearchCriteria, BindingResult bindingResult){
@@ -1977,7 +2013,6 @@ public class ServiceAdpaterController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,
-			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif",
 			value = "/gallery/media/{mediaId:[0-9]+}/{fileName:[0-9a-zA-Z.]+}")
 	public String getMedia(@PathVariable String mediaId, @PathVariable String fileName){
 		String mediaType = downloadHelper.getMediaType(fileName);
@@ -2146,6 +2181,62 @@ public class ServiceAdpaterController {
 			final FileDownloadException exception){
 		return new ResponseEntity<List<String>>(exception.getMessages(), 
 				HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, 
+			value="/gallery/movie/{movieId:[0-9]+}/{fileName:[.a-zA-Z0-9]+}")
+	public String getMovie(
+			@Validated Movie movie, @PathVariable String fileName, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return "common/error";
+		}
+		String serviceName = "gallery-distribution";
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/movie/preview/")
+												.append(movie.getMovieId())
+												.append("/")
+												.append(fileName)
+												.toString())
+										.build();		
+		return new StringBuilder().append("redirect:")
+				.append(uriComponents.toString())
+				.toString();
+	} 
+	
+	@RequestMapping(method=RequestMethod.GET, 
+			value="/gallery/movie-thumbnail/{movieId:[0-9]+}",
+			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE})
+	@ResponseBody
+	public ResponseEntity<BufferedImage> getMovieThumbnail(
+			@Validated Movie movie, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "gallery";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/movie/")
+												.append(movie.getMovieId())
+												.toString())
+										.build();
+		Movie target = restTemplate.getForObject(uriComponents.toUri(), Movie.class);
+		BufferedImage image = null;
+		try {
+			image = downloadHelper.getGalleryThumbnailImage(target);
+		} catch(BusinessException e){
+			return ResponseEntity.badRequest().body(null);
+		}
+		return ResponseEntity.ok().body(image);
 	}
 	
 	private URI getFrontendServerUri(){

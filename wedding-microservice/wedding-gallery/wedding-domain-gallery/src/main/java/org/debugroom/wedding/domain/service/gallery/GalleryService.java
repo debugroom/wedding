@@ -18,6 +18,8 @@ public interface GalleryService {
 	
 	public List<Photo> getPhotographsByUser(User user);
 	
+	public List<Movie> getRandomMovies(User user);
+
 	public List<Movie> getMovies(String userId);
 	
 	public List<Folder> getFoldersWithPhotographs(String userId);
@@ -26,6 +28,8 @@ public interface GalleryService {
 	
 	public List<Photo> getPhotographsByFolder(Folder folder);
 	
+	public List<Movie> getMoviesByFolder(Folder folder);
+
 	public String getPhotographUrl(String photoId);
 	
 	public String getPhotoThumbnailUrl(String photoId);
@@ -42,11 +46,7 @@ public interface GalleryService {
 	
 	public Photo savePhotograph(Photo photo, String folderId) throws BusinessException;
 	
-	public Movie saveMovie(Movie movie);
-	
-	public void createPhotoThumbnail(Photo photo, Media media);
-	
-	public Media createDownloadZipFile(List<Media> mediaList);
+	public Movie saveMovie(Movie movie, String folderId);
 	
 	public Photo deletePhotograph(String photoId);
 	

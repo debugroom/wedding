@@ -1,5 +1,5 @@
 .gallery-panel{
-	margin : 50px 0px 50px;
+	margin : 100px 0px 100px;
 }
 
 .contents-panel h3{
@@ -254,6 +254,11 @@
     margin : 20px auto 20px;
 }
 
+#contentsPanel video{
+    width : 80%;
+    margin : 20px auto 20px;
+}
+
 #detailPanel .alternative-button{
     content: "";
     clear: both;
@@ -321,4 +326,48 @@
 .progress-bar{
     height : 18px;
     background : green;
+}
+
+.playerPanel {
+	margin : 100px 100px 50px;
+}
+
+#video_player {
+    display: table;
+    line-height: 0;
+    font-size: 0;
+    background: #000;
+}
+#video_player video,
+    #video_player figcaption {
+        display: table-cell;
+        vertical-align: top;
+}
+#video_player figcaption {
+    width: 25%;
+}
+#video_player figcaption a {
+    display: block;
+    opacity: .5;
+    transition: 1s opacity;
+}
+#video_player figcaption a img,
+    figure video {
+        width: 100%;
+        height: auto;
+}
+
+#video_player figcaption a:hover {
+    opacity: 1;
+}
+
+@media (max-width: 700px) {
+    #video_player video,
+        #video_player figcaption {
+            display: table-row;
+        }
+    #video_player figcaption a {
+       display: inline-block;
+       width: 33.33%;
+    }
 }

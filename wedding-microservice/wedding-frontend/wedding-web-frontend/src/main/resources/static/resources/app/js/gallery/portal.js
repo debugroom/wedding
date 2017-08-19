@@ -23,6 +23,7 @@ jQuery("#new-folder").on("click", function(){
 	
 });
 jQuery("[id^=delete-folder-icon-]").on("click", displayModalWindow);
+jQuery("#video_player a").on("click", handler);
 
 function getFolderDetail(){
 	var folderFormPanel = $("#folderFormPanel")
@@ -51,13 +52,13 @@ function getFolderDetail(){
 	$("#hyper-link-get-users").on("mouseenter", getViewers);
 	$("#hyper-link-edit-folder").on("click", editFolder);
 	
+	var thumbnailPanel = $("#thumbnailPanel");
+	if(thumbnailPanel != null){
+		thumbnailPanel.remove();
+	}
+ 	$("#detailPanel").append($('<div id="thumbnailPanel"></div>'));
  	
  	$.get($(this).data("folderRelatedPhotographsUrl"), function(data){
-		var thumbnailPanel = $("#thumbnailPanel");
-		if(thumbnailPanel != null){
-			thumbnailPanel.remove();
-		}
-	 	$("#detailPanel").append($('<div id="thumbnailPanel"></div>'));
 		$.each(data.photographs, 
 			function(i, val){
 				$("#thumbnailPanel")
@@ -78,25 +79,33 @@ function getFolderDetail(){
 							+ '">'));	
 			}
 		);
-		$(".thumbnail-image").on("click", selectContents);
-		$("#thumbnailPanel").append($('<img class="file-upload-button-image" id="file-upload-button" src="' 
-				+ data.requestContextPath
-				+ '/static/resources/app/img/picture-upload.png'
-				+ '" />'));
-		$("#thumbnailPanel").append($('<input type="file" id="file-upload-input" name="uploadFileForms[]" multiple ' 
-				+ ' data-folder-id="' 
-				+ data.folderId
-				+ '" data-url="' 
-				+ data.requestContextPath
-				+ '/gallery/upload'
-				+ '" />'));
-		$("#thumbnailPanel").before($('<div id="progress">' 
-				+ '<div id="progress-bar" class="progress-bar" style="width: 0%;"></div>'
-				+ '</div>'));
-		$("#file-upload-button").on("click",function(){
-			$('#file-upload-input').trigger("click");
-		});
-		$("#file-upload-input").on("click", uploadFiles);
+		$("[id^=thumbnail-image-]").on("click", selectContents);
+	});
+
+ 	$.get($(this).data("folderRelatedMoviesUrl"), function(data){
+ 		$.each(data.movies,
+ 			function(i, val){
+ 				$("#thumbnailPanel")
+ 					.append($('<img id="thumbnail-movie-'
+ 							+ val.movieId
+ 							+ '" class="thumbnail-image" src="'
+ 							+ data.requestContextPath
+ 							+ '/gallery/movie-thumbnail/'
+ 							+ val.movieId
+ 							+ '" data-movie-id="'
+ 							+ val.movieId
+ 							+ '" data-movies-url="'
+ 							+ data.requestContextPath
+ 							+ '/gallery/media/'
+ 							+ val.movieId
+ 							+ '" data-file-extension="'
+ 							+ getExtension(val.filePath)
+ 							+ '">'));
+ 			}
+ 		);
+
+		$("[id^=thumbnail-movie-]").on("click", selectContents);
+
 		$("#detailPanel").append($('<div class="alternative-button">' 
 				+ '<button id="download-button" class="alternative-first-button" value="' 
 				+ data.requestContextPath
@@ -105,14 +114,28 @@ function getFolderDetail(){
 	 			+ '<button id="delete-button" class="alternative-last-button" value="'
 				+ data.requestContextPath
 				+ "/gallery/media"
-	 			+'" disabled="true">削除する</button></div>'));
-		$("#download-button").on("click", downloadContents);
-		$("#delete-button").on("click", deleteContents);
-	});
+	 			+'" disabled="true">削除する</button></div>'));$("#file-upload-input").on("click", uploadFiles);
+	$("#download-button").on("click", downloadContents);
+	$("#delete-button").on("click", deleteContents);
+    });
+
+	$("#thumbnailPanel").append($('<img class="file-upload-button-image" id="file-upload-button" src="' 
+				+ '/static/resources/app/img/upload.png'
+				+ '" />'));
+	$("#file-upload-button").on("click",function(){
+			$('#file-upload-input').trigger("click");
+    });
+	$("#thumbnailPanel").append($('<input type="file" id="file-upload-input" name="uploadFileForms[]" multiple ' 
+				+ ' data-folder-id="' 
+				+ $(this).data("folderId")
+				+ '" data-url="' 
+				+ '/gallery/upload'
+				+ '" />'));
+	$("#thumbnailPanel").before($('<div id="progress">' 
+				+ '<div id="progress-bar" class="progress-bar" style="width: 0%;"></div>'
+				+ '</div>'));
 
 }
-
-
 
 function showFolderPanel(isNew, imageFolderIconUrl, viewersUrl, noViewersUrl, folderUrl){
 	if(isNew){
@@ -259,6 +282,8 @@ function updateFolderIcon(data){
 				+ data.folder.folderName
 				+ '" data-folder-related-photographs-url="' 
 				+ data.requestContextPath + '/gallery/photographs/' + data.folder.folderId + '?folderName=' + data.folder.folderName
+				+ '" data-folder-related-movies-url="' 
+				+ data.requestContextPath + '/gallery/movies/' + data.folder.folderId + '?folderName=' + data.folder.folderName
 				+ '" data-folder-related-users-url="' 
 				+ data.requestContextPath + '/gallery/folder/viewers/' + data.folder.folderId
 				+ '" data-folder-related-no-users-url="' 
@@ -479,7 +504,11 @@ function selectContents(event){
 	    if(!((event.ctrlKey && !event.metaKey) 
 	    		|| (!event.ctrlKey && event.metaKey))){
 		// 何もコンテンツが選択おらず、ctlキーが押下されていない場合はコンテンツパネルを表示する。
-	    	showContentsPanel($(this).data("photographsUrl"), $(this).data("fileExtension"), $(this).data("photoId"));
+	    	if($(this).data("photographsUrl") != null){
+	    		showContentsPanel("photo", $(this).data("photographsUrl"), $(this).data("fileExtension"), $(this).data("photoId"));
+	    	}else if($(this).data("moviesUrl") != null){
+	    		showContentsPanel("movie",$(this).data("moviesUrl"), $(this).data("fileExtension"), $(this).data("movieId"));
+	    	}
 		}
 		$(this).toggleClass("selectedContents");
 		$("#download-button").toggleClass("activate");
@@ -493,7 +522,11 @@ function selectContents(event){
 			for(var i = 0 ; i < selectedContents.length ; i++){
 				$(selectedContents[i]).toggleClass("selectedContents");
 			}
-			showContentsPanel($(this).data("photographsUrl"), $(this).data("fileExtension"), $(this).data("photoId"));
+	    	if($(this).data("photographsUrl") != null){
+	    		showContentsPanel("photo", $(this).data("photographsUrl"), $(this).data("fileExtension"), $(this).data("photoId"));
+	    	}else if($(this).data("moviesUrl") != null){
+	    		showContentsPanel("movie", $(this).data("moviesUrl"), $(this).data("fileExtension"), $(this).data("movieId"));
+	    	}
 			$(this).toggleClass("selectedContents");
 		}else{
 		// 既にコンテンツが選択済みでctlキーが押下されている場合→選択を解除し、コンテンツパネルを非表示にする。
@@ -512,22 +545,34 @@ function selectContents(event){
 	}
 }
 
-function showContentsPanel(contentsUrl, extension, photoId){
+function showContentsPanel(type, contentsUrl, extension, id){
 	var contentsPanel = $("#contentsPanel");
 	if(contentsPanel){
 		contentsPanel.remove();
 	}
-	$("#thumbnail-image-" + photoId).before($('<div id="contentsPanel">'
+	if(type == "photo"){
+		$("#thumbnail-image-" + id).before($('<div id="contentsPanel">'
 			+ '<img class="" src="'
 			+ contentsUrl + "/xxx" + extension
 			+ '" />'
 			+ '</div>'));
+	} else if(type == "movie"){
+		$("#thumbnail-movie-" + id).before($('<div id="contentsPanel">'
+			+ '<video controls ><source src="'
+			+ contentsUrl + "/xxx" + extension
+			+ '"/></video>'
+			+ '</div>'));
+	}
 }
 function uploadFiles(){
+	var progressPanel = $("#progress");
+	if(progressPanel != null){
+		progressPanel.remove();
+	}
 	$('#file-upload-input').fileupload({
 		url : $(this).data("url"),
 		dataType : 'json',
-		acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|wmv|mov)$/i,
+		acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|wmv|MOV|mov|m4v)$/i,
         maxFileSize: 10000000000,
         formData : {folderId : $(this).data("folderId")},
         submit : function(e, data){
@@ -544,7 +589,8 @@ function uploadFiles(){
 			})        	
         },
 		done : function(e, data){
-			$("#file-upload-button").before($(
+			if(data.result.media.mediaType == "PHOTOGRAPH"){
+				$("#file-upload-button").before($(
 				'<img id="thumbnail-image-'
 					+ data.result.media.mediaId
 					+ '" class="thumbnail-image" src="'
@@ -560,7 +606,26 @@ function uploadFiles(){
 					+ '" data-file-extension=".'
 					+ data.result.media.extension
 					+ '" />'));
-			$("#thumbnail-image-" + data.result.media.mediaId).on("click", selectContents);
+				$("#thumbnail-image-" + data.result.media.mediaId).on("click", selectContents);
+			}else if(data.result.media.mediaType == "MOVIE"){
+				$("#file-upload-button").before($(
+				'<img id="thumbnail-movie-'
+					+ data.result.media.mediaId
+					+ '" class="thumbnail-image" src="'
+					+ data.result.requestContextPath
+					+ '/gallery/movie-thumbnail/'
+					+ data.result.media.mediaId
+					+ '" data-movie-id="'
+					+ data.result.media.mediaId
+					+ '" data-movies-url="'
+					+ data.result.requestContextPath
+					+ '/gallery/movie/'
+					+ data.result.media.mediaId
+					+ '" data-file-extension=".'
+					+ data.result.media.extension
+					+ '" />'));
+				$("#thumbnail-movie-" + data.result.media.mediaId).on("click", selectContents);
+			}
 		},
 		fail : function(e, data){
 			$(".errorMessage").remove();
@@ -657,6 +722,10 @@ function deleteContents(){
 		    	$.each(data.movies, function(i, val){
 	    			$("#thumbnail-movie-" + val.movieId).remove();
 	    		});
+		    	var contentsPanel = $("#contentsPanel");
+		    	if(contentsPanel){
+		    		contentsPanel.remove();
+		    	}
 	    	},
 	    	function(data){
 	    		$(".errorMessage").remove();
@@ -751,3 +820,10 @@ function moveUsersPanelToCurrentPosition(event){
 }
 
 $(window).resize(centeringModalSyncer);
+
+function handler(e) {
+	e.preventDefault();
+	$("#video_player video source")[0].src = this.getAttribute("href");
+	$("#video_player video").load();
+	document.querySelector("#video_player video").play();
+}

@@ -49,6 +49,51 @@
               </div>
             </div>
           </div>
+          <div class="playerPanel">
+            <figure id="video_player">
+              <video controls poster="${pageContext.request.contextPath}/gallery/movie-thumbnail/${galleryPortalResource.randomMovies[0].movieId}">
+                <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')=='MOV'}">
+                  <source src="${pageContext.request.contextPath}/gallery/movie/${galleryPortalResource.randomMovies[0].movieId}/xxx.mp4" type="video/mp4">
+                </c:if>
+                <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')!='MOV'}">
+                  <source src="${pageContext.request.contextPath}/gallery/movie/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}" type="video/${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}">
+                </c:if>
+              </video>
+              <figcaption>
+                <c:forEach items="${galleryPortalResource.randomMovies}" var="movie" varStatus="status">
+                  <c:if test="${fn:substringAfter(movie.filePath, '.')=='MOV'}">
+                    <a href="${pageContext.request.contextPath}/gallery/movie/${movie.movieId}/xxx.mp4">
+                      <img src="${pageContext.request.contextPath}/gallery/movie-thumbnail/${movie.movieId}" />
+                    </a>
+                  </c:if>
+                  <c:if test="${fn:substringAfter(movie.filePath, '.')!='MOV'}">
+                    <a href="${pageContext.request.contextPath}/gallery/movie/${movie.movieId}/xxx.${fn:substringAfter(movie.thumbnailFilePath, '.')}">
+                      <img src="${pageContext.request.contextPath}/gallery/movie-thumbnail/${movie.movieId}" />
+                    </a>
+                  </c:if>
+                </c:forEach>
+              </figcaption>
+            </figure>
+          </div>
+<!--  
+          <video id="my-video" class="video-js" controls preload="auto" width="640" height="264" 
+            poster="${pageContext.request.contextPath}/gallery/movie-thumbnail/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].thumbnailFilePath, '.')}" 
+            data-setup='{ "controlBar": { "muteToggle": false } }'>
+            <c:forEach items="${galleryPortalResource.randomMovies}" var="movie" varStatus="status">
+              <c:if test="${fn:substringAfter(movie.filePath, '.')=='MOV'}">
+                <source src="${pageContext.request.contextPath}/gallery/movie/${movie.movieId}/xxx.mp4" type="video/mp4">
+              </c:if>
+              <c:if test="${fn:substringAfter(movie.filePath, '.')!='MOV'}">
+                <source src="${pageContext.request.contextPath}/gallery/movie/${movie.movieId}/xxx.${fn:substringAfter(movie.filePath, '.')}" type="video/${fn:substringAfter(movie.filePath, '.')}">
+              </c:if>
+            </c:forEach>
+            <p class="vjs-no-js">
+              To view this video please enable JavaScript, and consider upgrading to a web browser that
+              <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+          </video>
+          <video src="/gallery/movie/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}"></video>
+-->
         </div>
         <div class="contents-panel">
           <h3>Gallery Contents</h3>
@@ -63,6 +108,7 @@
                     data-folder-related-users-url="${pageContext.request.contextPath}/gallery/folder/viewers/<c:out value='${folder.folderId}' />" 
                     data-folder-related-no-users-url="${pageContext.request.contextPath}/gallery/folder/no-viewers/<c:out value='${folder.folderId}' />" 
                     data-folder-related-photographs-url="${pageContext.request.contextPath}/gallery/photographs/<c:out value='${folder.folderId}' />?folderName=<c:out value='${folder.folderName}' />" 
+                    data-folder-related-movies-url="${pageContext.request.contextPath}/gallery/movies/<c:out value='${folder.folderId}' />?folderName=<c:out value='${folder.folderName}' />" 
                     data-edit-folder-url="${pageContext.request.contextPath}/gallery/folders/<c:out value='${folder.folderId}' />"
                     />
                  <c:if test="${folder.folderId != '000000000000'}">
@@ -91,3 +137,4 @@
   </div>
 </body>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/resources/app/js/gallery/portal.js"></script>
+<script src="http://vjs.zencdn.net/6.2.4/video.js"></script>

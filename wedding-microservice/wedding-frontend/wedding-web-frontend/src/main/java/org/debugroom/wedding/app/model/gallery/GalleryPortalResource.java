@@ -20,6 +20,7 @@ public class GalleryPortalResource implements Serializable{
 	private List<Photo> photographs;
 	private List<Photo> randomPhotographs;
 	private List<Movie> movies;
+	private List<Movie> randomMovies;
 	private List<Folder> folders;
 	
 }

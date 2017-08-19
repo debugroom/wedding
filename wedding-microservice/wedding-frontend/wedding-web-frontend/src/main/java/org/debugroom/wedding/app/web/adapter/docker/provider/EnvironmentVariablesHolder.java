@@ -69,10 +69,18 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 
 		List<String> galleryBatchServicePathList = new ArrayList<String>();
 		pathMap.put(properties.getGalleryBatchServiceName(), galleryBatchServicePathList);
-		galleryServicePathList.add(new StringBuilder()
+		galleryBatchServicePathList.add(new StringBuilder()
 				.append(properties.getGalleryBatchServiceAddr())
 				.append(":")
 				.append(properties.getGalleryBatchServicePort())
+				.toString());
+
+		List<String> galleryDistributionServicePathList = new ArrayList<String>();
+		pathMap.put(properties.getGalleryDistributionServiceName(), galleryDistributionServicePathList);
+		galleryDistributionServicePathList.add(new StringBuilder()
+				.append(properties.getGalleryDistributionServiceAddr())
+				.append(":")
+				.append(properties.getGalleryDistributionServicePort())
 				.toString());
 
 		return pathMap;
@@ -111,6 +119,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		ipAddrMap.put(properties.getGalleryBatchServiceName(),galleryBatchServiceIpAddrList);
 		galleryBatchServiceIpAddrList.add(properties.getGalleryBatchServiceAddr());
 
+		List<String> galleryDistributionServiceIpAddrList = new ArrayList<String>();
+		ipAddrMap.put(properties.getGalleryDistributionServiceName(),galleryDistributionServiceIpAddrList);
+		galleryDistributionServiceIpAddrList.add(properties.getGalleryDistributionServiceAddr());
+
 		return ipAddrMap;
 	}
 
@@ -145,6 +157,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		List<String> galleryBatchServicePortList = new ArrayList<String>();
 		portMap.put(properties.getGalleryBatchServiceName(), galleryBatchServicePortList);
 		galleryBatchServicePortList.add(properties.getGalleryBatchServicePort());
+
+		List<String> galleryDistributionServicePortList = new ArrayList<String>();
+		portMap.put(properties.getGalleryDistributionServiceName(), galleryDistributionServicePortList);
+		galleryDistributionServicePortList.add(properties.getGalleryDistributionServicePort());
 
 		return portMap;
 
