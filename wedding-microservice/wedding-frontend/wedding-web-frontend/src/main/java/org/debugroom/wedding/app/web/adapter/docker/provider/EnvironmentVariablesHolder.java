@@ -83,6 +83,14 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 				.append(properties.getGalleryDistributionServicePort())
 				.toString());
 
+		List<String> messageServicePathList = new ArrayList<String>();
+		pathMap.put(properties.getMessageServiceName(), messageServicePathList);
+		messageServicePathList.add(new StringBuilder()
+				.append(properties.getMessageServiceAddr())
+				.append(":")
+				.append(properties.getMessageServicePort())
+				.toString());
+
 		return pathMap;
 
 	}
@@ -123,6 +131,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		ipAddrMap.put(properties.getGalleryDistributionServiceName(),galleryDistributionServiceIpAddrList);
 		galleryDistributionServiceIpAddrList.add(properties.getGalleryDistributionServiceAddr());
 
+		List<String> messageServiceIpAddrList = new ArrayList<String>();
+		ipAddrMap.put(properties.getMessageServiceName(), messageServiceIpAddrList);
+		messageServiceIpAddrList.add(properties.getMessageServiceAddr());
+
 		return ipAddrMap;
 	}
 
@@ -161,6 +173,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		List<String> galleryDistributionServicePortList = new ArrayList<String>();
 		portMap.put(properties.getGalleryDistributionServiceName(), galleryDistributionServicePortList);
 		galleryDistributionServicePortList.add(properties.getGalleryDistributionServicePort());
+
+		List<String> messageServicePortList = new ArrayList<String>();
+		portMap.put(properties.getMessageServiceName(), messageServicePortList);
+		messageServicePortList.add(properties.getMessageServicePort());
 
 		return portMap;
 

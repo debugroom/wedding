@@ -81,4 +81,13 @@ public class ServiceProperties {
 	@Value("${gallery.distribution.service.port}")
 	private String galleryDistributionServicePort;
 
+	@Value("${message.service.name}")
+	private String messageServiceName;
+	
+	@Value("${message.service.addr}")
+	private String messageServiceAddr;
+
+	@Value("${message.service.port}")
+	private String messageServicePort;
+
 }

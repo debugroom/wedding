@@ -80,8 +80,10 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry){
-		registry.addResourceHandler("/static/**")
-		        .addResourceLocations("classpath:/static/");
+		registry.addResourceHandler("/static/**", "/webjars/**")
+		        .addResourceLocations("classpath:/static/", 
+		        		"classpath:/META-INF/resources/webjars/")
+		        .resourceChain(false);
 	}
 
 	@Override

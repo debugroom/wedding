@@ -112,6 +112,10 @@ import org.debugroom.wedding.app.model.management.user.LoginIdSearchCriteria;
 import org.debugroom.wedding.app.model.management.user.LoginIdSearchResult;
 import org.debugroom.wedding.app.model.management.user.NewUserForm;
 import org.debugroom.wedding.app.model.management.user.UserPageImpl;
+import org.debugroom.wedding.app.model.message.ChatPortalResource;
+import org.debugroom.wedding.app.model.message.GetMessagesResult;
+import org.debugroom.wedding.app.model.message.Message;
+import org.debugroom.wedding.app.model.message.MessageBoard;
 import org.debugroom.wedding.app.model.management.user.AddressSearchCriteria.SearchAddress;
 import org.debugroom.wedding.app.model.management.user.EditUserForm.GetUser;
 import org.debugroom.wedding.app.model.management.user.EditUserForm.UpdateUser;
@@ -2237,6 +2241,58 @@ public class ServiceAdpaterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		return ResponseEntity.ok().body(image);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/chat/{userId:[0-9]+}")
+	public String chat(@PathVariable String userId, Model model){
+		
+		String serviceName = "message";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/portal/")
+												.append(userId)
+												.toString())
+										.build();
+		model.addAttribute(restTemplate.getForObject(
+				uriComponents.toUri(), ChatPortalResource.class));
+		return "chat/portal";
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/chat/message-board/{messageBoardId}")
+	public ResponseEntity<GetMessagesResult> getMessages(
+			@Validated MessageBoard messageBoard, BindingResult bindingResult, Model model){
+
+		GetMessagesResult getMessagesResult = GetMessagesResult.builder().build();
+
+		if(bindingResult.hasErrors()){
+			List<String> errorMessages = new ArrayList<String>();
+			getMessagesResult.setErrorMessages(errorMessages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				errorMessages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessagesResult);
+		}
+		String serviceName = "message";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/messages/")
+												.append(messageBoard.getMessageBoardId())
+												.toString())
+										.build();
+		getMessagesResult.setMessages(Arrays.asList(restTemplate.getForObject(
+				uriComponents.toUri(), Message[].class)));
+		return ResponseEntity.status(HttpStatus.OK).body(getMessagesResult);
+
 	}
 	
 	private URI getFrontendServerUri(){

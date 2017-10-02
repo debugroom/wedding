@@ -19,5 +19,7 @@
     <module>wedding-management</module>
     <module>wedding-profile</module>
     <module>wedding-portal</module>
+    <module>wedding-message</module>
+    <module>wedding-infra-cassandra</module>
   </modules>
 </project>
