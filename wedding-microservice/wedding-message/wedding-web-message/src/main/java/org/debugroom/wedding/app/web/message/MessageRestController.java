@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.message.ChatPortalResource;
+import org.debugroom.wedding.app.model.message.UpdateMessageBoardForm;
+import org.debugroom.wedding.domain.entity.message.Group;
 import org.debugroom.wedding.domain.entity.message.Message;
 import org.debugroom.wedding.domain.entity.message.MessageBoard;
 import org.debugroom.wedding.domain.entity.message.User;
@@ -50,6 +52,44 @@ public class MessageRestController {
 	@RequestMapping(method=RequestMethod.GET, value="/{messageBoardId}/users")
 	public List<User> getUsersByMessageBoard(@PathVariable Long messageBoardId){
 		return messageService.getUsers(MessageBoard.builder()
+				.messageBoardId(messageBoardId).build());
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/users")
+	public List<User> getUsers(){
+		return messageService.getUsers();
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/message-board/new")
+	public MessageBoard saveMessageBoard(@RequestBody Group group){
+		return messageService.saveMessageBoard(group);
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/message-board/{messageBoardId}")
+	public MessageBoard getMessageBoard(@PathVariable Long messageBoardId) 
+			throws BusinessException{
+		return messageService.getMessageBoard(
+				MessageBoard.builder().messageBoardId(messageBoardId).build());
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/message-board/{messageBoardId}/not-users")
+	public List<User> getNotUsers(@PathVariable Long messageBoardId){
+		return messageService.getNotUsers(
+				MessageBoard.builder().messageBoardId(messageBoardId).build());
+	}
+
+	@RequestMapping(method=RequestMethod.PUT, value="/message-board/{messageBoardId}")
+	public MessageBoard updateMessageBoard(
+			@RequestBody UpdateMessageBoardForm updateMessageBoardForm){
+		return messageService.updateMessageBoard(
+				updateMessageBoardForm.getMessageBoard(), 
+				updateMessageBoardForm.getCheckedAddUsers(), 
+				updateMessageBoardForm.getCheckedDeleteUsers());
+	}
+
+	@RequestMapping(method=RequestMethod.DELETE, value="/message-board/{messageBoardId}")
+	public MessageBoard deleteMessageBoard(@PathVariable Long messageBoardId){
+		return messageService.deleteMessageBoard(MessageBoard.builder()
 				.messageBoardId(messageBoardId).build());
 	}
 

@@ -112,10 +112,16 @@ import org.debugroom.wedding.app.model.management.user.LoginIdSearchCriteria;
 import org.debugroom.wedding.app.model.management.user.LoginIdSearchResult;
 import org.debugroom.wedding.app.model.management.user.NewUserForm;
 import org.debugroom.wedding.app.model.management.user.UserPageImpl;
+import org.debugroom.wedding.app.model.message.AddMessageBoardResult;
 import org.debugroom.wedding.app.model.message.ChatPortalResource;
+import org.debugroom.wedding.app.model.message.DeleteMessageBoardResult;
 import org.debugroom.wedding.app.model.message.GetMessagesResult;
+import org.debugroom.wedding.app.model.message.Group;
 import org.debugroom.wedding.app.model.message.Message;
 import org.debugroom.wedding.app.model.message.MessageBoard;
+import org.debugroom.wedding.app.model.message.UpdateMessageBoardForm;
+import org.debugroom.wedding.app.model.message.UpdateMessageBoardResource;
+import org.debugroom.wedding.app.model.message.UpdateMessageBoardResult;
 import org.debugroom.wedding.app.model.management.user.AddressSearchCriteria.SearchAddress;
 import org.debugroom.wedding.app.model.management.user.EditUserForm.GetUser;
 import org.debugroom.wedding.app.model.management.user.EditUserForm.UpdateUser;
@@ -2293,6 +2299,176 @@ public class ServiceAdpaterController {
 				uriComponents.toUri(), Message[].class)));
 		return ResponseEntity.status(HttpStatus.OK).body(getMessagesResult);
 
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/chat/users")
+	public ResponseEntity<UserSearchResult> chatUsers(){
+		String serviceName = "message";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/users")
+												.toString())
+										.build();
+		User[] users = restTemplate.getForObject(uriComponents.toUri(), User[].class);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(UserSearchResult.builder().users(
+						Arrays.asList(users)).build());
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, value="/chat/group/new")
+	public ResponseEntity<AddMessageBoardResult> addGroup(
+			@RequestBody @Validated Group group, BindingResult bindingResult){
+		
+		AddMessageBoardResult addMessageBoardResult = AddMessageBoardResult
+				.builder().userId("00000000").build();
+
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			addMessageBoardResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(addMessageBoardResult);
+		}
+		
+		String serviceName = "message";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/message-board/new")
+												.toString())
+										.build();
+		
+		addMessageBoardResult.setMessageBoard(restTemplate.postForObject(
+			uriComponents.toUri(), group, MessageBoard.class));
+		addMessageBoardResult.setRequestContextPath(getFrontendServerUri().toString());
+
+		return ResponseEntity.status(HttpStatus.OK).body(addMessageBoardResult);
+
+	}
+
+	@RequestMapping(method=RequestMethod.GET, 
+			value="/chat/update/message-board/{messageBoardId:[0-9]+}")
+	public ResponseEntity<UpdateMessageBoardResource> getUpdateMessageBoardResource(
+			@PathVariable String messageBoardId){
+		
+		UpdateMessageBoardResource updateMessageBoardResource =
+			UpdateMessageBoardResource.builder().build();
+		
+		String serviceName = "message";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/message-board/")
+												.append(messageBoardId)
+												.toString())
+										.build();
+		
+		updateMessageBoardResource.setMessageBoard(
+				restTemplate.getForObject(uriComponents.toUri(), MessageBoard.class));
+	
+		uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/message-board/")
+												.append(messageBoardId)
+												.append("/not-users")
+												.toString())
+										.build();
+		
+		updateMessageBoardResource.setNotBelongUsers(Arrays.asList(
+				restTemplate.getForObject(uriComponents.toUri(), 
+						org.debugroom.wedding.app.model.message.User[].class)));
+	
+		return ResponseEntity.status(HttpStatus.OK).body(updateMessageBoardResource);
+
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/chat/update/message-board/{messageBoardId:[0-9]+}")
+	public ResponseEntity<UpdateMessageBoardResult> updateMessageBoard(
+			@PathVariable String messageBoardId, 
+			@RequestBody @Validated UpdateMessageBoardForm updateMessageBoardForm,
+			BindingResult bindingResult){
+		
+		UpdateMessageBoardResult updateMessageBoardResult = UpdateMessageBoardResult
+				.builder().userId("00000000").build();
+
+		if(bindingResult.hasErrors()){
+			List<String> messages = new ArrayList<String>();
+			updateMessageBoardResult.setMessages(messages);
+			for(FieldError fieldError : bindingResult.getFieldErrors()){
+				messages.add(fieldError.getDefaultMessage());
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(updateMessageBoardResult);
+			
+		}
+		
+		String serviceName = "message";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/message-board/")
+												.append(messageBoardId)
+												.toString())
+										.build();
+		
+		updateMessageBoardResult.setMessageBoard(restTemplate.exchange(
+				uriComponents.toUri(), HttpMethod.PUT, 
+				new HttpEntity<UpdateMessageBoardForm>(updateMessageBoardForm), 
+				MessageBoard.class).getBody());
+		updateMessageBoardResult.setRequestContextPath(getFrontendServerUri().toString());
+		
+		return ResponseEntity.status(HttpStatus.OK).body(updateMessageBoardResult);
+
+	}
+
+	@RequestMapping(method=RequestMethod.DELETE, 
+			value="/chat/delete/message-board/{messageBoardId:[0-9]+}")
+	public ResponseEntity<DeleteMessageBoardResult> deleteMessageBoard(
+			@PathVariable String messageBoardId){
+		
+		DeleteMessageBoardResult deleteMessageBoardResult = DeleteMessageBoardResult
+				.builder().build();
+	
+		String serviceName = "message";
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
+										.host(provider.getIpAddr(serviceName))
+										.port(provider.getPort(serviceName))
+										.path(new StringBuilder()
+												.append(APP_NAME)
+												.append("/message-board/")
+												.append(messageBoardId)
+												.toString())
+										.build();
+		
+		deleteMessageBoardResult.setMessageBoard(
+				restTemplate.exchange(uriComponents.toUri(), HttpMethod.DELETE, 
+						null, MessageBoard.class).getBody());
+		
+		return ResponseEntity.status(HttpStatus.OK).body(deleteMessageBoardResult);
+		
 	}
 	
 	private URI getFrontendServerUri(){

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +24,8 @@ public class MessageBoard implements Serializable{
 	@NotNull
 	@Min(0)
 	private Long messageBoardId;
+	@Size(min=1, max=256)
+	@Pattern(regexp="^[^ =#$%&./<>?¥^¥~¥[¥]¥(¥)¥¥]+$")
 	private String title;
 	private Group group;
 

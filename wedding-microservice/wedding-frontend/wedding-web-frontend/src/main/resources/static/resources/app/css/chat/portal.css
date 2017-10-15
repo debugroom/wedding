@@ -38,6 +38,14 @@
     cursor:pointer;
 }
 
+.tab-panel:after{
+    display:block;
+    clear:both;
+    height:0px;
+    visibility:hidden;
+    content:".";
+}
+
 .content-panel {
     width: auto;
     margin: 100px 50px 100px;
@@ -144,4 +152,219 @@
 
 input:focus {
     border:solid 1px #EEA34A;
+}
+
+.add-group-icon{
+	width : 25px;
+	margin: 0 5px 0;
+}
+
+.add-group-icon:hover{
+    cursor:pointer;
+}
+
+#input-group-name {
+    font-size : 0.9em;
+    margin : 10px 0px 10px 5px;
+    width  : 280px;
+    height : 20px;
+    text-align : left;
+}
+
+#group-panel table{
+    margin : 50px auto 50px;
+    width : 75%;
+}
+
+#group-panel td:nth-child(1){
+    width : 50px;
+    text-align: center;
+}
+
+#group-panel td:nth-child(2){
+    width : 75px;
+    text-align: center;
+}
+
+#group-panel td:nth-child(3){
+    width : auto;
+    padding : 5px;
+}
+
+#group-panel td:nth-child(4){
+    width : 75px;
+    text-align: center;
+}
+
+#group-panel .alternative-button{
+    content: "";
+    clear: both;
+    display: block;
+    text-align :center;
+    margin : 20px auto 40px; 
+}
+
+#group-panel .alternative-first-button {
+    font-size : 1.0em;
+    width : 150px;
+    height : 60px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+#group-panel .alternative-last-button {
+    font-size : 1.0em;
+    width : 150px;
+    height : 60px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+#group-panel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+}
+.group-update-link{
+	margin : 10px;
+	float: right;
+}
+
+.group-update-link:after{
+    display:block;
+    clear:both;
+    height:0px;
+    visibility:hidden;
+    content:".";
+}
+
+.group-edit-panel{
+	display : block;
+}
+
+#input-edit-group-name {
+    font-size : 0.9em;
+    margin : 10px 0px 10px 5px;
+    width  : 280px;
+    height : 20px;
+    text-align : left;
+}
+
+.group-edit-panel table{
+    margin : 50px auto 50px;
+    width : 75%;
+}
+
+.group-edit-panel td:nth-child(1){
+    width : 50px;
+    text-align: center;
+}
+
+.group-edit-panel td:nth-child(2){
+    width : 75px;
+    text-align: center;
+}
+
+.group-edit-panel td:nth-child(3){
+    width : auto;
+    padding : 5px;
+}
+
+.group-edit-panel td:nth-child(4){
+    width : 75px;
+    text-align: center;
+}
+
+.group-edit-panel .selective-button{
+    content: "";
+    clear: both;
+    display: block;
+    text-align :center;
+    margin : 20px auto 40px; 
+}
+
+.group-edit-panel .selective-first-button {
+    font-size : 1.0em;
+    width : 120px;
+    height : 30px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+.group-edit-panel .selective-median-button {
+    font-size : 1.0em;
+    width : 120px;
+    height : 30px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+.group-edit-panel .selective-last-button {
+    font-size : 1.0em;
+    width : 120px;
+    height : 30px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+.group-edit-panel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
 }

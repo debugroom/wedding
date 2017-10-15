@@ -8,15 +8,20 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.entity.message.Group;
 import org.debugroom.wedding.domain.entity.message.GroupRelatedMessageBoard;
+import org.debugroom.wedding.domain.entity.message.GroupRelatedMessageBoardPK;
 import org.debugroom.wedding.domain.entity.message.GroupRelatedUser;
+import org.debugroom.wedding.domain.entity.message.GroupRelatedUserPK;
 import org.debugroom.wedding.domain.entity.message.Message;
 import org.debugroom.wedding.domain.entity.message.MessageBoard;
 import org.debugroom.wedding.domain.entity.message.MessageBoardRelatedGroup;
+import org.debugroom.wedding.domain.entity.message.MessageBoardRelatedGroupPK;
 import org.debugroom.wedding.domain.entity.message.MessagePK;
 import org.debugroom.wedding.domain.entity.message.User;
 import org.debugroom.wedding.domain.entity.message.UserRelatedGroup;
+import org.debugroom.wedding.domain.entity.message.UserRelatedGroupPK;
 import org.debugroom.wedding.domain.repository.cassandra.message.GroupRelatedMessageBoardRepository;
 import org.debugroom.wedding.domain.repository.cassandra.message.GroupRelatedUserRepository;
 import org.debugroom.wedding.domain.repository.cassandra.message.GroupRepository;
@@ -81,6 +86,11 @@ public class MessageServiceImpl implements MessageService{
 	}
 
 	@Override
+	public List<User> getUsers(){
+		return (List<User>)userRepository.findAll();
+	}
+
+	@Override
 	public List<User> getUsers(MessageBoard messageBoard) {
 		List<MessageBoardRelatedGroup> messageBoardRelatedGroups = 
 				messageBoardRelatedGroupRepository.
@@ -101,17 +111,57 @@ public class MessageServiceImpl implements MessageService{
 		}
 		return users;
 	}
+	
+	@Override
+	public List<User> getNotUsers(MessageBoard messageBoard){
+		List<MessageBoardRelatedGroup> messageBoardRelatedGroups = 
+				messageBoardRelatedGroupRepository.
+				findByMessageBoardRelatedGrouppkMessageBoardId(messageBoard.getMessageBoardId());
+		List<Long> groupIds = new ArrayList<Long>();
+		for(MessageBoardRelatedGroup messageBoardRelatedGroup : messageBoardRelatedGroups){
+			groupIds.add(messageBoardRelatedGroup.getMessageBoardRelatedGrouppk().getGroupId());
+		}
+		Map<String, User> userMap = userRepository.findAllForMap();
+		for(Group group : groupRepository.findByGroupIdIn(groupIds)){
+			List<GroupRelatedUser> groupRelatedUsers =
+					groupRelatedUserRepository.findByGroupRelatedUserpkGroupId(group.getGroupId());
+			for(GroupRelatedUser groupRelatedUser : groupRelatedUsers){
+				userMap.remove(groupRelatedUser.getGroupRelatedUserpk().getUserId());
+			}
+		}
+		return new ArrayList<User>(userMap.values());
+	}
+
+	@Override
+	public MessageBoard getMessageBoard(MessageBoard messageBoard) throws BusinessException{
+		List<MessageBoardRelatedGroup> messageBoardRelatedGroups =
+				messageBoardRelatedGroupRepository
+				.findByMessageBoardRelatedGrouppkMessageBoardId(messageBoard.getMessageBoardId());
+		if(messageBoardRelatedGroups.size() != 1){
+			throw new BusinessException("messageService.error.0001");
+		}
+		MessageBoard targetMessageBoard = messageBoardRepository.findOne(
+				messageBoard.getMessageBoardId());
+		Group group = groupRepository.findOne(
+				messageBoardRelatedGroups.get(0).getMessageBoardRelatedGrouppk().getGroupId());
+		List<GroupRelatedUser> groupRelatedUsers = groupRelatedUserRepository
+				.findByGroupRelatedUserpkGroupId(group.getGroupId());
+		List<String> userIds = new ArrayList<String>();
+		for(GroupRelatedUser groupRelatedUser : groupRelatedUsers){
+			userIds.add(groupRelatedUser.getGroupRelatedUserpk().getUserId());
+		}
+		group.setUsers(userRepository.findByUserIdIn(userIds));
+		targetMessageBoard.setGroup(group);
+		return targetMessageBoard;
+	}
 
 	@Override
 	public Message saveMessage(Message inputMessage) {
 		Long messageBoardId = inputMessage.getMessagepk().getMessageBoardId();
-		List<Message> messages = messageRepository
-				.findByMessagepkMessageBoardId(messageBoardId);
 		long maxMessageNo = 0;
-		for(Message message : messages){
-			if(maxMessageNo < message.getMessagepk().getMessageNo()){
-				maxMessageNo = message.getMessagepk().getMessageNo();
-			}
+		if(0 != messageRepository.countByMessagepkMessageBoardId(messageBoardId)){
+			maxMessageNo = messageRepository
+				.findTopByMessageBoardIdOrderByMeesageNo(messageBoardId);
 		}
 		return messageRepository.save(Message.builder()
 				.messagepk(MessagePK.builder()
@@ -134,22 +184,215 @@ public class MessageServiceImpl implements MessageService{
 	}
 
 	@Override
-	public MessageBoard saveMessageBoard(MessageBoard messageBoard, Group group) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	public MessageBoard saveMessageBoard(Group group) {
+		MessageBoard messageBoard = MessageBoard.builder()
+				.title(group.getGroupName()).build();
+		return saveMessageBoard(messageBoard, group);
 	}
 
 	@Override
-	public MessageBoard updateMessageBoard(MessageBoard messageBoard, Group group) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	public MessageBoard saveMessageBoard(MessageBoard messageBoard, Group group) {
+
+		Long newGroupId = groupRepository.findTopByOrderByGroupId()+1;
+		Group addGroup = Group.builder()
+				.groupId(newGroupId)
+				.groupName(group.getGroupName())
+				.ver(0)
+				.lastUpdatedDate(new Date())
+				.build();
+		groupRepository.save(addGroup);
+
+		Long newMessageBoardId = messageBoardRepository.findTopByOrderByMessageBoardId()+1;
+		MessageBoard addMessageBoard = MessageBoard.builder()
+				.messageBoardId(newMessageBoardId)
+				.title(messageBoard.getTitle())
+				.ver(0)
+				.lastUpdatedDate(new Date())
+				.build();
+		messageBoardRepository.save(addMessageBoard);
+		addMessageBoard.setGroup(addGroup);
+
+		List<UserRelatedGroup> userRelatedGroups = new ArrayList<UserRelatedGroup>();
+		List<GroupRelatedUser> groupRelatedUsers = new ArrayList<GroupRelatedUser>();
+		for(User user : group.getUsers()){
+			UserRelatedGroup addUserRelatedGroup = UserRelatedGroup.builder()
+					.userRelatedGrouppk(UserRelatedGroupPK.builder()
+							.groupId(newGroupId).userId(user.getUserId())
+							.build())
+					.ver(0)
+					.lastUpdatedDate(new Date())
+					.build();
+			userRelatedGroups.add(addUserRelatedGroup);
+			GroupRelatedUser addGroupRelatedUser = GroupRelatedUser.builder()
+					.groupRelatedUserpk(GroupRelatedUserPK.builder()
+							.groupId(newGroupId).userId(user.getUserId())
+							.build())
+					.ver(0)
+					.lastUpdatedDate(new Date())
+					.build();
+			groupRelatedUsers.add(addGroupRelatedUser);
+		}
+		userRelatedGroupRepository.save(userRelatedGroups);
+		groupRelatedUserRepository.save(groupRelatedUsers);
+		
+		GroupRelatedMessageBoard groupRelatedMessageBoard = GroupRelatedMessageBoard.builder()
+				.groupRelatedMessageBoardpk(GroupRelatedMessageBoardPK.builder()
+						.groupId(newGroupId).messageBoardId(newMessageBoardId).build())
+				.ver(0)
+				.lastUpdatedDate(new Date())
+				.build();
+		groupRelatedMessageBoardRepository.save(groupRelatedMessageBoard);
+		
+		MessageBoardRelatedGroup messageBoardRelatedGroup = MessageBoardRelatedGroup.builder()
+				.messageBoardRelatedGrouppk(MessageBoardRelatedGroupPK.builder()
+						.messageBoardId(newMessageBoardId).groupId(newGroupId).build())
+				.ver(0)
+				.lastUpdatedDate(new Date())
+				.build();
+		messageBoardRelatedGroupRepository.save(messageBoardRelatedGroup);
+		
+		return addMessageBoard;
+
+	}
+
+	@Override
+	public MessageBoard updateMessageBoard(
+			MessageBoard messageBoard, List<User> addUsers, List<User> deleteUsers) {
+		
+		Long messageBoardId = messageBoard.getMessageBoardId();
+		MessageBoard updateMessageBoard = messageBoardRepository.findOne(messageBoardId);
+		
+		List<MessageBoardRelatedGroup> messageBoardRelatedGroups =
+				messageBoardRelatedGroupRepository
+				.findByMessageBoardRelatedGrouppkMessageBoardId(messageBoardId);
+		
+		Group updateGroup = groupRepository.findOne(
+				messageBoardRelatedGroups.get(0).getMessageBoardRelatedGrouppk().getGroupId());
+		
+		if(null != deleteUsers){
+			
+			List<UserRelatedGroup> deleteUserRelatedGroups = new ArrayList<UserRelatedGroup>();
+			List<GroupRelatedUser> deleteGroupRelatedUsers = new ArrayList<GroupRelatedUser>();
+
+			for(User deleteUser : deleteUsers){
+				deleteUserRelatedGroups.add(UserRelatedGroup.builder().userRelatedGrouppk(
+					UserRelatedGroupPK.builder()
+					.groupId(updateGroup.getGroupId())
+					.userId(deleteUser.getUserId())
+					.build())
+					.ver(0)
+					.lastUpdatedDate(new Date())
+					.build());
+				deleteGroupRelatedUsers.add(GroupRelatedUser.builder().groupRelatedUserpk(
+					GroupRelatedUserPK.builder()
+					.userId(deleteUser.getUserId())
+					.groupId(updateGroup.getGroupId())
+					.build())
+					.ver(0)
+					.lastUpdatedDate(new Date())
+					.build());
+			}
+			userRelatedGroupRepository.delete(deleteUserRelatedGroups);
+			groupRelatedUserRepository.delete(deleteGroupRelatedUsers);
+		}
+
+		if(null != addUsers){
+			
+			List<UserRelatedGroup> addUserRelatedGroups = new ArrayList<UserRelatedGroup>();
+			List<GroupRelatedUser> addGroupRelatedUsers = new ArrayList<GroupRelatedUser>();
+
+			for(User addUser : addUsers){
+				addUserRelatedGroups.add(UserRelatedGroup.builder().userRelatedGrouppk(
+					UserRelatedGroupPK.builder()
+					.groupId(updateGroup.getGroupId())
+					.userId(addUser.getUserId())
+					.build())
+					.ver(0)
+					.lastUpdatedDate(new Date())
+					.build());
+				addGroupRelatedUsers.add(GroupRelatedUser.builder().groupRelatedUserpk(
+					GroupRelatedUserPK.builder()
+					.userId(addUser.getUserId())
+					.groupId(updateGroup.getGroupId())
+					.build())
+					.ver(0)
+					.lastUpdatedDate(new Date())
+					.build());
+			}
+
+			userRelatedGroupRepository.save(addUserRelatedGroups);
+			groupRelatedUserRepository.save(addGroupRelatedUsers);
+
+		}
+
+		if(!updateMessageBoard.getTitle().equals(messageBoard.getTitle())){
+			
+			updateMessageBoard.setTitle(messageBoard.getTitle());
+			updateMessageBoard.setVer(updateMessageBoard.getVer()+1);
+			updateGroup.setGroupName(messageBoard.getTitle());
+			updateGroup.setVer(updateGroup.getVer()+1);
+		
+			messageBoardRepository.save(updateMessageBoard);
+			groupRepository.save(updateGroup);
+		
+		}
+
+		return updateMessageBoard;
+
 	}
 
 	@Override
 	public MessageBoard deleteMessageBoard(MessageBoard messageBoard) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+
+		Long messageBoardId = messageBoard.getMessageBoardId();
+		MessageBoard deleteMessageBoard = messageBoardRepository.findOne(messageBoardId);
+		
+		List<MessageBoardRelatedGroup> messageBoardRelatedGroups =
+				messageBoardRelatedGroupRepository
+				.findByMessageBoardRelatedGrouppkMessageBoardId(messageBoardId);
+
+		Group deleteGroup = groupRepository.findOne(
+				messageBoardRelatedGroups.get(0).getMessageBoardRelatedGrouppk().getGroupId());
+		
+		List<UserRelatedGroup> deleteUserRelatedGroups = new ArrayList<UserRelatedGroup>();
+		List<GroupRelatedUser> deleteGroupRelatedUsers = new ArrayList<GroupRelatedUser>();
+		
+		for(GroupRelatedUser groupRelatedUser : 
+			groupRelatedUserRepository.findByGroupRelatedUserpkGroupId(deleteGroup.getGroupId())){
+			deleteUserRelatedGroups.add(UserRelatedGroup.builder().userRelatedGrouppk(
+					UserRelatedGroupPK.builder()
+					.groupId(deleteGroup.getGroupId())
+					.userId(groupRelatedUser.getGroupRelatedUserpk().getUserId())
+					.build())
+					.build());
+			deleteGroupRelatedUsers.add(groupRelatedUser);
+		}
+		
+		groupRelatedUserRepository.delete(deleteGroupRelatedUsers);
+		userRelatedGroupRepository.delete(deleteUserRelatedGroups);
+		
+		groupRelatedMessageBoardRepository.delete(
+				GroupRelatedMessageBoard.builder()
+				.groupRelatedMessageBoardpk(GroupRelatedMessageBoardPK.builder()
+						.groupId(deleteGroup.getGroupId())
+						.messageBoardId(messageBoardId)
+						.build())
+				.build());
+		messageBoardRelatedGroupRepository.delete(
+				MessageBoardRelatedGroup.builder()
+				.messageBoardRelatedGrouppk(MessageBoardRelatedGroupPK.builder()
+						.messageBoardId(messageBoardId)
+						.groupId(deleteGroup.getGroupId())
+						.build())
+				.build());
+		
+		groupRepository.delete(deleteGroup);
+		messageBoardRepository.delete(deleteMessageBoard);
+		
+		return deleteMessageBoard;
+
 	}
+
 
 	@Override
 	public Message updateMessage(Message message) {

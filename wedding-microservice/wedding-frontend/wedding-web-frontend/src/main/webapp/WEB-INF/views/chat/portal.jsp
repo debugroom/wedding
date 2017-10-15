@@ -27,7 +27,7 @@
     <div class="flex-item-2">
       <article>
         <div class="chat-panel">
-          <div class="tab-panel">
+          <div id="tab" class="tab-panel">
             <ul>
               <c:forEach var="messageBoard" items="${chatPortalResource.messageBoards}" varStatus="status">
                 <li id="tab-<c:out value='${messageBoard.messageBoardId}' />" class="tab" 
@@ -38,18 +38,14 @@
                 </li>
               </c:forEach>
             </ul>
+            <img id="add-group-icon" class="add-group-icon"
+                  data-url="${pageContext.request.contextPath}/chat/group/new"
+                  data-get-users-url="${pageContext.request.contextPath}/chat/users"
+                  src="${pageContext.request.contextPath}/static/resources/app/img/add.png" />
           </div>
-          <div class="content-panel">
+          <div id="content" class="content-panel">
             <c:forEach var="messageBoard" items="${chatPortalResource.messageBoards}" varStatus="status">
               <div id="content-${messageBoard.messageBoardId}" class="content">
-                <form class="form-inline">
-                  <div class="form-group">
-                    <label for="messageBody">Type message.</label>
-                    <input type="text" id="form-<c:out value='${messageBoard.messageBoardId}' />" class="form-control" placeholder="message here...">
-                  </div>
-                  <button id="send-<c:out value='${messageBoard.messageBoardId}' />" 
-                   data-message-board-id="<c:out value='${messageBoard.messageBoardId}' />" type="submit">Send</button>
-                </form>
               </div>
             </c:forEach>
          </div>

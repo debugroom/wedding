@@ -379,7 +379,7 @@ function getNotViewers(){
 				if(val.brideSide == true){
 					status = "新婦側";
 				}else{
-					status = "新郎側"
+					status = "新郎側";
 				}
 			$("#users-table tbody")
 					.append($('<tr>' 
