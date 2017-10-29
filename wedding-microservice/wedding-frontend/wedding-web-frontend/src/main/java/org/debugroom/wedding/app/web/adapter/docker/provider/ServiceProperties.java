@@ -90,4 +90,14 @@ public class ServiceProperties {
 	@Value("${message.service.port}")
 	private String messageServicePort;
 
+	@Value("${login.service.name}")
+	private String loginServiceName;
+	
+	@Value("${login.service.addr}")
+	private String loginServiceAddr;
+
+	@Value("${login.service.port}")
+	private String loginServicePort;
+
+
 }

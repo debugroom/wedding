@@ -27,6 +27,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -135,6 +136,7 @@ import org.debugroom.wedding.app.web.helper.InformationMessageBodyHelper;
 import org.debugroom.wedding.app.web.helper.GalleryContentsUploadHelper;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
 import org.debugroom.wedding.app.web.helper.ProfileImageUploadHelper;
+import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
 import org.debugroom.wedding.app.web.validator.PasswordEqualsValidator;
@@ -226,32 +228,27 @@ public class ServiceAdpaterController {
 
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String login() throws RestClientException, URISyntaxException{
-		String serviceName = "login";
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getForObject(
-				RequestBuilder.getGetRequest(provider.getPath(serviceName), 
-						APP_NAME, serviceName, null, null),
-				String.class);
-		return serviceName;
+		return "login";
 	}
 	
 	@RequestMapping(value="/portal/{userId:[0-9]+}", method=RequestMethod.GET)
-	public String portal(@PathVariable String userId, Model model) 
+	public String portal(@PathVariable String userId, Model model, 
+			@AuthenticationPrincipal CustomUserDetails customUserDetails) 
 			throws URISyntaxException{
-		String serviceName = "portal";
-		Map<Integer, String> pathVariableMap = new HashMap<Integer, String>();
-		pathVariableMap.put(0, userId);
-		RestTemplate restTemplate = new RestTemplate();
-		try {
-			PortalResource portalResource = restTemplate.getForObject(
-					RequestBuilder.getGetRequest(provider.getPath(serviceName), 
-							APP_NAME, serviceName, null, pathVariableMap),
-					PortalResource.class);
-			model.addAttribute(portalResource);
-		} catch (RestClientException e) {
-			// TODO Consideration exception handling
-			e.printStackTrace();
+		if(!userId.equals(customUserDetails.getUser().getUserId())){
+			model.addAttribute("errorCode", "9000");
+			return "common/error";
 		}
+		String serviceName = "portal";
+		RestTemplate restTemplate = new RestTemplate();
+		PortalResource portalResource = restTemplate.getForObject(
+			RequestBuilder.buildUriComponents(serviceName, 
+				new StringBuilder()
+				.append(APP_NAME)
+				.append("/portal/{userId}")
+				.toString(), provider).expand(userId).toUri(), 
+			PortalResource.class);
+			model.addAttribute(portalResource);
 		return "portal/portal";
 	}
 	
@@ -261,21 +258,20 @@ public class ServiceAdpaterController {
 			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE},
 			value = "/portal/image/{userId:[0-9]+}/{imageFileExtension}")
 	@ResponseBody
-	public ResponseEntity<BufferedImage> getPortalImage(@PathVariable String userId){
+	public ResponseEntity<BufferedImage> getPortalImage(@PathVariable String userId,
+			@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		if(!userId.equals(customUserDetails.getUser().getUserId())){
+			return ResponseEntity.badRequest().body(null);
+		}
 		String serviceName = "portal";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/profile/")
-											.append("{userId}")
-											.toString())
-									.build()
-									.expand(userId);
-		User user = restTemplate.getForObject(uriComponents.toUri(),User.class);
+		User user = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/profile/{userId}")
+						.toString(), provider).expand(userId).toUri(), 
+				User.class);
 		BufferedImage image = null;
 		try {
 			image = downloadHelper.getProfileImage(user);
@@ -289,30 +285,21 @@ public class ServiceAdpaterController {
 	public String information(@Validated Information information, Model model) 
 			throws URISyntaxException{
 		String serviceName = "information";
-		Map<Integer, String> pathVariableMap = new HashMap<Integer, String>();
-		pathVariableMap.put(0, information.getInfoId());
 		RestTemplate restTemplate = new RestTemplate();
-		try{
-			Information resultInformation = restTemplate.getForObject(
-					RequestBuilder.getGetRequest(provider.getPath(serviceName), 
-							APP_NAME, serviceName, null, pathVariableMap),
-					Information.class);
-			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-					.host(provider.getIpAddr("frontend"))
-					.port(provider.getPort("frontend"))
-					.path(new StringBuilder()
-							.append("/information/body/")
-							.append(information.getInfoId())
-							.toString())
-					.build();
-			resultInformation.setInfoRootPath(uriComponents.toString());
-			model.addAttribute(resultInformation);
-
-		} catch (RestClientException e) {
-			// TODO Consideration exception handling
-			e.printStackTrace();
-		}
+		Information resultInformation = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/information/{infoId}")
+						.toString(), provider).expand(information.getInfoId()).toUri(),
+				Information.class);
+		resultInformation.setInfoRootPath(
+				RequestBuilder.buildUriComponents("frontend", 
+						new StringBuilder()
+						.append("information/body/")
+						.append(information.getInfoId())
+						.toString(), provider).toString());
+		model.addAttribute(resultInformation);
 		return "portal/information";
 	}
 
@@ -322,52 +309,51 @@ public class ServiceAdpaterController {
 	public String infomationBody(@PathVariable String infoId){
 		String serviceName = "information";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/information/")
-											.append(infoId)
-											.toString())
-									.build();
 		try {
 			return informationMessageBodyHelper.getMessageBody(restTemplate.getForObject(
-					uriComponents.toUri(), org.debugroom.wedding.domain.entity.Information.class));
+						RequestBuilder.buildUriComponents(serviceName, 
+								new StringBuilder()
+								.append(APP_NAME)
+								.append("/information/{infoId}")
+								.toString(), provider).expand(infoId).toUri(),
+						org.debugroom.wedding.domain.entity.Information.class));
 		} catch (RestClientException | BusinessException e) {
-			return "error";
+			e.printStackTrace();
 		}
+		return "error";
 	}
 
 	@RequestMapping(value="/profile/{userId:[0-9]+}", method=RequestMethod.GET)
-	public String profile(@PathVariable String userId, Model model){
-		String serviceName = "profile";
-		Map<Integer, String> pathVariableMap = new HashMap<Integer, String>();
-		pathVariableMap.put(0, userId);
-		RestTemplate restTemplate = new RestTemplate();
-		try {
-			PortalResource portalResource = PortalResource.builder() 
-					.user(restTemplate.getForObject(
-					RequestBuilder.getGetRequest(provider.getPath(serviceName), 
-					APP_NAME, serviceName, null, pathVariableMap),
-					User.class))
-					.build();
-			model.addAttribute(portalResource);
-		} catch (RestClientException | URISyntaxException e) {
-			e.printStackTrace();
+	public String profile(@PathVariable String userId, Model model,
+			@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		if(!userId.equals(customUserDetails.getUser().getUserId())){
+			model.addAttribute("errorCode", "9000");
+			return "common/error";
 		}
+		String serviceName = "profile";
+		RestTemplate restTemplate = new RestTemplate();
+		PortalResource portalResource = PortalResource.builder() 
+				.user(restTemplate.getForObject(
+							RequestBuilder.buildUriComponents(serviceName, 
+									new StringBuilder()
+									.append(APP_NAME)
+									.append("/profile/{userId}")
+									.toString(), provider).expand(userId).toUri(),
+							User.class))
+				.build();
+		model.addAttribute(portalResource);
 		return "profile/portal";
 	}
 
 	@RequestMapping(value="/profile/{userId:[0-9]+}", method=RequestMethod.POST)
 	public String profile(@PathVariable String userId, 
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
 			@Validated EditProfileForm editProfileForm, 
 			BindingResult bindingResult, Model model, Locale locale){
-
-		String serviceName = "profile";
-		Map<Integer, String> pathVariableMap = new HashMap<Integer, String>();
-		pathVariableMap.put(0, userId);
+		if(!userId.equals(customUserDetails.getUser().getUserId())){
+			model.addAttribute("errorCode", "9000");
+			return "common/error";
+		}
 		if(bindingResult.hasErrors()){
 			model.addAttribute(mapper.map(editProfileForm, 
 					org.debugroom.wedding.app.model.profile.PortalResource.class));
@@ -387,16 +373,16 @@ public class ServiceAdpaterController {
 			}
 			editProfileForm.setNewImageFile(null);
 		}
+		String serviceName = "profile";
 		RestTemplate restTemplate = new RestTemplate();
-		try {
-			model.addAttribute(restTemplate.exchange(
-					RequestBuilder.getPathVariableHttpRequestURI(provider.getPath(serviceName), 
-							APP_NAME, serviceName, pathVariableMap), HttpMethod.PUT,
-					new HttpEntity<EditProfileForm>(editProfileForm), 
-					UpdateUserResult.class).getBody());
-		} catch (RestClientException | URISyntaxException e) {
-			e.printStackTrace();
-		}
+		model.addAttribute("updateResult", restTemplate.exchange(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+							.append(APP_NAME)
+							.append("/profile/{userId}")
+							.toString(), provider).expand(userId).toUri(),
+				HttpMethod.PUT, new HttpEntity<EditProfileForm>(editProfileForm), 
+				UpdateUserResult.class).getBody());
 
 		return "profile/result";
 	}
@@ -406,23 +392,21 @@ public class ServiceAdpaterController {
 			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE},
 			value = "/profile/image/{userId:[0-9]+}/{imageFileExtension}")
 	@ResponseBody
-	public ResponseEntity<BufferedImage> getProfileImage(@PathVariable String userId){
+	public ResponseEntity<BufferedImage> getProfileImage(@PathVariable String userId,
+			@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		if(!userId.equals(customUserDetails.getUser().getUserId())){
+			if(customUserDetails.getUser().getAuthorityLevel() != 9){
+				return ResponseEntity.badRequest().body(null);
+			}
+		}
 		String serviceName = "profile";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/")
-											.append(serviceName)
-											.append("/")
-											.append("{userId}")
-											.toString())
-									.build()
-									.expand(userId);
-		User user = restTemplate.getForObject(uriComponents.toUri(),User.class);
+		User user = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/profile/{userId}")
+						.toString(), provider).expand(userId).toUri(), User.class);
 		BufferedImage image = null;
 		try {
 			image = downloadHelper.getProfileImage(user);
@@ -430,7 +414,6 @@ public class ServiceAdpaterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		return ResponseEntity.ok().body(image);
-	
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value="/management/user/portal")
@@ -444,18 +427,12 @@ public class ServiceAdpaterController {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 	    params.set("page", Integer.toString(pageParam.getPage()));
 	    params.set("size", Integer.toString(pageParam.getSize()));
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/")
-												.append("users")
-												.toString())
-										.queryParams(params)
-										.build();
-		Page<User> page = restTemplate.getForObject(uriComponents.toUri(), UserPageImpl.class);
+		Page<User> page = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/users")
+						.toString(), provider, params).toUri(), UserPageImpl.class);
 		model.addAttribute("page", page);
 
 		return "management/user/portal";
@@ -484,23 +461,16 @@ public class ServiceAdpaterController {
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginIdSearchResult);
 		}
-		
+
 		String serviceName = "management";
 		RestTemplate restTemplate = new RestTemplate();
-		
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/")
-												.append("users")
-												.append("/")
-												.append(loginId)
-												.toString())
-										.build();
-		User user = restTemplate.getForObject(uriComponents.toUri(), User.class);
+		User user = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+					new StringBuilder()
+					.append(APP_NAME)
+					.append("/users/{loginId}")
+					.toString(), provider).expand(loginId).toUri(),
+				User.class);
 		if(user.getUserId() != null){
 			loginIdSearchResult.setExists(true);
 		}
@@ -558,27 +528,21 @@ public class ServiceAdpaterController {
 	@RequestMapping(method = RequestMethod.POST, value="/management/user/profile/new")
 	public String newUserProfile(@Validated(ConfirmUser.class) NewUserForm newUserForm,
 			BindingResult bindingResult, Model model, Locale locale){
-		
 		String serviceName = "management";
-
 		User user = mapper.map(newUserForm, User.class);
 		if(bindingResult.hasErrors()){
 			model.addAttribute(newUserForm);
 			model.addAttribute(BindingResult.class.getName() + ".newUserForm", bindingResult);
 			return "management/user/form";
 		}
-
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/user/profile/new")
-											.toString())
-									.build();
-		user = restTemplate.postForObject(uriComponents.toUri(), user, User.class);
+		user = restTemplate.postForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/user/profile/new")
+						.toString(), provider).toUri(), 
+				user, User.class);
 		if(null != newUserForm.getNewImageFile()){
 			try {
 				user.setImageFilePath(uploadHelper.saveFile(
@@ -612,27 +576,22 @@ public class ServiceAdpaterController {
 			model.addAttribute("newUser", user);
 			return "management/user/form";
 		}
-
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/user/")
-											.append(newUserForm.getUserId())
-											.toString())
-									.build();
 		try{
 			redirectAttributes.addFlashAttribute("newUser", 
-				restTemplate.postForObject(uriComponents.toUri(), user, User.class));
+				restTemplate.postForObject(
+						RequestBuilder.buildUriComponents(serviceName, 
+								new StringBuilder()
+								.append(APP_NAME)
+								.append("/user/{userId}")
+								.toString(), provider)
+						.expand(newUserForm.getUserId()).toUri(),
+						user, User.class));
 		} catch (Exception e){
 			//TODO Using Business Exception for optimistic rock error.
 			model.addAttribute("errorCode", "");
 			return "common/error";
 		}
-		
 		return new StringBuilder()
 					.append("redirect:")
 					.append(user.getUserId())
@@ -656,21 +615,16 @@ public class ServiceAdpaterController {
 		if(errors.hasErrors()){
 			return "management/user/portal";
 		}
-	
-		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/user/")
-											.append(editUserForm.getUserId())
-											.toString())
-									.build();
 		User user = null;
 		try{
-			user = restTemplate.getForObject(uriComponents.toUri(), User.class);
+			RestTemplate restTemplate = new RestTemplate();
+			user = restTemplate.getForObject(
+					RequestBuilder.buildUriComponents(serviceName, 
+					new StringBuilder()
+					.append(APP_NAME)
+					.append("/user/{userId}")
+					.toString(), provider)
+					.expand(editUserForm.getUserId()).toUri(), User.class);
 		} catch (Exception e){
 			//TODO Using Business Exception for optimistic rock error.
 			model.addAttribute("errorCode", "");
@@ -718,21 +672,15 @@ public class ServiceAdpaterController {
 		}
 
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/user/")
-											.append(editUserForm.getUserId())
-											.toString())
-									.build();
-
-
 		try{
 			redirectAttributes.addFlashAttribute("updateResult", 
-					restTemplate.exchange(uriComponents.toUri(), 
+					restTemplate.exchange(
+							RequestBuilder.buildUriComponents(serviceName, 
+									new StringBuilder()
+									.append(APP_NAME)
+									.append("/user/{userId}")
+									.toString(), provider)
+							.expand(editUserForm.getUserId()).toUri(),
 							HttpMethod.PUT, new HttpEntity<User>(user), 
 							UpdateUserResult.class).getBody());
 		} catch (Exception e){
@@ -770,19 +718,14 @@ public class ServiceAdpaterController {
 		}
 
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/user/")
-											.append(deleteUserForm.getUserId())
-											.toString())
-									.build();
 		try{
 			redirectAttributes.addFlashAttribute("deleteUser", 
-					restTemplate.exchange(uriComponents.toUri(), 
+					restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName, 
+							new StringBuilder()
+							.append(APP_NAME)
+							.append("/user/{userId}")
+							.toString(), provider)
+							.expand(deleteUserForm.getUserId()).toUri(),
 					HttpMethod.DELETE, new HttpEntity<User>(
 						mapper.map(deleteUserForm, User.class)), User.class).getBody());
 		} catch (Exception e){
@@ -806,29 +749,20 @@ public class ServiceAdpaterController {
 	@RequestMapping(method=RequestMethod.GET, value="/management/information/portal")
 	public String informationManagementPortal(@Validated PageParam pageParam, 
 			BindingResult bindingResult, Model model){
-		
 		if(bindingResult.hasErrors()){
 			return "common/error";
 		}
-
 		String serviceName = "management";
 		RestTemplate restTemplate = new RestTemplate();
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 	    params.set("page", Integer.toString(pageParam.getPage()));
 	    params.set("size", Integer.toString(pageParam.getSize()));
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/")
-												.append("information")
-												.toString())
-										.queryParams(params)
-										.build();
 		model.addAttribute("page", restTemplate.getForObject(
-				uriComponents.toUri(), InformationPageImpl.class));
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/information")
+						.toString(), provider, params).toUri(), InformationPageImpl.class));
 		return "management/information/portal";
 	}
 
@@ -836,17 +770,12 @@ public class ServiceAdpaterController {
 	public String newInformationForm(Model model){
 		String serviceName = "management";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/information/form")
-												.toString())
-										.build();
 		model.addAttribute("users", restTemplate.getForObject(
-				uriComponents.toUri(), InformationFormResource.class).getUsers());
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/information/form")
+						.toString(), provider).toUri(), InformationFormResource.class).getUsers());
 		return "management/information/form";
 	}
 
@@ -865,39 +794,24 @@ public class ServiceAdpaterController {
 		}
 
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/")
-												.append("information/draft/new")
-												.toString())
-										.build();
-		
 		InformationDraft informationDraft = restTemplate.postForObject(
-				uriComponents.toUri(), newInformationForm, InformationDraft.class);
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/information/draft/new")
+						.toString(), provider).toUri(), newInformationForm, InformationDraft.class);
 
 		try {
-
 			informationMessageBodyHelper.saveMessageBody(informationDraft, 
 					newInformationForm.getMessageBody());
-
-			uriComponentsBuilder = UriComponentsBuilder.newInstance();
-			uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-					.host(provider.getIpAddr("frontend"))
-					.port(provider.getPort("frontend"))
-					.path(new StringBuilder()
-							.append("/information/body/")
-							.append(informationDraft.getInformation().getInfoId())
-							.append("?temp&infoPagePath=")
-							.append(informationDraft.getInformation().getInfoPagePath())
-							.toString())
-					.build();
-		
-			informationDraft.setTempInfoUrl(uriComponents.toString());
-	
+			MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+			params.set("temp", null);
+			params.set("infoPagePath", informationDraft.getInformation().getInfoPagePath());
+			informationDraft.setTempInfoUrl(RequestBuilder.buildUriComponents("frontend", 
+					new StringBuilder()
+					.append("/information/body/{infoId}")
+					.toString(), provider, params)
+					.expand(informationDraft.getInformation().getInfoId()).toString());
 			model.addAttribute(informationDraft);
 		} catch (BusinessException e) {
 			model.addAttribute("errorMessage", messageSource.getMessage(
@@ -905,7 +819,6 @@ public class ServiceAdpaterController {
 			model.addAttribute(newInformationForm);
 			return "management/information/form";
 		}
-		
 		return "management/information/confirm";
 	}
 
@@ -931,18 +844,16 @@ public class ServiceAdpaterController {
 		String serviceName = "management";
 		InformationDraft informationDraft = 
 				mapper.map(newInformationForm, InformationDraft.class);
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-					.host(provider.getIpAddr("frontend"))
-					.port(provider.getPort("frontend"))
-					.path(new StringBuilder()
-							.append("/information/body/")
-							.append(informationDraft.getInformation().getInfoId())
-							.append("?temp&infoPagePath=")
-							.append(informationDraft.getInformation().getInfoPagePath())
-							.toString())
-					.build();
-		informationDraft.setTempInfoUrl(uriComponents.toString());
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.set("temp", null);
+		params.set("infoPagePath", informationDraft.getInformation().getInfoPagePath());
+		informationDraft.setTempInfoUrl(
+				RequestBuilder.buildUriComponents("frontend", 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/information/body/{infoId}")
+						.toString(), provider, params)
+				.expand(informationDraft.getInformation().getInfoId()).toString());
 		
 		if(bindingResult.hasErrors()){
 			model.addAttribute(informationDraft);
@@ -955,27 +866,19 @@ public class ServiceAdpaterController {
 		}
 
 		RestTemplate restTemplate = new RestTemplate();
-
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/information/")
-												.append(informationDraft
-														.getInformation()
-														.getInfoId())
-												.toString())
-										.build();	
-		
 		try{
 			redirectAttributes.addFlashAttribute(
 				InformationResource
 					.builder()
 					.information(
 						restTemplate.postForObject(
-								uriComponents.toUri(), newInformationForm,
+								RequestBuilder.buildUriComponents(serviceName, 
+										new StringBuilder()
+										.append(APP_NAME)
+										.append("/information/{infoId}")
+										.toString(), provider)
+								.expand(informationDraft.getInformation().getInfoId())
+								.toUri(), newInformationForm,
 								org.debugroom.wedding.domain.entity.Information.class))
 					.messageBodyUrl(informationDraft.getTempInfoUrl())
 					.build());
@@ -1011,42 +914,30 @@ public class ServiceAdpaterController {
 
 		String serviceName = "management";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/information/")
-												.append(informationDetailForm.getInfoId())
-												.toString())
-										.build();
 
 		InformationDetail informationDetail = restTemplate.getForObject(
-				uriComponents.toUri(), InformationDetail.class);
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/information/{infoId}")
+						.toString(), provider)
+				.expand(informationDetailForm.getInfoId()).toUri(), InformationDetail.class);
 
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr("frontend"))
-										.port(provider.getPort("frontend"))
-										.path(new StringBuilder()
-												.append("/information/body/")
-												.append(informationDetailForm.getInfoId())
-												.toString())
-										.build();
+		informationDetail.setMessageBodyUrl(
+				RequestBuilder.buildUriComponents("frontend", 
+						new StringBuilder()
+						.append("/information/body/{infoId}")
+						.toString(), provider).expand(informationDetailForm.getInfoId())
+				.toString());
 
-		informationDetail.setMessageBodyUrl(uriComponents.toString());
-
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr("frontend"))
-										.port(provider.getPort("frontend"))
-										.path(new StringBuilder()
-												.append("/search/users?type=not-information-viewers&infoId=")
-												.toString())
-										.build();
-
-		informationDetail.setNoAccessedUsersUrl(uriComponents.toString());
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.set("type", "not-information-viewers");
+		params.set("infoId", "");
+		informationDetail.setNoAccessedUsersUrl(
+				RequestBuilder.buildUriComponents("frontend", 
+						new StringBuilder()
+						.append("/search/users")
+						.toString(), provider, params).toString());
 		
 		model.addAttribute(informationDetail);
 		
@@ -1077,45 +968,33 @@ public class ServiceAdpaterController {
 		}
 
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-	
 		String serviceName = null;
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-		UriComponents uriComponents = null;
 		switch (userSearchCriteria.getType()){
 			case "not-information-viewers" :
 				serviceName = "management";
 				params.set("not-information-viewers", "");
 				params.set("infoId", userSearchCriteria.getInfoId());
-				uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/users")
-												.toString())
-										.queryParams(params)
-										.build();
 				return ResponseEntity.status(HttpStatus.OK).body(restTemplate.getForObject(
-					uriComponents.toUri(), UserSearchResult.class));
+						RequestBuilder.buildUriComponents(serviceName, 
+								new StringBuilder()
+								.append(APP_NAME)
+								.append("/users")
+								.toString(), provider, params)
+						.toUri(), UserSearchResult.class));
 			case "not-request-users" :
 				serviceName = "management";
 				params.set("not-request-users", "");
 				params.set("requestId", userSearchCriteria.getRequestId());
-				uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/users")
-												.toString())
-										.queryParams(params)
-										.build();
 				return ResponseEntity.status(HttpStatus.OK).body(restTemplate.getForObject(
-					uriComponents.toUri(), UserSearchResult.class));
+						RequestBuilder.buildUriComponents(serviceName, 
+								new StringBuilder()
+								.append(APP_NAME)
+								.append("/users")
+								.toString(), provider, params)
+						.toUri(), UserSearchResult.class));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userSearchResult);
-
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, value="/management/information/{information.infoId:[0-9]+}")
@@ -1131,27 +1010,20 @@ public class ServiceAdpaterController {
 		if(bindingResult.hasErrors()){
 			InformationDetail informationDetail = 
 					mapper.map(updateInformationForm, InformationDetail.class);
-			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-											.host(provider.getIpAddr("frontend"))
-											.port(provider.getPort("frontend"))
-											.path(new StringBuilder()
-													.append("/search/users?type=not-information-viewers&infoId=")
-													.toString())
-											.build();
-			informationDetail.setNoAccessedUsersUrl(uriComponents.toString());
-			uriComponentsBuilder = UriComponentsBuilder.newInstance();
-			uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-											.host(provider.getIpAddr("frontend"))
-											.port(provider.getPort("frontend"))
-											.path(new StringBuilder()
-													.append("/information/body/")
-													.append(informationDetail
-															.getInformation()
-															.getInfoId())
-													.toString())
-											.build();
-			informationDetail.setMessageBodyUrl(uriComponents.toString());
+			MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+			params.set("type", "not-information-viewers");
+			params.set("infoId", "");
+			informationDetail.setNoAccessedUsersUrl(
+					RequestBuilder.buildUriComponents("frontend", 
+							new StringBuilder()
+							.append("/search/users")
+							.toString(), provider, params).toString());
+			informationDetail.setMessageBodyUrl(
+					RequestBuilder.buildUriComponents("frontend", 
+							new StringBuilder()
+							.append("/information/body/{infoId}")
+							.toString(), provider)
+					.expand(informationDetail.getInformation().getInfoId()).toString());
 			model.addAttribute(informationDetail);
 			model.addAttribute(BindingResult.class.getName() + ".informationDetail", bindingResult);
 			return "/management/information/detail";
@@ -1160,22 +1032,17 @@ public class ServiceAdpaterController {
 		String serviceName = "management";
 		RestTemplate restTemplate = new RestTemplate();
 
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/information/")
-												.append(updateInformationForm.getInformation().getInfoId())
-												.toString())
-										.build();	
-		
 		try{
 
 			UpdateInformationResult updateInformationResult = 
-					restTemplate.exchange(uriComponents.toUri(), HttpMethod.PUT, 
-							new HttpEntity<UpdateInformationForm>(updateInformationForm), 
+					restTemplate.exchange(
+							RequestBuilder.buildUriComponents(serviceName, 
+									new StringBuilder()
+									.append(APP_NAME)
+									.append("/information/{infoId}")
+									.toString(), provider)
+							.expand(updateInformationForm.getInformation().getInfoId()).toUri(),
+							HttpMethod.PUT, new HttpEntity<UpdateInformationForm>(updateInformationForm), 
 							UpdateInformationResult.class).getBody();
 			
 			updateInformationResult.setBeforeMessageBody(
@@ -1225,21 +1092,16 @@ public class ServiceAdpaterController {
 		String serviceName = "management";
 
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/information/")
-											.append(deleteInformationForm.getInfoId())
-											.toString())
-									.build();
 		try{
 			InformationDetail informationDetail = InformationDetail
 					.builder()
 					.information(restTemplate.exchange(
-						uriComponents.toUri(), HttpMethod.DELETE, 
+							RequestBuilder.buildUriComponents(serviceName, 
+									new StringBuilder()
+									.append(APP_NAME)
+									.append("/information/{infoId}")
+									.toString(), provider)
+							.expand(deleteInformationForm.getInfoId()).toUri(), HttpMethod.DELETE, 
 						new HttpEntity<DeleteInformationForm>(deleteInformationForm), 
 						org.debugroom.wedding.domain.entity.Information.class).getBody())
 					.build();
@@ -1277,18 +1139,12 @@ public class ServiceAdpaterController {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 	    params.set("page", Integer.toString(pageParam.getPage()));
 	    params.set("size", Integer.toString(pageParam.getSize()));
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/")
-												.append("requests")
-												.toString())
-										.queryParams(params)
-										.build();
-		Page<Request> page = restTemplate.getForObject(uriComponents.toUri(), RequestPageImpl.class);
+		Page<Request> page = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/requests")
+						.toString(), provider, params).toUri(), RequestPageImpl.class);
 		model.addAttribute("page", page);
 
 		return "management/request/portal";
@@ -1298,17 +1154,12 @@ public class ServiceAdpaterController {
 	public String newRequestForm(Model model){
 		String serviceName = "management";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/form")
-												.toString())
-										.build();
 		model.addAttribute("users", restTemplate.getForObject(
-				uriComponents.toUri(), RequestFormResource.class).getUsers());
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/request/form")
+						.toString(), provider).toUri(), RequestFormResource.class).getUsers());
 		return "management/request/form";
 	}
 
@@ -1327,18 +1178,12 @@ public class ServiceAdpaterController {
 		}
 
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/draft/new")
-												.toString())
-										.build();
-
 		RequestDraft requestDraft = restTemplate.postForObject(
-				uriComponents.toUri(), newRequestForm, RequestDraft.class);
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/request/draft/new")
+						.toString(), provider).toUri(), newRequestForm, RequestDraft.class);
 		requestDraft.getRequest().setRequestContents(newRequestForm.getRequestContents());
 		model.addAttribute(requestDraft);
 		
@@ -1365,37 +1210,28 @@ public class ServiceAdpaterController {
 		String serviceName = "management";
 	
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/")
-												.append(newRequestForm.getRequestId())
-												.toString())
-										.build();
 
 		Request request = restTemplate.postForObject(
-				uriComponents.toUri(), newRequestForm, Request.class);
-		
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-											.host(provider.getIpAddr(serviceName))
-											.port(provider.getPort(serviceName))
-											.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/body/")
-												.append(newRequestForm.getRequestId())
-												.toString())
-										.build();
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/request/{requestId}")
+						.toString(), provider)
+				.expand(newRequestForm.getRequestId()).toUri(), 
+				newRequestForm, Request.class);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 
 		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
 
-		String requestContents = restTemplate.exchange(uriComponents.toUri(), 
+		String requestContents = restTemplate.exchange(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/request/body/{requestId}")
+						.toString(), provider)
+				.expand(newRequestForm.getRequestId()).toUri(),
 				HttpMethod.GET, httpEntity, String.class).getBody();
 		request.setRequestContents(requestContents);
 
@@ -1424,50 +1260,36 @@ public class ServiceAdpaterController {
 		String serviceName = "management";
 		
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/")
-												.append(requestDetailForm.getRequestId())
-												.toString())
-										.build();
 		RequestDetail requestDetail = restTemplate.getForObject(
-				uriComponents.toUri(), RequestDetail.class);
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/request/{requestId}")
+						.toString(), provider)
+				.expand(requestDetailForm.getRequestId()).toUri(), RequestDetail.class);
 
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/body/")
-												.append(requestDetailForm.getRequestId())
-												.toString())
-										.build();
-		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 
 		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
 
 		requestDetail.getRequest().setRequestContents(
-				restTemplate.exchange(uriComponents.toUri(), 
+				restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/request/body/{requestId}")
+						.toString(), provider)
+					.expand(requestDetailForm.getRequestId()).toUri(), 
 				HttpMethod.GET, httpEntity, String.class).getBody());
 		
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr("frontend"))
-										.port(provider.getPort("frontend"))
-										.path(new StringBuilder()
-												.append("/search/users?type=not-request-users&requestId=")
-												.toString())
-										.build();
-		
-		requestDetail.setNotRequestUsersUrl(uriComponents.toString());
-		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.set("type", "not-request-users");
+		params.set("requestId", "");
+		requestDetail.setNotRequestUsersUrl(
+				RequestBuilder.buildUriComponents("frontend", 
+					new StringBuilder()
+					.append("/search/users")
+					.toString(), provider, params).toString());
 		model.addAttribute(requestDetail);
 		
 		if("detail".equals(requestDetailForm.getType())){
@@ -1487,18 +1309,16 @@ public class ServiceAdpaterController {
 					PageParam.builder().page(0).size(10).build(), bindingResult, model);
 		}
 
-
 		if(bindingResult.hasErrors()){
 			RequestDetail requestDetail = mapper.map(updateRequestForm, RequestDetail.class);
-			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr("frontend"))
-										.port(provider.getPort("frontend"))
-										.path(new StringBuilder()
-												.append("/search/users?type=not-request-users&requestId=")
-												.toString())
-										.build();
-			requestDetail.setNotRequestUsersUrl(uriComponents.toString());
+			MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+			params.set("type", "not-request-users");
+			params.set("requestId", "");
+			requestDetail.setNotRequestUsersUrl(
+					RequestBuilder.buildUriComponents("frontend", 
+							new StringBuilder()
+							.append("/search/users")
+							.toString(), provider, params).toString());
 			model.addAttribute(requestDetail);
 			model.addAttribute(BindingResult.class.getName() + ".requestDetail", bindingResult);
 			return "/management/request/detail";
@@ -1506,42 +1326,29 @@ public class ServiceAdpaterController {
 
 		String serviceName = "management";
 		RestTemplate restTemplate = new RestTemplate();
-
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/body/")
-												.append(updateRequestForm.getRequest().getRequestId())
-												.toString())
-										.build();	
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 
 		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
 
-		String beforeRequestContents = restTemplate.exchange(uriComponents.toUri(), 
+		String beforeRequestContents = restTemplate.exchange(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/request/body/{requestId}")
+						.toString(), provider)
+				.expand(updateRequestForm.getRequest().getRequestId()).toUri(),
 				HttpMethod.GET, httpEntity, String.class).getBody();
-	
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/")
-												.append(updateRequestForm.getRequest().getRequestId())
-												.toString())
-										.build();	
-		
 		try{
-
 			UpdateRequestResult updateRequestResult = 
-					restTemplate.exchange(uriComponents.toUri(), HttpMethod.PUT, 
-							new HttpEntity<UpdateRequestForm>(updateRequestForm), 
+					restTemplate.exchange(
+							RequestBuilder.buildUriComponents(serviceName, 
+									new StringBuilder()
+									.append(APP_NAME)
+									.append("/request/{requestId}")
+									.toString(), provider)
+							.expand(updateRequestForm.getRequest().getRequestId()).toUri(), 
+							HttpMethod.PUT, new HttpEntity<UpdateRequestForm>(updateRequestForm), 
 							UpdateRequestResult.class).getBody();
 
 			updateRequestResult.getBeforeEntity().getRequest()
@@ -1561,7 +1368,6 @@ public class ServiceAdpaterController {
 				.append(updateRequestForm.getRequest().getRequestId())
 				.append("?complete")
 				.toString();
-
 	}
 	
 	@RequestMapping(method=RequestMethod.GET, 
@@ -1584,62 +1390,47 @@ public class ServiceAdpaterController {
 		}
 		
 		String serviceName = "management";
-
 		RestTemplate restTemplate = new RestTemplate();
-		
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/request/body/")
-												.append(deleteRequestForm.getRequestId())
-												.toString())
-										.build();	
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
-
 		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
 
-		String deleteRequestContents = restTemplate.exchange(uriComponents.toUri(), 
+		String deleteRequestContents = restTemplate.exchange(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/request/body/{requestId}")
+						.toString(), provider)
+				.expand(deleteRequestForm.getRequestId()).toUri(),
 				HttpMethod.GET, httpEntity, String.class).getBody();
 
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/request/")
-											.append(deleteRequestForm.getRequestId())
-											.toString())
-									.build();
 		try{
 			RequestDetail requestDetail = RequestDetail
 					.builder()
 					.request(restTemplate.exchange(
-						uriComponents.toUri(), HttpMethod.DELETE, 
-						new HttpEntity<DeleteRequestForm>(deleteRequestForm), 
+							RequestBuilder.buildUriComponents(serviceName, 
+									new StringBuilder()
+									.append(APP_NAME)
+									.append("/request/{requestId}")
+									.toString(), provider)
+							.expand(deleteRequestForm.getRequestId()).toUri(), 
+							HttpMethod.DELETE, new HttpEntity<DeleteRequestForm>(deleteRequestForm), 
 						org.debugroom.wedding.app.model.management.request.Request.class)
 						.getBody())
 					.build();
 			requestDetail.getRequest().setRequestContents(deleteRequestContents);
 			redirectAttributes.addFlashAttribute(requestDetail);
-		
 		} catch (Exception e){
 			//TODO Using Business Exception for serverside error.
 			model.addAttribute("errorCode", "");
 			return "common/error";
 		}
-
 		return new StringBuilder()
 					.append("redirect:")
 					.append(deleteRequestForm.getRequestId())
 					.append("?complete")
 					.toString();
-
 	}
 
 	@RequestMapping(method=RequestMethod.GET,
@@ -1651,21 +1442,21 @@ public class ServiceAdpaterController {
 
 	
 	@RequestMapping(method=RequestMethod.GET, value="/gallery/{userId:[0-9]+}")
-	public String gallery(@PathVariable String userId, Model model){
-
+	public String gallery(@PathVariable String userId, Model model,
+			@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		if(!userId.equals(customUserDetails.getUser().getUserId())){
+			model.addAttribute("errorCode", "9000");
+			return "common/error";
+		}
 		String serviceName = "gallery";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/portal/")
-												.append(userId)
-												.toString())
-										.build();
-		model.addAttribute(restTemplate.getForObject(uriComponents.toUri(), 
+		model.addAttribute("user", customUserDetails.getUser());
+		model.addAttribute(restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/portal/{userId}")
+						.toString(), provider).expand(userId).toUri(),
 				GalleryPortalResource.class));
 		return "gallery/portal";
 	}
@@ -1681,17 +1472,13 @@ public class ServiceAdpaterController {
 		}
 		String serviceName = "gallery";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/photo/")
-												.append(photo.getPhotoId())
-												.toString())
-										.build();
-		Photo target = restTemplate.getForObject(uriComponents.toUri(), Photo.class);
+		Photo target = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/photo/{photoId}")
+						.toString(), provider)
+				.expand(photo.getPhotoId()).toUri(), Photo.class);
 		BufferedImage image = null;
 		try {
 			image = downloadHelper.getGalleryThumbnailImage(target);
@@ -1711,17 +1498,13 @@ public class ServiceAdpaterController {
 		}
 		String serviceName = "gallery";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/photo/")
-												.append(photo.getPhotoId())
-												.toString())
-										.build();
-		Photo target = restTemplate.getForObject(uriComponents.toUri(), Photo.class);		
+		Photo target = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/photo/{photoId}")
+						.toString(), provider)
+				.expand(photo.getPhotoId()).toUri(), Photo.class);		
 		
 		BufferedImage image = null;
 		try {
@@ -1768,25 +1551,16 @@ public class ServiceAdpaterController {
 
 		String serviceName = "gallery";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/folder/")
-												.append(folder.getFolderId())
-												.append("/photographs")
-												.toString())
-										.build();
-
-		Photo[] photographs = restTemplate.getForObject(uriComponents.toUri(), Photo[].class);
+		Photo[] photographs = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/folder/{folderId}/photographs")
+						.toString(), provider)
+				.expand(folder.getFolderId()).toUri(), Photo[].class);
 		photoSearchResult.setPhotographs(Arrays.asList(photographs));
-		
 		photoSearchResult.setRequestContextPath(getFrontendServerUri().toString());
-	
 		return ResponseEntity.status(HttpStatus.OK).body(photoSearchResult);
-
 	}
 
 	@RequestMapping(method=RequestMethod.GET, value="/gallery/movies/{folderId}")
@@ -1803,25 +1577,18 @@ public class ServiceAdpaterController {
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(movieSearchResult);
 		}
-		
 		String serviceName = "gallery";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/folder/")
-												.append(folder.getFolderId())
-												.append("/movies")
-												.toString())
-										.build();		
-		Movie[] movies = restTemplate.getForObject(uriComponents.toUri(), Movie[].class);
+		Movie[] movies = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/folder/{folderId}/movies")
+						.toString(), provider)
+				.expand(folder.getFolderId()).toUri(), Movie[].class);
 		movieSearchResult.setMovies(Arrays.asList(movies));
 		movieSearchResult.setRequestContextPath(getFrontendServerUri().toString());
 		return ResponseEntity.status(HttpStatus.OK).body(movieSearchResult);
-		
 	}
 
 	@RequestMapping(method=RequestMethod.GET, value="/gallery/folder/viewers/{folderId}")
@@ -1842,19 +1609,13 @@ public class ServiceAdpaterController {
 
 		String serviceName = "gallery";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/folder/")
-												.append(userSearchCriteria.getFolderId())
-												.append("/viewers")
-												.toString())
-										.build();
-		
-		User[] users = restTemplate.getForObject(uriComponents.toUri(), User[].class);
+		User[] users = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/folder/{folderId}/viewers")
+						.toString(), provider)
+				.expand(userSearchCriteria.getFolderId()).toUri(), User[].class);
 		userSearchResult.setUsers(Arrays.asList(users));
 
 		return ResponseEntity.status(HttpStatus.OK).body(userSearchResult);
@@ -1879,19 +1640,13 @@ public class ServiceAdpaterController {
 
 		String serviceName = "gallery";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/folder/")
-												.append(userSearchCriteria.getFolderId())
-												.append("/no-viewers")
-												.toString())
-										.build();
-
-		User[] users = restTemplate.getForObject(uriComponents.toUri(), User[].class);
+		User[] users = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/folder/{folderId}/no-viewers")
+						.toString(), provider)
+				.expand(userSearchCriteria.getFolderId()).toUri(), User[].class);
 		userSearchResult.setUsers(Arrays.asList(users));
 
 		return ResponseEntity.status(HttpStatus.OK).body(userSearchResult);
@@ -1900,6 +1655,7 @@ public class ServiceAdpaterController {
 	@RequestMapping(method=RequestMethod.POST, value="/gallery/folder/new",
 			consumes={MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<CreateFolderResult> createFolder(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
 			@Validated(CreateFolder.class) @RequestBody CreateFolderForm createFolderForm,
 			BindingResult bindingResult){
 		
@@ -1918,30 +1674,21 @@ public class ServiceAdpaterController {
 		String serviceName = "gallery";
 	
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/folder/new")
-												.toString())
-										.build();
-
 		//TODO setUserId form http session.
-		createFolderForm.setUserId("00000001");
-		
+		createFolderForm.setUserId(customUserDetails.getUser().getUserId());
 		createFolderResult.setFolder(restTemplate.postForObject(
-				uriComponents.toUri(), createFolderForm, Folder.class));
-
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/folder/new")
+						.toString(), provider).toUri(), createFolderForm, Folder.class));
 		createFolderResult.setRequestContextPath(getFrontendServerUri().toString());
-		
 		return ResponseEntity.status(HttpStatus.OK).body(createFolderResult);
-		
 	}
 
 	@RequestMapping(method=RequestMethod.PUT, value="/gallery/folders/{folderId}")
 	public ResponseEntity<UpdateFolderResult> updateFolder(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
 			@Validated(UpdateFolder.class) @RequestBody UpdateFolderForm updateFolderForm,
 			BindingResult bindingResult){
 		
@@ -1958,30 +1705,20 @@ public class ServiceAdpaterController {
 		}
 		
 		String serviceName = "gallery";
-	
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/folder/")
-												.append(updateFolderForm.getFolder().getFolderId())
-												.toString())
-										.build();
-
 		//TODO setUserId form http session.
-		updateFolderForm.setUserId("00000001");
-		
-		updateFolderResult.setFolder(restTemplate.exchange(uriComponents.toUri(), 
+		updateFolderForm.setUserId(customUserDetails.getUser().getUserId());
+		updateFolderResult.setFolder(restTemplate.exchange(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/folder/{folderId}")
+						.toString(), provider)
+				.expand(updateFolderForm.getFolder().getFolderId()).toUri(),
 				HttpMethod.PUT, new HttpEntity<UpdateFolderForm>(updateFolderForm), 
 				Folder.class).getBody());
-
 		updateFolderResult.setRequestContextPath(getFrontendServerUri().toString());
-		
 		return ResponseEntity.status(HttpStatus.OK).body(updateFolderResult);
-
 	}
 
 	@RequestMapping(method=RequestMethod.DELETE, value="/gallery/folders/{folderId}")
@@ -1999,27 +1736,18 @@ public class ServiceAdpaterController {
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(deleteFolderResult);
 		}
-	
 		String serviceName = "gallery";
-
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/folder/")
-											.append(deleteFolderForm.getFolderId())
-											.toString())
-									.build();
-
-		deleteFolderResult.setFolder(restTemplate.exchange(uriComponents.toUri(), 
+		deleteFolderResult.setFolder(restTemplate.exchange(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/folder/{folderId}")
+						.toString(), provider)
+				.expand(deleteFolderForm.getFolderId()).toUri(),
 				HttpMethod.DELETE, new HttpEntity<DeleteFolderForm>(deleteFolderForm), 
 				Folder.class).getBody());
-		
 		return ResponseEntity.status(HttpStatus.OK).body(deleteFolderResult);
-		
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,
@@ -2038,6 +1766,7 @@ public class ServiceAdpaterController {
 
 	@RequestMapping(method=RequestMethod.POST, value="/gallery/upload")
 	public ResponseEntity<UploadFileResult> uploadFile(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
 			@Validated UploadFileForm uploadFileForm, BindingResult bindingResult){
 		
 		UploadFileResult uploadFileResult = new UploadFileResult();
@@ -2049,28 +1778,21 @@ public class ServiceAdpaterController {
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uploadFileResult);
 		}
-		
 		MultipartFile multipartFile = uploadFileForm.getUploadFile();
-		
 		try {
 			//TODO get Userid from session.
 			Media media = galleryContentsUploadHelper.createMedia(
-					multipartFile, "00000001", uploadFileForm.getFolderId());
+					multipartFile, customUserDetails.getUser().getUserId(), 
+					uploadFileForm.getFolderId());
 
 			String serviceName = "gallery";
-
 			RestTemplate restTemplate = new RestTemplate();
-			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-			UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/media/new")
-											.toString())
-									.build();
 			uploadFileResult.setMedia(restTemplate.postForObject(
-					uriComponents.toUri(), media, Media.class));
+					RequestBuilder.buildUriComponents(serviceName, 
+							new StringBuilder()
+							.append(APP_NAME)
+							.append("/media/new")
+							.toString(), provider).toUri(), media, Media.class));
 			uploadFileResult.setRequestContextPath(getFrontendServerUri().toString());
 		} catch (BusinessException e) {
 			List<String> messages = new ArrayList<String>();
@@ -2078,7 +1800,6 @@ public class ServiceAdpaterController {
 			messages.add(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uploadFileResult);
 		}
-		
 		return ResponseEntity.status(HttpStatus.OK).body(uploadFileResult);
 	}
 	
@@ -2099,42 +1820,30 @@ public class ServiceAdpaterController {
 		}
 
 		String serviceName = "gallery";
-
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = null;
-		UriComponents uriComponents = null;
-		
 		List<Photo> photographs = new ArrayList<Photo>();
 		deleteMediaResult.setPhotographs(photographs);
 		List<Movie> movies = new ArrayList<Movie>();
 		deleteMediaResult.setMovies(movies);
 		for(Photo photo : deleteMediaForm.getPhotographs()){
-			uriComponentsBuilder = UriComponentsBuilder.newInstance();
-			uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/photo/")
-											.append(photo.getPhotoId())
-											.toString())
-									.build();
 			photographs.add(restTemplate.exchange(
-					uriComponents.toUri(), HttpMethod.DELETE, null, Photo.class).getBody());
+					RequestBuilder.buildUriComponents(serviceName, 
+							new StringBuilder()
+							.append(APP_NAME)
+							.append("/photo/{photoId}")
+							.toString(), provider)
+					.expand(photo.getPhotoId()).toUri(), 
+					HttpMethod.DELETE, null, Photo.class).getBody());
 		}
 		for(Movie movie: deleteMediaForm.getMovies()){
-			uriComponentsBuilder = UriComponentsBuilder.newInstance();
-			uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-									.host(provider.getIpAddr(serviceName))
-									.port(provider.getPort(serviceName))
-									.path(new StringBuilder()
-											.append(APP_NAME)
-											.append("/movie/")
-											.append(movie.getMovieId())
-											.toString())
-									.build();
 			movies.add(restTemplate.exchange(
-					uriComponents.toUri(), HttpMethod.DELETE, null, Movie.class).getBody());
+						RequestBuilder.buildUriComponents(serviceName, 
+							new StringBuilder()
+							.append(APP_NAME)
+							.append("/movie/{movieId}")
+							.toString(), provider)
+					.expand(movie.getMovieId()).toUri(), 
+					HttpMethod.DELETE, null, Movie.class).getBody());
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(deleteMediaResult);
 	}
@@ -2152,38 +1861,24 @@ public class ServiceAdpaterController {
 			}
 			throw new FileDownloadException(messages);
 		}
-		
+
 		String serviceName = "gallery-batch";
-		
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-				.host(provider.getIpAddr(serviceName))
-				.port(provider.getPort(serviceName))
-				.path(new StringBuilder()
+		String accessKey = restTemplate.postForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
 						.append(APP_NAME)
 						.append("/gallery/archive")
-						.toString())
-				.build();
-		
-		String accessKey = restTemplate.postForObject(
-				uriComponents.toUri(), downloadMediaForm, String.class);
+						.toString(), provider).toUri(), downloadMediaForm, String.class);
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 	    params.set("accessKey", accessKey);
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-				.host(provider.getIpAddr(serviceName))
-				.port(provider.getPort(serviceName))
-				.path(new StringBuilder()
+		return ResponseEntity.ok().body(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
 						.append(APP_NAME)
 						.append("/gallery/archive")
-						.toString())
-				.queryParams(params)
-				.build();
-		
-
-		return ResponseEntity.ok().body(uriComponents.toString());
-
+						.toString(), provider, params).toString()
+				);
 	}
 	
 	@ExceptionHandler(FileDownloadException.class)
@@ -2201,20 +1896,14 @@ public class ServiceAdpaterController {
 			return "common/error";
 		}
 		String serviceName = "gallery-distribution";
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/movie/preview/")
-												.append(movie.getMovieId())
-												.append("/")
-												.append(fileName)
-												.toString())
-										.build();		
 		return new StringBuilder().append("redirect:")
-				.append(uriComponents.toString())
+				.append(RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/movie/preview/{movieId}/")
+						.append(fileName)
+						.toString(), provider)
+						.expand(movie.getMovieId()).toString())
 				.toString();
 	} 
 	
@@ -2229,17 +1918,13 @@ public class ServiceAdpaterController {
 		}
 		String serviceName = "gallery";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/movie/")
-												.append(movie.getMovieId())
-												.toString())
-										.build();
-		Movie target = restTemplate.getForObject(uriComponents.toUri(), Movie.class);
+		Movie target = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/movie/{movieId}")
+						.toString(), provider)
+				.expand(movie.getMovieId()).toUri(), Movie.class);
 		BufferedImage image = null;
 		try {
 			image = downloadHelper.getGalleryThumbnailImage(target);
@@ -2249,23 +1934,22 @@ public class ServiceAdpaterController {
 		return ResponseEntity.ok().body(image);
 	}
 	
-	@RequestMapping(method=RequestMethod.GET, value="/chat/{userId:[0-9]+}")
-	public String chat(@PathVariable String userId, Model model){
-		
+	@RequestMapping(method=RequestMethod.GET, value="/chat/portal/{userId:[0-9]+}")
+	public String chat(@PathVariable String userId, Model model,
+			@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		if(!userId.equals(customUserDetails.getUser().getUserId())){
+			model.addAttribute("errorCode", "9000");
+			return "common/error";
+		}
 		String serviceName = "message";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/portal/")
-												.append(userId)
-												.toString())
-										.build();
 		model.addAttribute(restTemplate.getForObject(
-				uriComponents.toUri(), ChatPortalResource.class));
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/portal/{userId}")
+						.toString(), provider)
+				.expand(userId).toUri(), ChatPortalResource.class));
 		return "chat/portal";
 	}
 
@@ -2285,18 +1969,13 @@ public class ServiceAdpaterController {
 		}
 		String serviceName = "message";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/messages/")
-												.append(messageBoard.getMessageBoardId())
-												.toString())
-										.build();
 		getMessagesResult.setMessages(Arrays.asList(restTemplate.getForObject(
-				uriComponents.toUri(), Message[].class)));
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/messages/{messageBoardId}")
+						.toString(), provider)
+				.expand(messageBoard.getMessageBoardId()).toUri(), Message[].class)));
 		return ResponseEntity.status(HttpStatus.OK).body(getMessagesResult);
 
 	}
@@ -2305,16 +1984,12 @@ public class ServiceAdpaterController {
 	public ResponseEntity<UserSearchResult> chatUsers(){
 		String serviceName = "message";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/users")
-												.toString())
-										.build();
-		User[] users = restTemplate.getForObject(uriComponents.toUri(), User[].class);
+		User[] users = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/users")
+						.toString(), provider).toUri(), User[].class);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(UserSearchResult.builder().users(
 						Arrays.asList(users)).build());
@@ -2322,10 +1997,11 @@ public class ServiceAdpaterController {
 	
 	@RequestMapping(method=RequestMethod.POST, value="/chat/group/new")
 	public ResponseEntity<AddMessageBoardResult> addGroup(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
 			@RequestBody @Validated Group group, BindingResult bindingResult){
 		
 		AddMessageBoardResult addMessageBoardResult = AddMessageBoardResult
-				.builder().userId("00000000").build();
+				.builder().userId(customUserDetails.getUser().getUserId()).build();
 
 		if(bindingResult.hasErrors()){
 			List<String> messages = new ArrayList<String>();
@@ -2338,22 +2014,14 @@ public class ServiceAdpaterController {
 		
 		String serviceName = "message";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/message-board/new")
-												.toString())
-										.build();
-		
 		addMessageBoardResult.setMessageBoard(restTemplate.postForObject(
-			uriComponents.toUri(), group, MessageBoard.class));
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/message-board/new")
+						.toString(), provider).toUri(), group, MessageBoard.class));
 		addMessageBoardResult.setRequestContextPath(getFrontendServerUri().toString());
-
 		return ResponseEntity.status(HttpStatus.OK).body(addMessageBoardResult);
-
 	}
 
 	@RequestMapping(method=RequestMethod.GET, 
@@ -2366,48 +2034,35 @@ public class ServiceAdpaterController {
 		
 		String serviceName = "message";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/message-board/")
-												.append(messageBoardId)
-												.toString())
-										.build();
-		
 		updateMessageBoardResource.setMessageBoard(
-				restTemplate.getForObject(uriComponents.toUri(), MessageBoard.class));
-	
-		uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/message-board/")
-												.append(messageBoardId)
-												.append("/not-users")
-												.toString())
-										.build();
-		
+				restTemplate.getForObject(
+						RequestBuilder.buildUriComponents(serviceName, 
+								new StringBuilder()
+								.append(APP_NAME)
+								.append("/message-board/{messageBoardId}")
+								.toString(), provider)
+						.expand(messageBoardId).toUri(), MessageBoard.class));
 		updateMessageBoardResource.setNotBelongUsers(Arrays.asList(
-				restTemplate.getForObject(uriComponents.toUri(), 
+				restTemplate.getForObject(
+						RequestBuilder.buildUriComponents(serviceName, 
+								new StringBuilder()
+								.append(APP_NAME)
+								.append("/message-board/{messageBoardId}/not-users")
+								.toString(), provider)
+						.expand(messageBoardId).toUri(),
 						org.debugroom.wedding.app.model.message.User[].class)));
-	
 		return ResponseEntity.status(HttpStatus.OK).body(updateMessageBoardResource);
-
 	}
 
 	@RequestMapping(method=RequestMethod.POST, value="/chat/update/message-board/{messageBoardId:[0-9]+}")
 	public ResponseEntity<UpdateMessageBoardResult> updateMessageBoard(
 			@PathVariable String messageBoardId, 
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
 			@RequestBody @Validated UpdateMessageBoardForm updateMessageBoardForm,
 			BindingResult bindingResult){
 		
 		UpdateMessageBoardResult updateMessageBoardResult = UpdateMessageBoardResult
-				.builder().userId("00000000").build();
+				.builder().userId(customUserDetails.getUser().getUserId()).build();
 
 		if(bindingResult.hasErrors()){
 			List<String> messages = new ArrayList<String>();
@@ -2416,30 +2071,21 @@ public class ServiceAdpaterController {
 				messages.add(fieldError.getDefaultMessage());
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(updateMessageBoardResult);
-			
 		}
 		
 		String serviceName = "message";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/message-board/")
-												.append(messageBoardId)
-												.toString())
-										.build();
-		
 		updateMessageBoardResult.setMessageBoard(restTemplate.exchange(
-				uriComponents.toUri(), HttpMethod.PUT, 
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/message-board/{messageBoardId}")
+						.toString(), provider)
+				.expand(messageBoardId).toUri(), HttpMethod.PUT, 
 				new HttpEntity<UpdateMessageBoardForm>(updateMessageBoardForm), 
 				MessageBoard.class).getBody());
 		updateMessageBoardResult.setRequestContextPath(getFrontendServerUri().toString());
-		
 		return ResponseEntity.status(HttpStatus.OK).body(updateMessageBoardResult);
-
 	}
 
 	@RequestMapping(method=RequestMethod.DELETE, 
@@ -2452,23 +2098,16 @@ public class ServiceAdpaterController {
 	
 		String serviceName = "message";
 		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-										.host(provider.getIpAddr(serviceName))
-										.port(provider.getPort(serviceName))
-										.path(new StringBuilder()
-												.append(APP_NAME)
-												.append("/message-board/")
-												.append(messageBoardId)
-												.toString())
-										.build();
-		
 		deleteMessageBoardResult.setMessageBoard(
-				restTemplate.exchange(uriComponents.toUri(), HttpMethod.DELETE, 
+				restTemplate.exchange(
+						RequestBuilder.buildUriComponents(serviceName, 
+								new StringBuilder()
+								.append(APP_NAME)
+								.append("/message-board/{messageBoardId}")
+								.toString(), provider)
+						.expand(messageBoardId).toUri(), HttpMethod.DELETE, 
 						null, MessageBoard.class).getBody());
-		
 		return ResponseEntity.status(HttpStatus.OK).body(deleteMessageBoardResult);
-		
 	}
 	
 	private URI getFrontendServerUri(){

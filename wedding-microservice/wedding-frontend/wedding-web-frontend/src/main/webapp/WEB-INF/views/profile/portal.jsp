@@ -75,7 +75,11 @@
                       <form:hidden path="loginId"/><br>
                       <form:errors path="loginId" cssStyle="color:red" />
                     </td>
-                    <td><button id="user.loginId-button" name="user.loginId-button" type="button" value="user.loginId" >変更</button></td>
+                    <td>
+<!--  
+                    <button id="user.loginId-button" name="user.loginId-button" type="button" value="user.loginId" >変更</button>
+-->
+                    </td>
                   </tr>
                   <tr>
                     <td><form:label path="address.postCd">郵便番号</form:label> : </td>

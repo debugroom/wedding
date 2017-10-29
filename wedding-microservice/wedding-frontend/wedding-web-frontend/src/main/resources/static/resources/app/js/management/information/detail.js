@@ -80,8 +80,8 @@ function updateParam(event){
 	addWarningMessage(event, updateRootNode);
 
 	if(inputItem.id == "information.releaseDate-edit"){
-		var reg = /[¥/]/g;
-		inputItem.value = inputItem.value.replace(reg, "-");
+		var reg = /[¥-]/g;
+		inputItem.value = inputItem.value.replace(reg, "/");
 	}
 
 	document.getElementById(event.currentTarget.name).value = inputItem.value;

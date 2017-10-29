@@ -91,6 +91,15 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 				.append(properties.getMessageServicePort())
 				.toString());
 
+		List<String> loginServicePathList = new ArrayList<String>();
+		pathMap.put(properties.getLoginServiceName(),loginServicePathList);
+		loginServicePathList.add(new StringBuilder()
+				.append(properties.getLoginServiceAddr())
+				.append(":")
+				.append(properties.getLoginServicePort())
+				.toString());
+
+
 		return pathMap;
 
 	}
@@ -135,6 +144,9 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		ipAddrMap.put(properties.getMessageServiceName(), messageServiceIpAddrList);
 		messageServiceIpAddrList.add(properties.getMessageServiceAddr());
 
+		List<String> loginServiceIpAddrList = new ArrayList<String>();
+		ipAddrMap.put(properties.getLoginServiceName(), loginServiceIpAddrList);
+		loginServiceIpAddrList.add(properties.getLoginServiceAddr());
 		return ipAddrMap;
 	}
 
@@ -177,6 +189,10 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 		List<String> messageServicePortList = new ArrayList<String>();
 		portMap.put(properties.getMessageServiceName(), messageServicePortList);
 		messageServicePortList.add(properties.getMessageServicePort());
+
+		List<String> loginServicePortList = new ArrayList<String>();
+		portMap.put(properties.getLoginServiceName(), loginServicePortList);
+		loginServicePortList.add(properties.getLoginServicePort());
 
 		return portMap;
 

@@ -9,9 +9,15 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
 public class RequestBuilder {
 
-	private static final String PROTOCOL = "http://";
+	private static final String PROTOCOL = "http";
+	private static final String APP_NAME = "api/v1";
 	
 	public static String getGetRequest(
 			String path, String appName, String serviceName, 
@@ -87,5 +93,32 @@ public class RequestBuilder {
 		return new URI(url.getProtocol(), url.getUserInfo(), url.getHost(),
 						url.getPort(), request.getContextPath(),null, null)
 					.toString();
+	}
+	
+	public static UriComponents buildUriComponents(
+			String serviceName, String path, ConnectPathProvider provider){
+
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+
+		return uriComponentsBuilder.scheme(PROTOCOL)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(path)
+				.build();
+	
+	}
+
+	public static UriComponents buildUriComponents(
+			String serviceName, String path, ConnectPathProvider provider, 
+			MultiValueMap<String, String> params){
+		
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
+
+		return uriComponentsBuilder.scheme(PROTOCOL)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(path)
+				.queryParams(params)
+				.build();
 	}
 }

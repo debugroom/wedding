@@ -30,9 +30,11 @@ public class User implements Serializable{
 	private String userId;
 	@NotNull
 	@Size(min=1, max=50)
+	@Pattern(regexp="^[^ =#$%&./<>?¥^¥~¥[¥]¥¥]+$")
 	private String lastName;
 	@NotNull
 	@Size(min=1, max=50)
+	@Pattern(regexp="^[^ =#$%&./<>?¥^¥~¥[¥]¥¥]+$")
 	private String firstName;
 	@NotNull
 	@Size(min=1, max=1024)

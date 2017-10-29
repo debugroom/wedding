@@ -23,7 +23,9 @@ public class AddUserInfoInterceptor extends HandlerInterceptorAdapter{
 				modelAndView.addObject(User
 						.builder()
 						.userId("00000000")
-						.authorityLevel(9)
+						.lastName("anonymous")
+						.firstName("user")
+						.authorityLevel(0)
 						.build());
 			}
 		}
