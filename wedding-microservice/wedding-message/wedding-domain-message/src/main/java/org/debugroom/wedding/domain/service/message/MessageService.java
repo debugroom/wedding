@@ -23,6 +23,7 @@ public interface MessageService {
 	public Message saveMessage(Message message);
 	public Message updateMessage(Message message);
 	public Message deleteMessage(Message message);
+	public void deleteMessages(MessageBoard messageBoard);
 	public User saveUser(User user);
 	public User updateUser(User user);
 	public User deleteUser(User user);

@@ -387,6 +387,7 @@ public class MessageServiceImpl implements MessageService{
 				.build());
 		
 		groupRepository.delete(deleteGroup);
+		deleteMessages(deleteMessageBoard);
 		messageBoardRepository.delete(deleteMessageBoard);
 		
 		return deleteMessageBoard;
@@ -448,4 +449,10 @@ public class MessageServiceImpl implements MessageService{
 		return null;
 	}
 
+	@Override
+	public void deleteMessages(MessageBoard messageBoard) {
+		List<Message> messages = messageRepository
+				.findByMessagepkMessageBoardId(messageBoard.getMessageBoardId());
+		messageRepository.delete(messages);
+	}
 }

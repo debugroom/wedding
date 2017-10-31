@@ -20,7 +20,7 @@
 <script type="text/javascript" 
     src="${pageContext.request.contextPath}/static/resources/app/js/profile/portal.js"></script>
 </head>
-<body>
+<body class="back-img">
   <c:import url="/WEB-INF/views/common/header.jsp" />
   <article>
     <div id="flex-container">

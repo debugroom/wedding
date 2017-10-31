@@ -20,7 +20,7 @@
 <script type="text/javascript" src="/webjars/sockjs-client/sockjs.js"></script>
 <script type="text/javascript" src="/webjars/stomp-websocket/stomp.js"></script>
 </head>
-<body>
+<body class="back-img">
   <c:import url="/WEB-INF/views/common/header.jsp" />
   <c:import url="/WEB-INF/views/common/lined-menu.jsp" />
   <div id="flex-container">

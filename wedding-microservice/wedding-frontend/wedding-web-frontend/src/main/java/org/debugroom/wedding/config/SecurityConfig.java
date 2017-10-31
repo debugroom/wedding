@@ -34,14 +34,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.authorizeRequests()
 			.antMatchers("/favicon.ico").permitAll()
 			.antMatchers("/webjars/**").permitAll()
-/*
-			.antMatchers("/portal/**").permitAll()
 			.antMatchers("/information/**").permitAll()
-			.antMatchers("/profile/**").permitAll()
-			.antMatchers("/management/**").permitAll()
 			.antMatchers("/search/**").permitAll()
 			.antMatchers("/address/**").permitAll()
 			.antMatchers("/image/**").permitAll()
+/*
+			.antMatchers("/portal/**").permitAll()
+			.antMatchers("/profile/**").permitAll()
+			.antMatchers("/management/**").permitAll()
 			.antMatchers("/gallery/**").permitAll()
 			.antMatchers("/chat/**").permitAll()
 			.antMatchers("/messages/**").permitAll()

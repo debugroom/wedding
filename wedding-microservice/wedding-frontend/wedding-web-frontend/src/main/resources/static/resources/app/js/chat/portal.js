@@ -321,6 +321,7 @@ function addGroup(){
 			"groupName" : groupName,
 			"users" : users,
 	};
+	disconnect();
 	$.ajax({
 		     type : "post",
 		     url  :  $(this).data("url"),

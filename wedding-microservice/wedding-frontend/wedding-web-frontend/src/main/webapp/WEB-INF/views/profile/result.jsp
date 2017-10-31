@@ -16,7 +16,7 @@
 <link rel="stylesheet"
     href="${pageContext.request.contextPath}/static/resources/app/css/profile/result.css">
 </head>
-<body>
+<body class="back-img">
   <c:import url="/WEB-INF/views/common/header.jsp" />
   <article>
     <div id="flex-container">
