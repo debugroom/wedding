@@ -1,8 +1,7 @@
 FROM            debugroom/wedding:centos7
 MAINTAINER      debugroom
 ENV             container docker
-RUN             cd /var/local/
-RUN             git clone -b develop https://github.com/debugroom/wedding.git
+RUN             git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
 RUN             yum update -y && yum clean all
 RUN             yum install -y postgresql postgresql-server && yum clean all
 RUN             su - postgres -c "initdb --encoding=UTF8 --no-locale --pgdata=/var/lib/pgsql/data --auth=ident"
