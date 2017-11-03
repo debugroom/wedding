@@ -23,5 +23,5 @@ RUN             echo "local    all             all                              
 RUN             echo "host     all             all             0.0.0.0/0               md5" >> /var/lib/pgsql/data/pg_hba.conf
 RUN             rm -f /var/lib/pgsql/data/pg_hba.tmp
 EXPOSE          5432
-RUN             chmod 755 /var/local/wedding/build-production-servers/build-postgres/scripts/init_db.sh
-RUN             /var/local/wedding/build-production-servers/build-postgres/scripts/init_db.sh
+RUN             chmod 755 /var/local/wedding/build-production-servers/build-postgresql/scripts/init_db.sh
+RUN             /var/local/wedding/build-production-servers/build-postgresql/scripts/init_db.sh
