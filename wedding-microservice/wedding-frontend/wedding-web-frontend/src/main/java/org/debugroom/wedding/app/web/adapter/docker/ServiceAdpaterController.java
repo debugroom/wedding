@@ -850,7 +850,6 @@ public class ServiceAdpaterController {
 		informationDraft.setTempInfoUrl(
 				RequestBuilder.buildUriComponents("frontend", 
 						new StringBuilder()
-						.append(APP_NAME)
 						.append("/information/body/{infoId}")
 						.toString(), provider, params)
 				.expand(informationDraft.getInformation().getInfoId()).toString());

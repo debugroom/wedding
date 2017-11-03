@@ -193,7 +193,10 @@ public class MessageServiceImpl implements MessageService{
 	@Override
 	public MessageBoard saveMessageBoard(MessageBoard messageBoard, Group group) {
 
-		Long newGroupId = groupRepository.findTopByOrderByGroupId()+1;
+		Long newGroupId = Long.valueOf(0);
+		if(0 != groupRepository.count()){
+			newGroupId = groupRepository.findTopByOrderByGroupId()+1;
+		}
 		Group addGroup = Group.builder()
 				.groupId(newGroupId)
 				.groupName(group.getGroupName())
@@ -202,7 +205,11 @@ public class MessageServiceImpl implements MessageService{
 				.build();
 		groupRepository.save(addGroup);
 
-		Long newMessageBoardId = messageBoardRepository.findTopByOrderByMessageBoardId()+1;
+		Long newMessageBoardId = Long.valueOf(0);
+		if(0 != messageBoardRepository.count()){
+			newMessageBoardId = messageBoardRepository.findTopByOrderByMessageBoardId();
+		}
+			
 		MessageBoard addMessageBoard = MessageBoard.builder()
 				.messageBoardId(newMessageBoardId)
 				.title(messageBoard.getTitle())

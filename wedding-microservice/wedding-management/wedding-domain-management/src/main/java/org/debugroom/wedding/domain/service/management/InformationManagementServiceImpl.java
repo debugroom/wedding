@@ -231,11 +231,16 @@ public class InformationManagementServiceImpl implements InformationManagementSe
 	
 	private String getNewInfoId(){
 		Information information = informationRepository.findTopByOrderByInfoIdDesc();
-		String sequence = new StringBuilder()
-				.append("00000000")
-				.append(Integer.parseInt(StringUtils.stripStart(
-						information.getInfoId(), "0"))+1)
-				.toString();
+		StringBuilder stringBuilder = new StringBuilder().append("00000000");
+		if(null != information){
+			if(!"00000000".equals(information.getInfoId())){
+				stringBuilder.append(Integer.parseInt(StringUtils.stripStart(
+						information.getInfoId(), "0"))+1);
+			}else{
+				stringBuilder.append("1");
+			}
+		}
+		String sequence = stringBuilder.toString();
 		return StringUtils.substring(
 				sequence, sequence.length()-8, sequence.length());
 	}

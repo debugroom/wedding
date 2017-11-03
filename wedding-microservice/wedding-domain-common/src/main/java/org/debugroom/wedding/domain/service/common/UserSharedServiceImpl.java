@@ -191,12 +191,16 @@ public class UserSharedServiceImpl implements UserSharedService{
 	@Override
 	public String getNewUserId() {
 		User user = userRepository.findTopByOrderByUserIdDesc();
-		String sequence = new StringBuilder()
-								.append("00000000")
-								.append(Integer.parseInt(
-										StringUtils.stripStart(
-												user.getUserId(), "0"))+1)
-								.toString();
+		StringBuilder stringBuilder = new StringBuilder().append("00000000");
+		if(null != user){
+			if(!"00000000".equals(user.getUserId())){
+				stringBuilder.append(Integer.parseInt(
+					StringUtils.stripStart(user.getUserId(), "0"))+1);
+			}else{
+				stringBuilder.append("1");
+			}
+		}
+		String sequence = stringBuilder.toString();
 		return StringUtils.substring(sequence,
 				sequence.length()-8, sequence.length());
 	}

@@ -213,11 +213,17 @@ public class RequestManagementServiceImpl implements RequestManagementService{
 
 	private String getNewRequestId(){
 		Request request = requestRepository.findTopByOrderByRequestIdDesc();
-		String sequence = new StringBuilder()
-				.append("0000")
-				.append(Integer.parseInt(StringUtils.stripStart(
-						request.getRequestId(), "0"))+1)
-				.toString();
+		StringBuilder stringBuilder = new StringBuilder().append("0000");
+		if(null != request){
+			if(!"0000".equals(request.getRequestId())){
+				stringBuilder.append(Integer.parseInt(StringUtils.stripStart(
+						request.getRequestId(), "0"))+1);
+			}else{
+				stringBuilder.append("1");
+			}
+			
+		}
+		String sequence = stringBuilder.toString();
 		return StringUtils.substring(
 				sequence, sequence.length()-4, sequence.length());
 	}

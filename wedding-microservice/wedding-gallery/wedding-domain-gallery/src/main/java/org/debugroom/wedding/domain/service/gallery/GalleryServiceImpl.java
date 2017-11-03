@@ -316,33 +316,48 @@ public class GalleryServiceImpl implements GalleryService{
 
 	private String getNewFolderId(){
 		Folder folder = folderRepository.findTopByOrderByFolderIdDesc();
-		String sequence = new StringBuilder()
-				.append("000000000000")
-				.append(Integer.parseInt(StringUtils.stripStart(
-						folder.getFolderId(), "0"))+1)
-				.toString();
+		StringBuilder stringBuilder = new StringBuilder().append("000000000000");
+		if(null != folder){
+			if(!"000000000000".equals(folder.getFolderId())){
+				stringBuilder.append(Integer.parseInt(StringUtils.stripStart(
+						folder.getFolderId(), "0"))+1);
+			}else{
+				stringBuilder.append("1");
+			}
+		}
+		String sequence	= stringBuilder.toString();
 		return StringUtils.substring(
 				sequence, sequence.length()-12, sequence.length());
 	}
 
 	private String getNewPhotoId(){
 		Photo photo = photoRepository.findTopByPhotoIdLikeOrderByPhotoIdDesc("0%");
-		String sequence = new StringBuilder()
-								.append("0000000000")
-								.append(Integer.parseInt(StringUtils.stripStart(
-										photo.getPhotoId(), "0"))+1)
-								.toString();
+		StringBuilder stringBuilder = new StringBuilder().append("0000000000");
+		if(null != photo){
+			if(!"0000000000".equals(photo.getPhotoId())){
+				stringBuilder.append(Integer.parseInt(StringUtils.stripStart(
+										photo.getPhotoId(), "0"))+1);
+			}else{
+				stringBuilder.append("1");
+			}
+		}
+		String sequence = stringBuilder.toString();
 		return StringUtils.substring(
 				sequence, sequence.length()-10, sequence.length());
 	}
 
 	private String getNewMovieId(){
 		Movie movie = movieRepository.findTopByMovieIdLikeOrderByMovieIdDesc("0%");
-		String sequence = new StringBuilder()
-								.append("0000000000")
-								.append(Integer.parseInt(StringUtils.stripStart(
-										movie.getMovieId(), "0"))+1)
-								.toString();
+		StringBuilder stringBuilder = new StringBuilder().append("0000000000");
+		if(null != movie){
+			if(!"0000000000".equals(movie.getMovieId())){
+				stringBuilder.append(Integer.parseInt(StringUtils.stripStart(
+										movie.getMovieId(), "0"))+1);
+			}else{
+				stringBuilder.append("1");
+			}
+		}
+		String sequence = stringBuilder.toString();
 		return StringUtils.substring(
 				sequence, sequence.length()-10, sequence.length());
 	}

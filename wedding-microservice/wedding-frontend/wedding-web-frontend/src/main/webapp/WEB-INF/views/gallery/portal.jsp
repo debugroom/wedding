@@ -30,6 +30,7 @@
     <div class="flex-item-2">
       <article>
         <div class="gallery-panel">
+          <c:if test="!empty ${galleryPortalResource.randomPhotographs}">
           <div class="slider-pro" id="my-slider">
             <div class="sp-slides">
               <div id="slider">
@@ -49,6 +50,8 @@
               </div>
             </div>
           </div>
+          </c:if>
+          <c:if test="!empty ${galleryPortalResource.randomMovies}">
           <div class="playerPanel">
             <figure id="video_player">
               <video controls poster="${pageContext.request.contextPath}/gallery/movie-thumbnail/${galleryPortalResource.randomMovies[0].movieId}">
@@ -75,6 +78,7 @@
               </figcaption>
             </figure>
           </div>
+          </c:if>
 <!--  
           <video id="my-video" class="video-js" controls preload="auto" width="640" height="264" 
             poster="${pageContext.request.contextPath}/gallery/movie-thumbnail/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].thumbnailFilePath, '.')}" 
