@@ -6,7 +6,7 @@ MAINTAINER      debugroom
 RUN yum install -y \
        java-1.8.0-openjdk \
        java-1.8.0-openjdk-devel \
-       wget tar
+       wget tar iproute
 
 ENV JAVA_HOME /etc/alternatives/java_sdk
 ADD datastax.repo /etc/yum.repos.d/
