@@ -168,7 +168,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>org.debugroom.sample.cassandra.config.WebApp</mainClass>
+          <mainClass>org.debugroom.wedding.config.WebApp</mainClass>
           <profiles>
             <profile>macosx-x86_64</profile>
           </profiles>

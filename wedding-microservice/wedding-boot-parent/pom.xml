@@ -160,6 +160,7 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
+          <encoding>UTF-8</encoding>
           <compilerArgument>-parameters</compilerArgument>
         </configuration>
       </plugin>
