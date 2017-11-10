@@ -5,3 +5,7 @@ spring:
     username: ${dbserver.app.username}
     password: ${dbserver.app.password}
     driverClassName: org.postgresql.Driver
+logging:
+  file: logs/app.log
+    level:
+      org.springframework.web: INFO
