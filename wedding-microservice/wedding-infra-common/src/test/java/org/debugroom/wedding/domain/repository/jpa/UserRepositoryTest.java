@@ -155,8 +155,8 @@ public class UserRepositoryTest {
 	        	 
 	        	User user = userRepository.findOne(fixture.userId);
 	        	 
-	        	assertThat(fixture.toString(), user.getFirstName(), 
-	        			 is(fixture.expected.getFirstName()));
+	        	assertThat(fixture.toString(), user.getUserId(), 
+	        			 is(fixture.expected.getUserId()));
 	        	assertThat(fixture.toString(), user.getLoginId(), 
 	        			 is(fixture.expected.getLoginId()));
 
