@@ -54,7 +54,7 @@ public class NotificationRepositoryTest {
 	@Category(UnitTests.class)
 	@RunWith(Enclosed.class)
 	@ContextConfiguration(classes = TestConfig.class)
-	@ActiveProfiles(profiles = {"jpa","dev"})
+	@ActiveProfiles(profiles = {"jpa","LocalDev"})
 	public static class UnitTest{
 		
 		@Inject

@@ -39,7 +39,7 @@ public class InformationRepositoryTest {
 	
 		@RunWith(Theories.class)
 		@ContextConfiguration(classes = TestConfig.class)
-		@ActiveProfiles(profiles = {"jpa", "dev"})
+		@ActiveProfiles(profiles = {"jpa", "LocalDev"})
 		public static class FindInformationByUserIdTest{
 		
 			@Inject
@@ -55,6 +55,20 @@ public class InformationRepositoryTest {
 				calendar.set(Calendar.DAY_OF_MONTH, 1);
 
 				List<Information> case1ExpectedInformationList = new ArrayList<Information>();
+				case1ExpectedInformationList.add(Information.builder().infoId("00000000").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000001").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000002").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000003").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000004").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000005").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000006").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000007").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000008").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000010").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000011").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000012").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000013").build());
+				case1ExpectedInformationList.add(Information.builder().infoId("00000015").build());
 				findInformationFixture[0].setCurrentTime(calendar.getTime());
 				findInformationFixture[0].expected.addAll(case1ExpectedInformationList);
 				

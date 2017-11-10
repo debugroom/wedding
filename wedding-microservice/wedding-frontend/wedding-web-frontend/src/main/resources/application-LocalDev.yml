@@ -1,0 +1,14 @@
+server:
+  port: 8081
+  tomcat:
+    additional-tld-skip-patterns : "javacpp.jar, *javacv*.jar, ffmpeg-*.jar"
+profile:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps
+info:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps
+gallery:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps/gallery
+    

@@ -36,7 +36,7 @@ public class MenuRepositoryTest {
 		
 		@RunWith(Theories.class)
 		@ContextConfiguration(classes = TestConfig.class)
-		@ActiveProfiles(profiles = {"jpa", "dev"})
+		@ActiveProfiles(profiles = {"jpa", "LocalDev"})
 		public static class WhiteBoxTest{
 			
 			@Inject
@@ -52,21 +52,17 @@ public class MenuRepositoryTest {
 
 				List<Menu> case2ExpectedMenuList = new ArrayList<Menu>();
 				case2ExpectedMenuList.add(Menu.builder().menuId("1000").build());
-				case2ExpectedMenuList.add(Menu.builder().menuId("1010").build());
 				case2ExpectedMenuList.add(Menu.builder().menuId("1020").build());
 				case2ExpectedMenuList.add(Menu.builder().menuId("2000").build());
 				case2ExpectedMenuList.add(Menu.builder().menuId("3000").build());
-				case2ExpectedMenuList.add(Menu.builder().menuId("4000").build());
 				case2ExpectedMenuList.add(Menu.builder().menuId("8000").build());
 				findMenuFixture[1].expected.addAll(case2ExpectedMenuList);
 
 				List<Menu> case3ExpectedMenuList = new ArrayList<Menu>();
 				case3ExpectedMenuList.add(Menu.builder().menuId("1000").build());
-				case3ExpectedMenuList.add(Menu.builder().menuId("1010").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("1020").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("2000").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("3000").build());
-				case3ExpectedMenuList.add(Menu.builder().menuId("4000").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("8000").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("9000").build());
 				case3ExpectedMenuList.add(Menu.builder().menuId("9010").build());

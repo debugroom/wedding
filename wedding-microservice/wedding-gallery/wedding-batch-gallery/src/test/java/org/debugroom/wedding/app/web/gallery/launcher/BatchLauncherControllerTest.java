@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = WebApp.class)
 @WebAppConfiguration
-@ActiveProfiles({"dev", "jpa", "web"})
+@ActiveProfiles({"LocalDev", "jpa", "web"})
 @Slf4j
 public class BatchLauncherControllerTest {
 

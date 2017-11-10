@@ -40,7 +40,7 @@ import org.debugroom.wedding.config.WebApp;
 	@ContextConfiguration(classes = WebApp.class)
 })
 @WebAppConfiguration
-@ActiveProfiles({"dev", "jpa"})
+@ActiveProfiles({"LocalDev", "jpa"})
 public class ProfileRestControllerTest {
 
 	@Autowired
