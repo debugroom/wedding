@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.cassandra.core.CassandraAdminOperations;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.http.MediaType;
@@ -46,9 +47,7 @@ import org.debugroom.wedding.domain.entity.message.UserRelatedGroup;
 import org.debugroom.wedding.domain.entity.message.UserRelatedGroupPK;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextHierarchy({
-	@ContextConfiguration(classes = WebApp.class)
-})
+@SpringBootTest(classes = WebApp.class)
 @WebAppConfiguration
 @ActiveProfiles({"dev", "cassandra"})
 public class MessageRestControllerTest {

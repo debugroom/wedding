@@ -17,3 +17,5 @@ RUN sed -i s/\#-Xmx4G/-Xmx2G/g /etc/cassandra/conf/jvm.options
 # RUN systemctl enable cassandra
 
 EXPOSE 7199 7000 7001 9160 9042 22 8012 61621
+
+RUN cqlsh -f create-keyspace.cql
