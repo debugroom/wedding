@@ -28,16 +28,17 @@ public class AddUserInfoInterceptor extends HandlerInterceptorAdapter{
 			if(null == modelAndView.getModel().get("user")){
 				SecurityContext securityContext = SecurityContextHolder.getContext();
 				Authentication authentication = securityContext.getAuthentication();
-				Object principal = authentication.getPrincipal();
-				if(principal instanceof CustomUserDetails){
-					modelAndView.addObject("user", 
+				if(null != authentication){
+					Object principal = authentication.getPrincipal();
+					if(principal instanceof CustomUserDetails){
+						modelAndView.addObject("user", 
 							((CustomUserDetails)authentication.getPrincipal()).getUser());
-				}else{
-					modelAndView.addObject("user", 
+					}else{
+						modelAndView.addObject("user", 
 							User.builder().userId("00000000").authorityLevel(0).build());
+					}
 				}
 			}
 		}
     }
-
 }
