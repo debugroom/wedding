@@ -1,4 +1,4 @@
 logging:
   file: logs/app.log
-    level:
-      org.springframework.web: INFO
+  level:
+    org.springframework.web: INFO
