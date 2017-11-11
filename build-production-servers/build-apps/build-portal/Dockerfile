@@ -15,8 +15,6 @@ ENV JAVA_HOME /etc/alternatives/jre
 RUN git clone -b feature/framework-spring https://github.com/debugroom/framework.git /var/local/framework
 RUN mvn install -f /var/local/framework/pom.xml
 RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
-RUN sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
-RUN sed -i 's/"dev\"\,\ \"cassandra/"cluster\"\,\ \"cassandra/g' /var/local/wedding/wedding-microservice/wedding-message/wedding-web-message/src/test/java/org/debugroom/wedding/app/web/message/MessageRestControllerTest.java
 
 # RUN mvn install -f /var/local/wedding/wedding-microservice/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/pom.xml
