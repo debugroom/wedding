@@ -29,16 +29,16 @@
             <div class="imgPanel">
               <c:choose>
                 <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"png")}'>
-                  <img src='/portal/image/<c:out value="${portalResource.user.userId}/xxxx.png" />'>
+                  <img src='${pageContext.request.contextPath}/portal/image/<c:out value="${portalResource.user.userId}/xxxx.png" />'>
                 </c:when>
                 <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"jpg")}'>
-                  <img src='/portal/image/<c:out value="${portalResource.user.userId}/xxxx.jpg" />'>
+                  <img src='${pageContext.request.contextPath}/portal/image/<c:out value="${portalResource.user.userId}/xxxx.jpg" />'>
                 </c:when>
                 <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"jpeg")}'>
-                  <img src='/portal/image/<c:out value="${portalResource.user.userId}/xxxx.jpg" />'>
+                  <img src='${pageContext.request.contextPath}/portal/image/<c:out value="${portalResource.user.userId}/xxxx.jpg" />'>
                 </c:when>
                 <c:when test='${fn:endsWith(portalResource.user.imageFilePath,"gif")}'>
-                  <img src='/portal/image/<c:out value="${portalResource.user.userId}/xxxx.gif" />'>
+                  <img src='${pageContext.request.contextPath}/portal/image/<c:out value="${portalResource.user.userId}/xxxx.gif" />'>
                 </c:when>
               </c:choose>
             </div>

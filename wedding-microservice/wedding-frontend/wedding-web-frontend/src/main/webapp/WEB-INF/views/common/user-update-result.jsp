@@ -89,16 +89,16 @@
                         <spring:bind path="imageFilePath">
                           <c:choose>
                             <c:when test='${fn:endsWith(updateResult.afterEntity.imageFilePath,"png")}'>
-                              <img src='/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.png" />'>
+                              <img src='${pageContext.request.contextPath}/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.png" />'>
                             </c:when>
                             <c:when test='${fn:endsWith(updateResult.afterEntity.imageFilePath,"jpg")}'>
-                              <img src='/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.jpg" />'>
+                              <img src='${pageContext.request.contextPath}/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.jpg" />'>
                             </c:when>
                             <c:when test='${fn:endsWith(updateResult.afterEntity.imageFilePath,"jpeg")}'>
-                              <img src='/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.jpg" />'>
+                              <img src='${pageContext.request.contextPath}/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.jpg" />'>
                             </c:when>
                             <c:when test='${fn:endsWith(updateResult.afterEntity.imageFilePath,"gif")}'>
-                              <img src='/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.gif" />'>
+                              <img src='${pageContext.request.contextPath}/profile/image/<c:out value="${updateResult.afterEntity.userId}/xxxx.gif" />'>
                             </c:when>
                           </c:choose>
                         </spring:bind>

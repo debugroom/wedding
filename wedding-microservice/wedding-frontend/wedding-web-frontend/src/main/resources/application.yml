@@ -8,17 +8,17 @@ spring:
       max-request-size: 10000000000
 profile:
   root:
-    directory: /tmp
-  directory: resource/app/img/profile
+    directory: /usr/local/app/profile
+  directory: image
   image:
     file:
       name: image
 info:
   root:
-    directory: /tmp
+    directory: /usr/local/app/info
 gallery:
   root:
-    directory: /tmp/gallery
+    directory: /usr/local/app/gallery
   image:
     original:
       directory: image/original

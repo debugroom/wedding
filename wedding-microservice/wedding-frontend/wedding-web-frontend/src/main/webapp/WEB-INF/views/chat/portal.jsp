@@ -16,9 +16,9 @@
     href="${pageContext.request.contextPath}/static/resources/app/css/flex.css">
 <link rel="stylesheet"
     href="${pageContext.request.contextPath}/static/resources/app/css/chat/portal.css">
-<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="/webjars/sockjs-client/sockjs.js"></script>
-<script type="text/javascript" src="/webjars/stomp-websocket/stomp.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/sockjs-client/sockjs.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/stomp-websocket/stomp.js"></script>
 </head>
 <body class="back-img">
   <c:import url="/WEB-INF/views/common/header.jsp" />
