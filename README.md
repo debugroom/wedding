@@ -2,11 +2,11 @@
 
 ## Deploy
 
-### DB Server on CentOS7 with docker
+### 1. DB Server on CentOS7 with docker
 
 アプリケーションのデータベースとして、PostgreSQLとApache Cassandraを環境構築する。なお、Cassandraはクラスタ構成するため、Dockerを利用し、マルチコンテナ構成でデータベースを構築する。
 
-#### 1. Install Docker
+#### 1-1. Install Docker in host machine
 
 ホストマシンとしてCentOS7を用意し、Dockerをインストールし、加えてコンテナ内で動かすCentOS7のイメージを取得する。[Dockerのインストール](http://debugroom.github.io/doc/memo/work/docker/article/install.html) を参考にDockerをインストールすること。なお、当環境ではAWS上のEC2インスタンスで実行した例。
 
@@ -43,11 +43,11 @@
 //omit
 ```
 
-#### 2. Install PostgreSQL on CentOS7 in docker container
+#### 1-2. Install PostgreSQL on CentOS7 in docker container
 
 PostgreSQLをコンテナ内のCentOS7へインストールする。構築した環境はイメージとしてDocker Hubに保存しておく。
 
-##### 2-1. CentOS7コンテナイメージの作成
+##### 1-2-1. CentOS7コンテナイメージの作成
 
 CentOS7コンテナイメージを取得し、コンテナを実行して、Gitのインストールを行い、環境イメージを保存する。
 
@@ -102,7 +102,7 @@ Login Succeededdocker commit centos7 debugroom/wedding:centos7
 
 ```
 
-##### 2-2. PostgreSQLのインストール・コンテナイメージ作成。
+##### 1-2-2. PostgreSQLのインストール・コンテナイメージ作成。
 
 [2-1](https://github.com/debugroom/wedding/tree/develop#2-1-centos7コンテナイメージの作成)で作成したCentOS7コンテナイメージ内にPostgreSQLをインストールする。インストールはDockerfileを利用して行う。なお、Dockerfileはgit cloneして取得する。
 
@@ -184,9 +184,9 @@ RUN             /var/local/wedding/build-production-servers/build-postgresql/scr
 docker runで作成したイメージからコンテナを実行し、データベースのデータを確認する場合は、docker run -it --name dbserver debugroom/wedding:postgres /bin/bashにて、コンテナを実行し、su - postgresにて、ユーザを切り替え、pg_ctl start -w;psql -d weddingにて、データベースに接続する。
 </details>
 
-#### 3. Install Apache Cassandra on CentOS7 in docker container
+#### 1-3. Install Apache Cassandra on CentOS7 in docker container
 
-Cassandraをコンテナ内のCentOS7へインストールする。コンテナのサーバは3台のクラスタ構成とし、構築した環境はイメージとしてDocker Hubに保存しておく。[2-2](https://github.com/debugroom/wedding/tree/develop#2-2-postgresqlのインストールコンテナイメージ作成)と同様、git clonseしたプロジェクト内にあるDockerfileから構築を行う。[Cassadraクラスタサーバを構築](http://debugroom.github.io/doc/memo/work/docker/article/usage.html#cassandra)も合わせて参照のこと。
+Cassandraをコンテナ内のCentOS7へインストールする。コンテナのサーバは3台のクラスタ構成とし、構築した環境はイメージとしてDocker Hubに保存しておく。[1-2-2](https://github.com/debugroom/wedding/tree/develop#1-2-2-postgresqlのインストールコンテナイメージ作成)と同様、git clonseしたプロジェクト内にあるDockerfileから構築を行う。[Cassadraクラスタサーバを構築](http://debugroom.github.io/doc/memo/work/docker/article/usage.html#cassandra)も合わせて参照のこと。
 
 1. Git cloneしてDockerファイルからコンテナイメージを構築し、DockerHubへプッシュ。
 2. 作成したコンテナイメージをcassandra-server1という名前で実行し、cassandraの設定ファイルにSeedサーバ、listen_address、rpc_address、auto_bootstrapを変更(Seed Serverのみauto_bootstrapにfalseを設定する。)、サービスの起動を行う。なお、IPアドレスはipコマンドで確認すること。
@@ -264,4 +264,192 @@ EXPOSE 7199 7000 7001 9160 9042 22 8012 61621
 
 ```
 
-### AP Server on CentOS7 with docker
+### 2.AP Server on CentOS7 with docker
+
+アプリケーションサーバでも、同様にDockerを利用し、マルチコンテナ構成でサービスベースでアプリを構築する。
+
+#### 2-1. Install Docker and Git in Host Machine
+
+DBサーバの構築と同様、ホストマシンとしてCentOS7を用意し、Dockerをインストールし、加えてコンテナ内で動かすCentOS7のイメージを取得する。[Dockerのインストール](http://debugroom.github.io/doc/memo/work/docker/article/install.html) を参考にDockerをインストールすること。なお、当環境ではAWS上のEC2インスタンスで実行した例。
+
+1. CentOS7上で、パッケージとパッケージキャッシュを更新する。
+2. Dockerをインストール
+3. dockerグループの作成とユーザの追加
+4. Docker Serviceの起動
+5. 一度ログアウト(以降sudoなしでdockerコマンドを実行するため)
+6. 再度ログイン後、Gitのインストール
+
+```bash:Dockerのインストール
+
+[1の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo yum update -y
+//omit
+
+[2の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo yum install -y docker
+//omit
+
+[3の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo groupadd docker
+//omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo gpasswd -a $USER docker
+//omit
+
+[4の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo systemctl enable docker.service
+//omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo systemctl start docker.service
+
+[5の手順]
+//omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ exit
+//omit
+
+[6の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo yum -y install wget make gcc perl-ExtUtils-MakeMaker curl-devel expat-devel gettext-devel openssl-devel zlib-devel autoconf
+// omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ cd /var/local/
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo wget https://www.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz
+// omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo tar xvzf git-2.9.5.tar.gz
+// omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ cd git-2.9.5
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo make configure
+// omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo ./configure --prefix=/usr
+// omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo make install
+// omit
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ git --version
+git version 2.9.5
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ cd /var/local/
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ sudo git clone -b  develop https://github.com/debugroom/wedding.git
+
+```
+
+#### 2. App on CentOS7 in docker container
+
+##### 2-1. PostgreSQL、Cassandraへ接続するバックエンドサービスアプリケーションの構築
+
+1. GitクローンしたDockerfileを使用して、バックエンドのサービスアプリケーション用のコンテナイメージを作成する。なお、アプリケーションからPostgreSQLに接続するために、構築したDBサーバのIPアドレスとポートを環境変数としてコンテナに設定する(同一のホストマシンではLINKを使用すればよいが、アプリケーションを異なるホストマシン上に配置するため、直接環境変数でIPとポートを設定する。なお、Docker1.9以降では異なるホスト間でもIPを共有する方法がある模様だが、ここでは実施していない)
+2. 作成したコンテナイメージを実行する。ポート8081がコンテナ内で実行されているAPサーバへ8080で繋がるようにオプション指定する。
+3. サービスの数だけ、1、２を繰り返す。なお、フォワーディングするポートだけ変更して実行すること。
+
+```bash:
+
+[1の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ cd /var/local/wedding
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker build --build-arg DBSERVER_PORT_5432_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_5432_TCP_PORT=ZZZ --build-arg DBSERVER_PORT_9042_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_9042_TCP_PORT=ZZZ -t debugroom/wedding:portal build-production-servers/build-apps/build-portal/
+
+//omit
+
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker images
+REPOSITORY                    TAG                 IMAGE ID            CREATED             SIZE
+debugroom/wedding             portal              ef2c28cf7acb        6 seconds ago       1.516 GB
+
+[2の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker run -itd --name apserver1 -p 8081:8080 debugroom/wedding:portal
+
+//omit
+
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker exec -ti apserver1 /bin/bash
+[root@e5c37433ae42 /]# curl http://localhost:8080/api/v1/portal/00000000
+{"user":{"userId":"00000000","authorityLevel":9,"imageFilePath":"resources/app/img/debugroom.png","lastLoginDate":1420070400000,"lastUpdatedDate":1420070400000,"loginId":"org.debugroom","firstName":"システム管理者","lastName":"(ΦωΦ)","ver":0,"address":{"userId":"00000000","address":"東京都千代田区1-1-1","lastUpdatedDate":1420070400000,"postCd":"123-4567","ver":0},"affiliations":[],"credentials":[{"id":{"userId":"00000000","credentialType":"PASSWORD"},"credentialKey":"$2a$11$5knhINqfA8BgXY1Xkvdhvu0kOhdlAeN1H/TlJbTbuUPDdqq.H.zzi","lastUpdatedDate":1420070400000,"validDate":1546300800000,"ver":0},{"id":{"userId":"00000000","credentialType":"ACCESSTOKEN"},"credentialKey":"$2a$11$5knhINqfA8BgXY1Xkvdhvu0kOhdlAeN1H/TlJbTbuUPDdqq.H.zzi","lastUpdatedDate":1420070400000,"validDate":1546300800000,"ver":0}],"emails":[{"id":{"userId":"00000000","emailId":0},"email":"00000000abc@debugroom.org","lastUpdatedDate":1420070400000,"ver":0},{"id":{"userId":"00000000","emailId":1},"email":"00000000efg@debugroom.org","lastUpdatedDate":1420070400000,"ver":0}],"notifications":[],"grps":[],"brideSide":false},"informationList":[]}
+
+[root@e5c37433ae42 /]# ctl + p + qで抜ける
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ curl http://localhost:8081/api/v1/portal/00000000
+{"user":{"userId":"00000000","authorityLevel":9,"imageFilePath":"resources/app/img/debugroom.png","lastLoginDate":1420070400000,"lastUpdatedDate":1420070400000,"loginId":"org.debugroom","firstName":"システム管理者","lastName":"(ΦωΦ)","ver":0,"address":{"userId":"00000000","address":"東京都千代田区1-1-1","lastUpdatedDate":1420070400000,"postCd":"123-4567","ver":0},"affiliations":[],"credentials":[{"id":{"userId":"00000000","credentialType":"PASSWORD"},"credentialKey":"$2a$11$5knhINqfA8BgXY1Xkvdhvu0kOhdlAeN1H/TlJbTbuUPDdqq.H.zzi","lastUpdatedDate":1420070400000,"validDate":1546300800000,"ver":0},{"id":{"userId":"00000000","credentialType":"ACCESSTOKEN"},"credentialKey":"$2a$11$5knhINqfA8BgXY1Xkvdhvu0kOhdlAeN1H/TlJbTbuUPDdqq.H.zzi","lastUpdatedDate":1420070400000,"validDate":1546300800000,"ver":0}],"emails":[{"id":{"userId":"00000000","emailId":0},"email":"00000000abc@debugroom.org","lastUpdatedDate":1420070400000,"ver":0},{"id":{"userId":"00000000","emailId":1},"email":"00000000efg@debugroom.org","lastUpdatedDate":1420070400000,"ver":0}],"notifications":[],"grps":[],"brideSide":false},"informationList":[]}
+
+```
+
+また、実行するDockerfileの概要は以下の通りである。
+
+```bash:バックエンドApp構築用Dockerfile
+
+# Dockerfile for service app using embedded tomcat server
+
+FROM       docker.io/debugroom/wedding:centos7
+MAINTAINER debugroom
+
+# JDK1.8、wget、tar、iprouteのインストール
+RUN yum install -y \
+       java-1.8.0-openjdk \
+       java-1.8.0-openjdk-devel \
+       wget tar iproute
+
+# Apache Mavenのインストール
+RUN wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+RUN sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+RUN yum install -y apache-maven
+
+# 環境変数JAVA_HOMEの設定
+ENV JAVA_HOME /etc/alternatives/jre
+
+# ライブラリ資材をクローン(MavenCentralに公開されてないライブラリ)
+RUN git clone -b feature/framework-spring https://github.com/debugroom/framework.git /var/local/framework
+
+# ローカルレポジトリへ資材をインストール
+RUN mvn install -f /var/local/framework/pom.xml
+
+# アプリケーション資材をクローン
+RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
+
+# アプリケーションをビルド
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-boot-parent/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-domain-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-web-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-portal/pom.xml
+
+# アプリから参照する環境変数を設定
+ENV DBSERVER_APP_USERNAME=XXX
+ENV DBSERVER_APP_PASSWORD=XXX
+ARG DBSERVER_PORT_5432_TCP_ADDR
+ARG DBSERVER_PORT_5432_TCP_PORT
+ARG DBSERVER_PORT_9042_TCP_ADDR
+ARG DBSERVER_PORT_9042_TCP_PORT
+ENV DBSERVER_PORT_5432_TCP_ADDR ${DBSERVER_PORT_5432_TCP_ADDR:-localhost}
+ENV DBSERVER_PORT_5432_TCP_PORT ${DBSERVER_PORT_5432_TCP_PORT:-localhost}
+ENV DBSERVER_PORT_9042_TCP_ADDR ${DBSERVER_PORT_9042_TCP_ADDR:-localhost}
+ENV DBSERVER_PORT_9042_TCP_PORT ${DBSERVER_PORT_9042_TCP_PORT:-localhost}
+
+# ポートを公開。
+EXPOSE 8080
+
+# 組み込みTomcatを内包するアプリケーションをプロファイルを指定して起動。
+CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding-microservice/wedding-portal/wedding-web-portal/target/wedding-web-portal-1.0-SNAPSHOT.jar
+
+```
+
+##### 2-2. フロントエンドアプリケーションの構築
+
+バックエンドと同様、GitクローンしたDockerfileを使用して、バックエンドのサービスアプリケーション用のコンテナイメージを作成する。本アプリケーションでは、画面にJSPを使用しているため、組み込みTomcatを内包したアプリケーションで実行できないため、アプリケーションをWarファイル化し、Tomcatにデプロイして実行する。
+
+1. Dockerfileを使用して、フロントエンドアプリケーション用のコンテナイメージを作成する。なお、DBサーバのIPとポート以外にもアプリケーション内で参照する環境変数を指定して実行している。
+2. 作成したコンテナイメージを実行する。ポート80がコンテナ内で実行されているAPサーバへ8080で繋がるようにオプション指定する。加えて、同一ホストマシン上で実行されているバックエンドサービスアプリケーションへ接続するためにリンクオプションで環境変数名と実行コンテナ名を紐付ける。
+
+```bash:
+
+[1の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ cd /var/local/wedding
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker build --build-arg DBSERVER_PORT_5432_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_5432_TCP_PORT=ZZZ --build-arg DBSERVER_PORT_9042_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_9042_TCP_PORT=ZZZ --build-arg FRONTEND_PORT_8080_TCP_ADDR=YYY.YYY.YYY.YYZ --build-arg FRONTEND_PORT_8080_TCP_PORT=ZZZ --build-arg LOGIN_PORT_8080_TCP_ADDR=YYY.YYY.YYY.YYZ --build-arg LOGIN_PORT_8080_TCP_PORT=ZZZ -t debugroom/wedding:frontend build-production-servers/build-apps/build-frontend/
+
+//omit
+
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker images
+REPOSITORY                    TAG                 IMAGE ID            CREATED             SIZE
+debugroom/wedding             frontend            472f152b6527        3 hours ago         2.456 GB
+
+[2の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker ps -a
+CONTAINER ID        IMAGE                                   COMMAND                  CREATED             STATUS              PORTS                                                                      NAMES
+817b9c59d3cb        debugroom/wedding:frontend              "/bin/bash"              3 hours ago         Up 3 hours          0.0.0.0:80->8080/tcp                                                       apserver6
+a6e70307f7c8        debugroom/wedding:message               "/bin/sh -c 'java -ja"   27 hours ago        Up 27 hours         0.0.0.0:8085->8080/tcp                                                     apserver5
+5aa38a74cf0c        debugroom/wedding:gallery               "/bin/sh -c 'java -ja"   30 hours ago        Up 30 hours         0.0.0.0:8084->8080/tcp                                                     apserver4
+479ea44caf13        debugroom/wedding:management            "/bin/sh -c 'java -ja"   30 hours ago        Up 30 hours         0.0.0.0:8083->8080/tcp                                                     apserver3
+ba1632161f71        debugroom/wedding:profile               "/bin/sh -c 'java -ja"   30 hours ago        Up 30 hours         0.0.0.0:8082->8080/tcp                                                     apserver2
+e5c37433ae42        debugroom/wedding:portal                "/bin/sh -c 'java -ja"   31 hours ago        Up 31 hours         0.0.0.0:8081->8080/tcp                                                     apserver1
+
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker run -itd --name apserver6 -p 80:8080 --link apserver1:portal --link apserver2:profile --link apserver3:management --link apserver4:gallery --link apserver5:message debugroom/wedding:frontend
+
+```

@@ -61,7 +61,7 @@
                   <td>
                     <form:input class="middle" path="loginId" />
                     <button id="confirm-loginId-button" name="confirm-loginId-button" 
-                    class="middle-button" type="button" value="/search/user?loginId=">ID確認</button>
+                    class="middle-button" type="button" value="${pageContext.request.contextPath}/search/user?loginId=">ID確認</button>
                     <br>(半角英数字32文字以内)
                     <br><form:errors path="loginId" cssClass="errorMessage"/>
                   </td>
@@ -121,7 +121,7 @@
                     <form:input class="short" path="address.postCd" />
                     (7桁の半角数字でXXX-YYYY形式)
                     <button id="get-address-button" name="get-address-button" 
-                    class="middle-button" type="button" value="/address/">住所取得</button>
+                    class="middle-button" type="button" value="${pageContext.request.contextPath}/address/">住所取得</button>
                     <br><form:errors path="address.postCd" cssClass="errorMessage"/>
                   </td>
                 </tr>
