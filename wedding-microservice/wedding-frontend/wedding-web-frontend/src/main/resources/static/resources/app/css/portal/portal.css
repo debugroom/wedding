@@ -1,7 +1,7 @@
 .back-img{
     width:                  100%;
     height:                 1200px;
-    background-image:       url(static/resources/app/img/portal.png);
+    background-image:       url(../img/portal.png);
     background-repeat:      no-repeat;
     background-position:    center bottom;
     -moz-background-size:   cover;
