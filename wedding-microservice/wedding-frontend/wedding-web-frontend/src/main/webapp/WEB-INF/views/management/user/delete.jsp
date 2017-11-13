@@ -50,16 +50,16 @@
                       <div class="imgPanel">
                           <c:choose>
                             <c:when test='${fn:endsWith(deleteUser.imageFilePath,"png")}'>
-                              <img src='/profile/image/<c:out value="${deleteUser.userId}/xxxx.png" />'>
+                              <img src='${pageContext.request.contextPath}/profile/image/<c:out value="${deleteUser.userId}/xxxx.png" />'>
                             </c:when>
                             <c:when test='${fn:endsWith(deleteUser.imageFilePath,"jpg")}'>
-                              <img src='/profile/image/<c:out value="${deleteUser.userId}/xxxx.jpg" />'>
+                              <img src='${pageContext.request.contextPath}/profile/image/<c:out value="${deleteUser.userId}/xxxx.jpg" />'>
                             </c:when>
                             <c:when test='${fn:endsWith(deleteUser.imageFilePath,"jpeg")}'>
-                              <img src='/profile/image/<c:out value="${deleteUser.userId}/xxxx.jpg" />'>
+                              <img src='${pageContext.request.contextPath}/profile/image/<c:out value="${deleteUser.userId}/xxxx.jpg" />'>
                             </c:when>
                             <c:when test='${fn:endsWith(deleteUser.imageFilePath,"gif")}'>
-                              <img src='/profile/image/<c:out value="${deleteUser.userId}/xxxx.gif" />'>
+                              <img src='${pageContext.request.contextPath}/profile/image/<c:out value="${deleteUser.userId}/xxxx.gif" />'>
                             </c:when>
                           </c:choose>
                       </div>

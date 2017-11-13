@@ -44,16 +44,16 @@
                         <div class="imgPanel">
                           <c:choose>
                             <c:when test='${fn:endsWith(deleteUser.imageFilePath,"png")}'>
-                              <img src='/image/<c:out value="${deleteUser.userId}" />/xxxx.png?imageFilePath=<c:out value="${deleteUser.imageFilePath}" />'>
+                              <img src='${pageContext.request.contextPath}/image/<c:out value="${deleteUser.userId}" />/xxxx.png?imageFilePath=<c:out value="${deleteUser.imageFilePath}" />'>
                           </c:when>
                           <c:when test='${fn:endsWith(deleteUser.imageFilePath,"jpeg")}'>
-                            <img src='/image/<c:out value="${deleteUser.userId}" />/xxxx.jpeg?imageFilePath=<c:out value="${deleteUser.imageFilePath}" />'>
+                            <img src='${pageContext.request.contextPath}/image/<c:out value="${deleteUser.userId}" />/xxxx.jpeg?imageFilePath=<c:out value="${deleteUser.imageFilePath}" />'>
                           </c:when>
                           <c:when test='${fn:endsWith(deleteUser.imageFilePath,"jpg")}'>
-                            <img src='/image/<c:out value="${deleteUser.userId}" />/xxxx.jpg?imageFilePath=<c:out value="${deleteUser.imageFilePath}" />'>
+                            <img src='${pageContext.request.contextPath}/image/<c:out value="${deleteUser.userId}" />/xxxx.jpg?imageFilePath=<c:out value="${deleteUser.imageFilePath}" />'>
                           </c:when>
                           <c:when test='${fn:endsWith(deleteUser.imageFilePath,"gif")}'>
-                            <img src='/image/<c:out value="${deleteUser.userId}" />/xxxx.gif?imageFilePath=<c:out value="${deleteUser.imageFilePath}" />'>
+                            <img src='${pageContext.request.contextPath}/image/<c:out value="${deleteUser.userId}" />/xxxx.gif?imageFilePath=<c:out value="${deleteUser.imageFilePath}" />'>
                           </c:when>
                           </c:choose>
                         </div>

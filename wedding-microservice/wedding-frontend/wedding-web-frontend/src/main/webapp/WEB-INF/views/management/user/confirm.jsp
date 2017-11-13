@@ -59,16 +59,16 @@
                       <div class="imgPanel">
                         <c:choose>
                           <c:when test='${fn:endsWith(newUser.imageFilePath,"png")}'>
-                            <img src='/image/<c:out value="${newUser.userId}" />/xxxx.png?imageFilePath=<c:out value="${newUser.imageFilePath}" />'>
+                            <img src='${pageContext.request.contextPath}/image/<c:out value="${newUser.userId}" />/xxxx.png?imageFilePath=<c:out value="${newUser.imageFilePath}" />'>
                           </c:when>
                           <c:when test='${fn:endsWith(newUser.imageFilePath,"jpeg")}'>
-                            <img src='/image/<c:out value="${newUser.userId}" />/xxxx.jpeg?imageFilePath=<c:out value="${newUser.imageFilePath}" />'>
+                            <img src='${pageContext.request.contextPath}/image/<c:out value="${newUser.userId}" />/xxxx.jpeg?imageFilePath=<c:out value="${newUser.imageFilePath}" />'>
                           </c:when>
                           <c:when test='${fn:endsWith(newUser.imageFilePath,"jpg")}'>
-                            <img src='/image/<c:out value="${newUser.userId}" />/xxxx.jpg?imageFilePath=<c:out value="${newUser.imageFilePath}" />'>
+                            <img src='${pageContext.request.contextPath}/image/<c:out value="${newUser.userId}" />/xxxx.jpg?imageFilePath=<c:out value="${newUser.imageFilePath}" />'>
                           </c:when>
                           <c:when test='${fn:endsWith(newUser.imageFilePath,"gif")}'>
-                            <img src='/image/<c:out value="${newUser.userId}" />/xxxx.gif?imageFilePath=<c:out value="${newUser.imageFilePath}" />'>
+                            <img src='${pageContext.request.contextPath}/image/<c:out value="${newUser.userId}" />/xxxx.gif?imageFilePath=<c:out value="${newUser.imageFilePath}" />'>
                           </c:when>
                         </c:choose>
                       </div>
