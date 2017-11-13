@@ -1,5 +1,6 @@
 server:
   port: 8081
+  contextPath: 
   tomcat:
     additional-tld-skip-patterns : "javacpp.jar, *javacv*.jar, ffmpeg-*.jar"
 spring:
