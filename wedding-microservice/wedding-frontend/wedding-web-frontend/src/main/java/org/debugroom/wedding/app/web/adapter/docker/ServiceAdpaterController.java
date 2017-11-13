@@ -300,7 +300,7 @@ public class ServiceAdpaterController {
 				RequestBuilder.buildUriComponents("frontend", 
 						new StringBuilder()
 						.append(contextPath)
-						.append("information/body/")
+						.append("/information/body/")
 						.append(information.getInfoId())
 						.toString(), provider).toString());
 		model.addAttribute(resultInformation);
