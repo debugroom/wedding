@@ -71,9 +71,9 @@
             </table>
             <div class="alternative-button">
               <button class="alternative-first-button" type="button"
-                  onclick="location.href='/management/request/new'" >続けて新規作成する</button>
+                  onclick="location.href='${pageContext.request.contextPath}/management/request/new'" >続けて新規作成する</button>
               <button class="alternative-last-button" type="button"
-                  onclick="location.href='/management/request/portal'" >依頼事項一覧に戻る</button>
+                  onclick="location.href='${pageContext.request.contextPath}/management/request/portal'" >依頼事項一覧に戻る</button>
             </div>
           </div>
         </div>

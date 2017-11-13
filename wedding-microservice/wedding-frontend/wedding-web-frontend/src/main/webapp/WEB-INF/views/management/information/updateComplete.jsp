@@ -173,7 +173,7 @@
                      </table>
              </c:if>            
           <button class="main-button" type="button"
-                onclick="location.href='/management/information/portal'" >インフォメーション一覧に戻る</button>
+                onclick="location.href='${pageContext.request.contextPath}/management/information/portal'" >インフォメーション一覧に戻る</button>
          </div>
        </div>
     </div>

@@ -166,7 +166,7 @@
              </c:if>
           </div>
           <button class="main-button" type="button"
-                onclick="location.href='/management/request/portal'" >依頼一覧に戻る</button>
+                onclick="location.href='${pageContext.request.contextPath}/management/request/portal'" >依頼一覧に戻る</button>
         </div>
       </div>
     </div>

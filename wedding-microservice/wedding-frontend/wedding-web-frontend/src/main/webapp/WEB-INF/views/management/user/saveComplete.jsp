@@ -103,9 +103,9 @@
              </spring:nestedPath>
              <div class="alternative-button">
                <button class="alternative-first-button" type="button"
-                  onclick="location.href='/management/user/new'" >続けて新規作成する</button>
+                  onclick="location.href='${pageContext.request.contextPath}/management/user/new'" >続けて新規作成する</button>
                <button class="alternative-last-button" type="button"
-                  onclick="location.href='/management/user/portal'" >ユーザ一覧に戻る</button>
+                  onclick="location.href='${pageContext.request.contextPath}/management/user/portal'" >ユーザ一覧に戻る</button>
              </div>
           </div>
         </div>

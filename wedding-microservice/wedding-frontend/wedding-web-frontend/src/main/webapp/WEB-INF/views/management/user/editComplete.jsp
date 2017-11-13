@@ -267,7 +267,7 @@
             </table>
           </c:forEach>
           <button class="main-button" type="button"
-                onclick="location.href='/management/user/portal'" >ユーザ一覧に戻る</button>
+                onclick="location.href='${pageContext.request.contextPath}/management/user/portal'" >ユーザ一覧に戻る</button>
         </div>
       </div>
     </div>

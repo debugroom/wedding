@@ -71,4 +71,56 @@
             <b>viewUsers</b>
         </field>
     </mapping>
+        <mapping>
+        <class-a>org.debugroom.wedding.app.model.management.request.Request</class-a>
+        <class-b>org.debugroom.wedding.domain.model.management.RequestDraft</class-b>
+        <field>
+            <a>requestId</a>
+            <b>request.requestId</b>
+        </field>
+        <field>
+            <a>title</a>
+            <b>request.title</b>
+        </field>
+        <field>
+            <a>registratedDate</a>
+            <b>request.registratedDate</b>
+        </field>
+        <field>
+            <a>requestContents</a>
+            <b>request.requestContents</b>
+        </field>
+        <field>
+            <a>checkedUsers</a>
+            <b>acceptors</b>
+        </field>
+    </mapping>
+    <mapping>
+        <class-a>org.debugroom.wedding.app.model.management.request.RequestDraft</class-a>
+        <class-b>org.debugroom.wedding.domain.model.management.RequestDraft</class-b>
+        <field>
+            <a>request.requestId</a>
+            <b>request.requestId</b>
+        </field>
+        <field>
+            <a>request.title</a>
+            <b>request.title</b>
+        </field>
+        <field>
+            <a>request.registratedDate</a>
+            <b>request.registratedDate</b>
+        </field>
+        <field>
+            <a>request.requestContents</a>
+            <b>request.requestContents</b>
+        </field>
+        <field>
+            <a>checkedAddUsers</a>
+            <b>acceptors</b>
+        </field>
+        <field>
+            <a>checkedDeleteUsers</a>
+            <b>excludeUsers</b>
+        </field>
+    </mapping>
 </mappings>
