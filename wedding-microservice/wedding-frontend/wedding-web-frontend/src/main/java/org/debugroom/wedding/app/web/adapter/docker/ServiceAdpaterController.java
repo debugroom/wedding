@@ -149,6 +149,9 @@ public class ServiceAdpaterController {
 	private static final String PROTOCOL = "http";
 	private static final String APP_NAME = "api/v1";
 
+	@Value("${server.contextPath}")
+	private String contextPath;
+	
 	@Inject
 	Mapper mapper;
 	
@@ -296,6 +299,7 @@ public class ServiceAdpaterController {
 		resultInformation.setInfoRootPath(
 				RequestBuilder.buildUriComponents("frontend", 
 						new StringBuilder()
+						.append(contextPath)
 						.append("information/body/")
 						.append(information.getInfoId())
 						.toString(), provider).toString());
@@ -809,6 +813,7 @@ public class ServiceAdpaterController {
 			params.set("infoPagePath", informationDraft.getInformation().getInfoPagePath());
 			informationDraft.setTempInfoUrl(RequestBuilder.buildUriComponents("frontend", 
 					new StringBuilder()
+					.append(contextPath)
 					.append("/information/body/{infoId}")
 					.toString(), provider, params)
 					.expand(informationDraft.getInformation().getInfoId()).toString());
@@ -850,6 +855,7 @@ public class ServiceAdpaterController {
 		informationDraft.setTempInfoUrl(
 				RequestBuilder.buildUriComponents("frontend", 
 						new StringBuilder()
+						.append(contextPath)
 						.append("/information/body/{infoId}")
 						.toString(), provider, params)
 				.expand(informationDraft.getInformation().getInfoId()).toString());
@@ -925,6 +931,7 @@ public class ServiceAdpaterController {
 		informationDetail.setMessageBodyUrl(
 				RequestBuilder.buildUriComponents("frontend", 
 						new StringBuilder()
+						.append(contextPath)
 						.append("/information/body/{infoId}")
 						.toString(), provider).expand(informationDetailForm.getInfoId())
 				.toString());
@@ -935,6 +942,7 @@ public class ServiceAdpaterController {
 		informationDetail.setNoAccessedUsersUrl(
 				RequestBuilder.buildUriComponents("frontend", 
 						new StringBuilder()
+						.append(contextPath)
 						.append("/search/users")
 						.toString(), provider, params).toString());
 		
@@ -1015,11 +1023,13 @@ public class ServiceAdpaterController {
 			informationDetail.setNoAccessedUsersUrl(
 					RequestBuilder.buildUriComponents("frontend", 
 							new StringBuilder()
+							.append(contextPath)
 							.append("/search/users")
 							.toString(), provider, params).toString());
 			informationDetail.setMessageBodyUrl(
 					RequestBuilder.buildUriComponents("frontend", 
 							new StringBuilder()
+							.append(contextPath)
 							.append("/information/body/{infoId}")
 							.toString(), provider)
 					.expand(informationDetail.getInformation().getInfoId()).toString());
@@ -1287,6 +1297,7 @@ public class ServiceAdpaterController {
 		requestDetail.setNotRequestUsersUrl(
 				RequestBuilder.buildUriComponents("frontend", 
 					new StringBuilder()
+					.append(contextPath)
 					.append("/search/users")
 					.toString(), provider, params).toString());
 		model.addAttribute(requestDetail);
@@ -1316,6 +1327,7 @@ public class ServiceAdpaterController {
 			requestDetail.setNotRequestUsersUrl(
 					RequestBuilder.buildUriComponents("frontend", 
 							new StringBuilder()
+							.append(contextPath)
 							.append("/search/users")
 							.toString(), provider, params).toString());
 			model.addAttribute(requestDetail);
