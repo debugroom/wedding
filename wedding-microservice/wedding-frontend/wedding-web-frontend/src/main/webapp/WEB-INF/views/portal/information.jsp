@@ -32,7 +32,7 @@
             <c:import url="${information.infoRootPath}" charEncoding="UTF-8"></c:import>
           </div>
           <button class="main-button" type="button"
-                  onclick="location.href='/portal/${user.userId}'" >ポータルに戻る</button>
+                  onclick="location.href='${pageContext.request.contextPath}/portal/${user.userId}'" >ポータルに戻る</button>
         </div>
       </div>
     </div>

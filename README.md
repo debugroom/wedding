@@ -451,5 +451,87 @@ ba1632161f71        debugroom/wedding:profile               "/bin/sh -c 'java -j
 e5c37433ae42        debugroom/wedding:portal                "/bin/sh -c 'java -ja"   31 hours ago        Up 31 hours         0.0.0.0:8081->8080/tcp                                                     apserver1
 
 [centos@ip-XXXX-XXX-XXX-XXX ~]$ docker run -itd --name apserver6 -p 80:8080 --link apserver1:portal --link apserver2:profile --link apserver3:management --link apserver4:gallery --link apserver5:message debugroom/wedding:frontend
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker exec -ti apserver6 /bin/bash
+[root@755de24a6e22 /]# /var/local/apache-tomcat/bin/startup.sh
+Tomcat started.
+
+```
+
+なお、実行するDockerfileは以下の通りである。
+
+```bash:
+
+# Dockerfile for wedding frontend app using embedded tomcat server
+
+FROM       docker.io/debugroom/wedding:centos7
+MAINTAINER debugroom
+
+# JDKのインストール
+RUN yum install -y \
+       java-1.8.0-openjdk \
+       java-1.8.0-openjdk-devel \
+       wget tar iproute
+
+# Mavenのインストール
+RUN wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+RUN sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+RUN yum install -y apache-maven
+
+# JAVA_HOME環境変数を設定
+ENV JAVA_HOME /etc/alternatives/jre
+
+# Tomcatのインストール
+RUN useradd -s /sbin/nologin tomcat
+RUN wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache/tomcat/tomcat-8/v8.5.23/bin/apache-tomcat-8.5.23.tar.gz -O /var/local/apache-tomcat-8.5.23.tar.gz  
+RUN tar xvzf /var/local/apache-tomcat-8.5.23.tar.gz -C /var/local
+RUN ln -s /var/local/apache-tomcat-8.5.23 /var/local/apache-tomcat
+RUN chown -R tomcat:tomcat /var/local/apache-tomcat
+
+# アプリケーションで使用する環境変数の設定
+ENV DBSERVER_APP_USERNAME=app
+ENV DBSERVER_APP_PASSWORD=app
+ARG DBSERVER_PORT_5432_TCP_ADDR
+ARG DBSERVER_PORT_5432_TCP_PORT
+ARG DBSERVER_PORT_9042_TCP_ADDR
+ARG DBSERVER_PORT_9042_TCP_PORT
+ARG FRONTEND_PORT_8080_TCP_PORT
+ARG FRONTEND_PORT_8080_TCP_ADDR
+ARG LOGIN_PORT_8080_TCP_PORT
+ARG LOGIN_PORT_8080_TCP_ADDR
+ENV DBSERVER_PORT_5432_TCP_ADDR ${DBSERVER_PORT_5432_TCP_ADDR:-localhost}
+ENV DBSERVER_PORT_5432_TCP_PORT ${DBSERVER_PORT_5432_TCP_PORT:-localhost}
+ENV DBSERVER_PORT_9042_TCP_ADDR ${DBSERVER_PORT_9042_TCP_ADDR:-localhost}
+ENV DBSERVER_PORT_9042_TCP_PORT ${DBSERVER_PORT_9042_TCP_PORT:-localhost}
+ENV FRONTEND_PORT_8080_TCP_ADDR ${LOGIN_PORT_8080_TCP_ADDR:-localhost}
+ENV FRONTEND_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
+ENV LOGIN_PORT_8080_TCP_ADDR ${LOGIN_PORT_8080_TCP_ADDR:-localhost}
+ENV LOGIN_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
+
+# アプリケーションで必要になるMavenCentralにないライブラリの取得とローカルレポジトリへインストール
+RUN git clone -b feature/framework-spring https://github.com/debugroom/framework.git /var/local/framework
+RUN mvn install -f /var/local/framework/pom.xml
+
+# アプリケーションをクローンし、デフォルトのプロファイルをproductionに変更
+RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
+RUN sed -i s/dev\,jpa/production\,jpa/g /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/src/main/resources/application.yml
+
+# アプリケーションをビルド
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-boot-parent/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-domain-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-web-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-frontend/pom.xml
+
+＃ アプリケーションが必要なディレクトリ環境や資材を構築
+RUN mkdir -p /usr/local/app/profile/image
+RUN mkdir -p /usr/local/app/info
+RUN mkdir -p /usr/local/app/gallery
+ADD human-icon.png /usr/local/app/profile/image/
+RUN chown -R tomcat:tomcat /usr/local/app
+
+EXPOSE 8080
+
+# アプリケーションをデプロイ
+RUN cp /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/target/wedding.war /var/local/apache-tomcat/webapps/
 
 ```
