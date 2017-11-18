@@ -29,7 +29,9 @@ function getMessages(){
 				classType = "message";
 			}
 			$("#content-" + val.messagepk.messageBoardId)
-					.append($('<p class="'+ classType + '"><span class="icon"><img src="/profile/image/'
+					.append($('<p class="'+ classType + '"><span class="icon"><img src="' 
+							+ data.requestContextPath
+							+ '/profile/image/'
 							+ val.user.userId + "/xxx" + getExtension(val.user.imageFilePath)
 							+ '"><span class="name">'
 							+ val.user.lastName + " " + val.user.firstName
@@ -52,7 +54,9 @@ function getMessages(){
         $("#content-" + messageBoardId).append(
 			'<div class="group-update-link">グループの変更・削除は<a id="group-update-link-' 
 					+ messageBoardId
-					+ '" href="javascript:void(0)" data-url="/chat/update/message-board/' 
+					+ '" href="javascript:void(0)" data-url="'
+					+ data.requestContextPath
+					+ '/chat/update/message-board/' 
 					+ messageBoardId
 					+ ' " onclick="getMessageBoard(this)">こちら</a></div>');
         $("#send-" + messageBoardId).on("click", sendMessage);
@@ -201,11 +205,11 @@ function connect() {
     var endpoint = null;
     var subscription = null;
 	if(messageBoardId === 0){
-		endpoint = "/messages/broadcast";
-		subscription = "/topic/broadcast";
+		endpoint = $(this).data("requestContextPath") + "/messages/broadcast";
+		subscription = $(this).data("requestContextPath") + "/topic/broadcast";
 	}else{
-		endpoint = "/messages/" + messageBoardId;
-		subscription = "/topic/user-" + userId;
+		endpoint = $(this).data("requestContextPath") + "/messages/" + messageBoardId;
+		subscription = $(this).data("requestContextPath") + "/topic/user-" + userId;
 	}
     if(stompClient !== null){
         stompClient.disconnect();

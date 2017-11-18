@@ -16,6 +16,7 @@ public class GetMessagesResult implements Serializable{
 	
 	private static final long serialVersionUID = 7556250017174766401L;
 
+	private String requestContextPath;
 	private List<Message> messages;
 	private List<String> errorMessages;
 	

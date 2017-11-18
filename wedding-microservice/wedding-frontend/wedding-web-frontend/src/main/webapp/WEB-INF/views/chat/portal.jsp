@@ -31,7 +31,7 @@
             <ul>
               <c:forEach var="messageBoard" items="${chatPortalResource.messageBoards}" varStatus="status">
                 <li id="tab-<c:out value='${messageBoard.messageBoardId}' />" class="tab" 
-                  data-user-id="<c:out value='${user.userId}' />"
+                  data-user-id="<c:out value='${user.userId}' />" data-request-context-path="${pageContext.request.contextPath}"
                   data-message-board-id="<c:out value='${messageBoard.messageBoardId}' />"
                   data-messages-url="${pageContext.request.contextPath}/chat/message-board/<c:out value='${messageBoard.messageBoardId}' />">
                   <c:out value="${messageBoard.title}" />

@@ -2011,6 +2011,7 @@ public class ServiceAdpaterController {
 						.append("/messages/{messageBoardId}")
 						.toString(), provider)
 				.expand(messageBoard.getMessageBoardId()).toUri(), Message[].class)));
+		getMessagesResult.setRequestContextPath(getFrontendServerUri().toString());
 		return ResponseEntity.status(HttpStatus.OK).body(getMessagesResult);
 
 	}
