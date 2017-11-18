@@ -1,6 +1,5 @@
 package org.debugroom.wedding.app.web.websocket;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -22,9 +21,6 @@ public class MessageController {
 	private static final String PROTOCOL = "http";
 	private static final String APP_NAME = "api/v1";
 
-	@Value("${server.contextPath}")
-	private String contextPath;
-	
 	@Inject
 	ConnectPathProvider provider;
 	
@@ -56,7 +52,7 @@ public class MessageController {
 		User[] users = restTemplate.getForObject(uriComponents.toUri(), User[].class);
 		for(User user : users){
 			simpMessagingTemplate.convertAndSend(
-				new StringBuilder().append(contextPath)
+				new StringBuilder()
 				.append("/topic/user-").append(user.getUserId()).toString(),
 						addMessage);
 		}

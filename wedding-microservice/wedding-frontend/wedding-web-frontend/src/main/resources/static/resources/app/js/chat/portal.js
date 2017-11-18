@@ -215,10 +215,10 @@ function connect() {
     var subscription = null;
 	if(messageBoardId === 0){
 		endpoint = $(this).data("requestContextPath") + "/messages/broadcast";
-		subscription = $(this).data("requestContextPath") + "/topic/broadcast";
+		subscription = "/topic/broadcast";
 	}else{
 		endpoint = $(this).data("requestContextPath") + "/messages/" + messageBoardId;
-		subscription = $(this).data("requestContextPath") + "/topic/user-" + userId;
+		subscription = "/topic/user-" + userId;
 	}
     if(stompClient !== null){
         stompClient.disconnect();
@@ -466,6 +466,8 @@ function updateMessageBoard(data){
 			+ data.messageBoard.messageBoardId 
 			+ '" class="tab" data-user-id="' 
 			+ data.userId 
+			+ '" data-request-context-path="' 
+			+ data.requestContextPath 
 			+ '" data-message-board-id="' 
 			+ data.messageBoard.messageBoardId 
 			+ '" data-messages-url="'
@@ -505,7 +507,7 @@ function updateMessageBoard(data){
     $("#tab-" + data.messageBoard.messageBoardId).on("click", connect);
     $("#send-" + data.messageBoard.messageBoardId).on("click", sendMessage);
     var endpoint = data.requestContextPath + "/messages/" + data.messageBoard.messageBoardId;
-    var subscription = data.requestContextPath + "/topic/user-" + data.userId;
+    var subscription = "/topic/user-" + data.userId;
 	socket = new SockJS(endpoint);
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
