@@ -207,6 +207,11 @@ public class ManagementRestController {
 		return userManagementService.deleteUser(user.getUserId());
 	}
 
+	@RequestMapping(method=RequestMethod.GET, value="/profile/{userId}")
+	public User getProfile(@PathVariable String userId) throws BusinessException{
+		return userManagementService.getUserProfile(userId);
+	}
+
 	@RequestMapping(method=RequestMethod.GET, value="/information")
 	public Page<Information> getInformation(@PageableDefault(
 			page=0, size=10, direction=Direction.ASC, sort={"infoId"}) Pageable pageable){

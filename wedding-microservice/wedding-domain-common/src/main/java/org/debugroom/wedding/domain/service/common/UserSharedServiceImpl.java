@@ -19,11 +19,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.domain.repository.jpa.NotificationRepository;
 import org.debugroom.wedding.domain.repository.jpa.UserRepository;
 import org.debugroom.wedding.domain.entity.User;
 import org.debugroom.wedding.domain.model.common.UpdateResult;
 import org.debugroom.wedding.domain.entity.Credential;
 import org.debugroom.wedding.domain.entity.Email;
+import org.debugroom.wedding.domain.entity.Notification;
 
 @Transactional
 @Service("userSharedService")
@@ -40,6 +42,9 @@ public class UserSharedServiceImpl implements UserSharedService{
 	
 	@Inject
 	UserRepository userRepository;
+	
+	@Inject
+	NotificationRepository notificationRepository;
 	
 	@Override
 	public boolean exists(User user) throws BusinessException{
@@ -241,6 +246,10 @@ public class UserSharedServiceImpl implements UserSharedService{
 
 	@Override
 	public User deleteUser(User user) {
+		List<Notification> notifications = notificationRepository.findByIdUserId(user.getUserId());
+		if(notifications != null && notifications.size() != 0){
+			notificationRepository.delete(notifications);
+		}
 		User deleteUser = userRepository.findOne(user.getUserId());
 		userRepository.delete(deleteUser);
 		return deleteUser;

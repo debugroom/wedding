@@ -108,4 +108,9 @@ public class MessageRestController {
 		return messageService.deleteUser(user);
 	}
 
+	@RequestMapping(method=RequestMethod.GET, value="/profile/{userId}")
+	public User getProfile(@PathVariable String userId){
+		return messageService.getUser(userId);
+	}
+
 }

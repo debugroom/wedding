@@ -511,4 +511,10 @@ public class MessageServiceImpl implements MessageService{
 				.findByMessagepkMessageBoardId(messageBoard.getMessageBoardId());
 		messageRepository.delete(messages);
 	}
+
+	@Override
+	public User getUser(String userId) {
+		return userRepository.findOne(userId);
+	}
+
 }

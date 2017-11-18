@@ -24,6 +24,7 @@ public interface MessageService {
 	public Message updateMessage(Message message);
 	public Message deleteMessage(Message message);
 	public void deleteMessages(MessageBoard messageBoard);
+	public User getUser(String userId);
 	public User saveUser(User user);
 	public User updateUser(User user);
 	public User deleteUser(User user);

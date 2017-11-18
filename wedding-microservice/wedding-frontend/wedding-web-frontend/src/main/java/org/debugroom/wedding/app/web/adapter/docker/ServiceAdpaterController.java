@@ -617,6 +617,33 @@ public class ServiceAdpaterController {
 		return "management/user/saveComplete";
 	}
 
+	@RequestMapping(method = RequestMethod.GET,
+			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif",
+			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE},
+			value = "/management/profile/image/{userId:[0-9]+}/{imageFileExtension}")
+	@ResponseBody
+	public ResponseEntity<BufferedImage> getManagementProfileImage(@PathVariable String userId,
+			@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		if(customUserDetails.getUser().getAuthorityLevel() != 9){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "management";
+		RestTemplate restTemplate = new RestTemplate();
+		User user = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/profile/{userId}")
+						.toString(), provider).expand(userId).toUri(), User.class);
+		BufferedImage image = null;
+		try{
+			image = downloadHelper.getProfileImage(user);
+		}catch(BusinessException e){
+			return ResponseEntity.badRequest().body(null);
+		}
+		return ResponseEntity.ok().body(image);
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value="/management/user/{userId:[0-9]+}")
 	public String getUser(@Validated(GetUser.class) EditUserForm editUserForm,
 			Errors errors, Model model){
@@ -1986,6 +2013,30 @@ public class ServiceAdpaterController {
 						.toString(), provider)
 				.expand(userId).toUri(), ChatPortalResource.class));
 		return "chat/portal";
+	}
+
+	@RequestMapping(method = RequestMethod.GET,
+			headers = "Accept=image/jpeg, image/jpg, image/png, image/gif",
+			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE},
+			value = "/chat/profile/image/{userId:[0-9]+}/{imageFileExtension}")
+	@ResponseBody
+	public ResponseEntity<BufferedImage> getChatProfileImage(@PathVariable String userId,
+			@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		String serviceName = "message";
+		RestTemplate restTemplate = new RestTemplate();
+		User user = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/profile/{userId}")
+						.toString(), provider).expand(userId).toUri(), User.class);
+		BufferedImage image = null;
+		try{
+			image = downloadHelper.getProfileImage(user);
+		}catch(BusinessException e){
+			return ResponseEntity.badRequest().body(null);
+		}
+		return ResponseEntity.ok().body(image);
 	}
 
 	@RequestMapping(method=RequestMethod.GET, value="/chat/message-board/{messageBoardId}")

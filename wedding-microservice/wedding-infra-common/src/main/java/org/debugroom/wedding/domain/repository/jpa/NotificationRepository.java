@@ -22,4 +22,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Noti
 	public void updateIsAccessedNyInfoId(@Param("isAccessed") boolean isAccessee,
 			@Param("infoId") String infoId);
 
+	public List<Notification> findByIdUserId(String userId);
+
 }

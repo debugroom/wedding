@@ -31,7 +31,7 @@ function getMessages(){
 			$("#content-" + val.messagepk.messageBoardId)
 					.append($('<p class="'+ classType + '"><span class="icon"><img src="' 
 							+ data.requestContextPath
-							+ '/profile/image/'
+							+ '/chat/profile/image/'
 							+ val.user.userId + "/xxx" + getExtension(val.user.imageFilePath)
 							+ '"><span class="name">'
 							+ val.user.lastName + " " + val.user.firstName
@@ -196,7 +196,7 @@ function showMessage(message){
 	$("#form-" + message.messagepk.messageBoardId)
 		.before($('<p class="'+ classType + '"><span class="icon"><img src="' 
 			+ requestContextPath
-			+ '/profile/image/'
+			+ '/chat/profile/image/'
 			+ message.user.userId + "/xxx" + getExtension(message.user.imageFilePath)
 			+ '"><span class="name">'
 			+ message.user.lastName + " " + message.user.firstName
@@ -407,7 +407,7 @@ function updateGroup(){
 					$("#form-" + val.messagepk.messageBoardId)
 							.before($('<p class="'+ classType + '"><span class="icon"><img src="' 
 									+ data.requestContextPath
-									+ '/profile/image/'
+									+ '/chat/profile/image/'
 									+ val.user.userId + "/xxx" + getExtension(val.user.imageFilePath)
 									+ '"><span class="name">'
 									+ val.user.lastName + " " + val.user.firstName

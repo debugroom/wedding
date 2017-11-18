@@ -44,16 +44,16 @@
                          <div class="imgPanel">
                            <c:choose>
                              <c:when test='${fn:endsWith(newUser.imageFilePath,"png")}'>
-                               <img src="${pageContext.request.contextPath}/profile/image/${newUser.userId}/xxxx.png">
+                               <img src="${pageContext.request.contextPath}/management/profile/image/${newUser.userId}/xxxx.png">
                              </c:when>
                              <c:when test='${fn:endsWith(newUser.imageFilePath,"jpeg")}'>
-                               <img src="${pageContext.request.contextPath}/profile/image/${newUser.userId}/xxxx.jpeg">
+                               <img src="${pageContext.request.contextPath}/management/profile/image/${newUser.userId}/xxxx.jpeg">
                              </c:when>
                              <c:when test='${fn:endsWith(newUser.imageFilePath,"jpg")}'>
-                               <img src="${pageContext.request.contextPath}/profile/image/${newUser.userId}/xxxx.jpg">
+                               <img src="${pageContext.request.contextPath}/management/profile/image/${newUser.userId}/xxxx.jpg">
                              </c:when>
                              <c:when test='${fn:endsWith(newUser.imageFilePath,"gif")}'>
-                               <img src="${pageContext.request.contextPath}/profile/image/${newUser.userId}/xxxx.gif">
+                               <img src="${pageContext.request.contextPath}/management/profile/image/${newUser.userId}/xxxx.gif">
                              </c:when>
                            </c:choose>
                          </div>
