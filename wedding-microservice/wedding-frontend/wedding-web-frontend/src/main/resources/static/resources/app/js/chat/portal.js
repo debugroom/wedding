@@ -81,14 +81,18 @@ function getMessageBoard(event){
 						+ '<div class="selective-button">'
 						+ '<button id="submit-edit-group-button-' 
 						+ data.messageBoard.messageBoardId
-						+ '" class="selective-first-button" type="button" data-url="/chat/update/message-board/' 
+						+ '" class="selective-first-button" type="button" data-url="' 
+						+ data.requestContextPath
+						+ '/chat/update/message-board/' 
 						+ data.messageBoard.messageBoardId
 						+ '" data-message-board-id="' 
 						+ data.messageBoard.messageBoardId
 						+ '">変更</button>'
 						+ '<button id="submit-delete-group-button-' 
 						+ data.messageBoard.messageBoardId
-						+ '" class="selective-median-button" type="button" data-url="/chat/delete/message-board/' 
+						+ '" class="selective-median-button" type="button" data-url="' 
+						+ data.requestContextPath
+						+ '/chat/delete/message-board/' 
 						+ data.messageBoard.messageBoardId
 						+ '" data-message-board-id="'
 						+ data.messageBoard.messageBoardId
@@ -183,13 +187,16 @@ function getMessageBoard(event){
 
 function showMessage(message){
     var userId = $("#tab-" + message.messagepk.messageBoardId).data("userId");
+    var requestContextPath = $("#tab-" + message.messagepk.messageBoardId).data("requestContextPath");
 	if(userId == message.user.userId){
 		classType = "message self";
 	}else{
 		classType = "message";
 	}
 	$("#form-" + message.messagepk.messageBoardId)
-		.before($('<p class="'+ classType + '"><span class="icon"><img src="/profile/image/'
+		.before($('<p class="'+ classType + '"><span class="icon"><img src="' 
+			+ requestContextPath
+			+ '/profile/image/'
 			+ message.user.userId + "/xxx" + getExtension(message.user.imageFilePath)
 			+ '"><span class="name">'
 			+ message.user.firstName + " " + message.user.lastName

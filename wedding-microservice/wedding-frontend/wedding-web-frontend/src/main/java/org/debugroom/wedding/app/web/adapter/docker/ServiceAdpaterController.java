@@ -2087,6 +2087,7 @@ public class ServiceAdpaterController {
 								.toString(), provider)
 						.expand(messageBoardId).toUri(),
 						org.debugroom.wedding.app.model.message.User[].class)));
+		updateMessageBoardResource.setRequestContextPath(contextPath);
 		return ResponseEntity.status(HttpStatus.OK).body(updateMessageBoardResource);
 	}
 

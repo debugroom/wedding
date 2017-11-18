@@ -17,6 +17,7 @@ public class UpdateMessageBoardResource implements Serializable{
 	public UpdateMessageBoardResource(){
 	}
 	
+	private String requestContextPath;
 	private MessageBoard messageBoard; 
 	private List<String> messages;
 	private List<User> notBelongUsers;
