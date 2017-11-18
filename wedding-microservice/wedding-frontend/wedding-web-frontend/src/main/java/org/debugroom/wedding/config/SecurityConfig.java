@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.debugroom.wedding.app.web.security.LoginFailureHandler;
 import org.debugroom.wedding.app.web.security.LoginSuccessHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.loginPage("/login")
 			.successForwardUrl("/portal")
 			.failureUrl("/login")
-			.successHandler(new LoginSuccessHandler())
+			.successHandler(loginSuccessHandler())
 //			.failureHandler(new LoginFailureHandler())
 			.usernameParameter("username")
 			.passwordParameter("password")
@@ -65,6 +66,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.permitAll();
 	}
 
+	@Bean
+	public LoginSuccessHandler loginSuccessHandler(){
+		return new LoginSuccessHandler();
+	}
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth

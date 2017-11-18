@@ -31,4 +31,6 @@ public interface UserSharedService {
 	
 	public User deleteUser(User user);
 
+	public User updateLastLoginDate(String userId);
+
 }

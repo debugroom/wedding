@@ -74,7 +74,21 @@ public class UserSharedServiceImpl implements UserSharedService{
 		UpdateResult<User> updateResult = new UpdateResult<User>();
 
 		User updateTargetUser = getUser(user.getUserId());
-		User beforeUpdate = mapper.map(updateTargetUser, User.class);
+		User beforeUpdate = User.builder()
+				.userId(updateTargetUser.getUserId())
+				.firstName(updateTargetUser.getFirstName())
+				.lastName(updateTargetUser.getLastName())
+				.loginId(updateTargetUser.getLoginId())
+				.authorityLevel(updateTargetUser.getAuthorityLevel())
+				.imageFilePath(updateTargetUser.getImageFilePath())
+				.isBrideSide(updateTargetUser.isBrideSide())
+				.lastLoginDate(updateTargetUser.getLastLoginDate())
+				.lastUpdatedDate(updateTargetUser.getLastUpdatedDate())
+				.ver(updateTargetUser.getVer())
+				.address(updateTargetUser.getAddress())
+				.credentials(updateTargetUser.getCredentials())
+				.emails(updateTargetUser.getEmails())
+				.build();
 
 		List<String> updateParamList = new ArrayList<String>();
 		
@@ -239,6 +253,13 @@ public class UserSharedServiceImpl implements UserSharedService{
 			throw new BusinessException("userSharedService.error.0004", loginId);
 		}
 		return user;
+	}
+
+	@Override
+	public User updateLastLoginDate(String userId) {
+		User updateTargetUser = userRepository.findOne(userId);
+		updateTargetUser.setLastLoginDate(DateUtil.getCurrentDate());
+		return updateTargetUser;
 	}
 
 }

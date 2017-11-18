@@ -207,7 +207,7 @@ public class MessageServiceImpl implements MessageService{
 
 		Long newMessageBoardId = Long.valueOf(0);
 		if(0 != messageBoardRepository.count()){
-			newMessageBoardId = messageBoardRepository.findTopByOrderByMessageBoardId();
+			newMessageBoardId = messageBoardRepository.findTopByOrderByMessageBoardId()+1;
 		}
 			
 		MessageBoard addMessageBoard = MessageBoard.builder()
@@ -276,7 +276,7 @@ public class MessageServiceImpl implements MessageService{
 		Group updateGroup = groupRepository.findOne(
 				messageBoardRelatedGroups.get(0).getMessageBoardRelatedGrouppk().getGroupId());
 		
-		if(null != deleteUsers){
+		if(null != deleteUsers && deleteUsers.size() != 0){
 			
 			List<UserRelatedGroup> deleteUserRelatedGroups = new ArrayList<UserRelatedGroup>();
 			List<GroupRelatedUser> deleteGroupRelatedUsers = new ArrayList<GroupRelatedUser>();
@@ -303,7 +303,7 @@ public class MessageServiceImpl implements MessageService{
 			groupRelatedUserRepository.delete(deleteGroupRelatedUsers);
 		}
 
-		if(null != addUsers){
+		if(null != addUsers && addUsers.size() != 0){
 			
 			List<UserRelatedGroup> addUserRelatedGroups = new ArrayList<UserRelatedGroup>();
 			List<GroupRelatedUser> addGroupRelatedUsers = new ArrayList<GroupRelatedUser>();
@@ -410,20 +410,69 @@ public class MessageServiceImpl implements MessageService{
 
 	@Override
 	public User saveUser(User user) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		userRepository.save(user);
+		return user;
 	}
 
 	@Override
 	public User updateUser(User user) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		User updateTargetUser = userRepository.findOne(user.getUserId());
+		if(!updateTargetUser.getFirstName().equals(user.getFirstName())){
+			updateTargetUser.setFirstName(user.getFirstName());
+			updateTargetUser.setLastUpdatedDate(new Date());
+		}
+		if(!updateTargetUser.getLastName().equals(user.getLastName())){
+			updateTargetUser.setLastName(user.getLastName());
+			updateTargetUser.setLastUpdatedDate(new Date());
+		}
+		if(!updateTargetUser.getLoginId().equals(user.getLoginId())){
+			updateTargetUser.setLoginId(user.getLoginId());
+			updateTargetUser.setLastUpdatedDate(new Date());
+		}
+		if(!updateTargetUser.getImageFilePath().equals(user.getImageFilePath())){
+			updateTargetUser.setImageFilePath(user.getImageFilePath());
+			updateTargetUser.setLastUpdatedDate(new Date());
+		}
+		if(null != user.getAuthorityLevel()){
+			if(updateTargetUser.getAuthorityLevel().intValue() 
+					!= user.getAuthorityLevel().intValue()){
+				updateTargetUser.setAuthorityLevel(user.getAuthorityLevel());
+				updateTargetUser.setLastUpdatedDate(new Date());
+			}
+		}
+		if(updateTargetUser.isBrideSide() != user.isBrideSide()){
+			updateTargetUser.setBrideSide(user.isBrideSide());
+				updateTargetUser.setLastUpdatedDate(new Date());
+		}
+		userRepository.save(updateTargetUser);
+		return updateTargetUser;
 	}
 
 	@Override
 	public User deleteUser(User user) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		List<UserRelatedGroup> userRelatedGroups = userRelatedGroupRepository
+				.findByUserRelatedGrouppkUserId(user.getUserId());
+		if(userRelatedGroups.size() != 0){
+			List<GroupRelatedUser> deleteGroupRelatedUsers = new ArrayList<GroupRelatedUser>();
+			List<UserRelatedGroup> deleteUserRelatedGroups = new ArrayList<UserRelatedGroup>();
+			for(UserRelatedGroup userRelatedGroup : 
+				userRelatedGroupRepository.findByUserRelatedGrouppkUserId(user.getUserId())){
+				deleteGroupRelatedUsers.add(GroupRelatedUser.builder().groupRelatedUserpk(
+						GroupRelatedUserPK.builder()
+						.userId(user.getUserId())
+						.groupId(userRelatedGroup.getUserRelatedGrouppk().getGroupId())
+						.build())
+						.build());
+				deleteUserRelatedGroups.add(userRelatedGroup);
+			}
+			groupRelatedUserRepository.delete(deleteGroupRelatedUsers);
+			userRelatedGroupRepository.delete(deleteUserRelatedGroups);
+		}		
+		
+		userRepository.delete(user);
+
+		return user;
+
 	}
 
 	@Override

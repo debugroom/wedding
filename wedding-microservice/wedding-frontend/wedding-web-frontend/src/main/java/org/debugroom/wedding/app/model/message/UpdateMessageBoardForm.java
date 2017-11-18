@@ -26,7 +26,7 @@ public class UpdateMessageBoardForm implements Serializable{
 	@Valid
 	private List<User> checkedAddUsers;
 	@Valid
-	private List<User> checketDeleteUsers;
+	private List<User> checkedDeleteUsers;
 	
 	
 }

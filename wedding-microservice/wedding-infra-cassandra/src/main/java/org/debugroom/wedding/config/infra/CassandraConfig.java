@@ -17,8 +17,8 @@ public abstract class CassandraConfig extends AbstractCassandraConfiguration{
 
 	@Override
 	public SchemaAction getSchemaAction(){
-//		return SchemaAction.CREATE_IF_NOT_EXISTS;
-		return SchemaAction.RECREATE;
+		return SchemaAction.CREATE_IF_NOT_EXISTS;
+//		return SchemaAction.RECREATE;
 	}
 
 	@Bean CassandraTemplate cassandraTemplate(Session session){

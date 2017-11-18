@@ -32,7 +32,7 @@ function getMessages(){
 					.append($('<p class="'+ classType + '"><span class="icon"><img src="/profile/image/'
 							+ val.user.userId + "/xxx" + getExtension(val.user.imageFilePath)
 							+ '"><span class="name">'
-							+ val.user.firstName + " " + val.user.lastName
+							+ val.user.lastName + " " + val.user.firstName
 							+ '</span></span><span class="body">'
 							+ val.comment
 							+ '</span></p>'));
@@ -344,17 +344,17 @@ function addGroup(){
 
 function updateGroup(){
 	var messageBoardId = $(this).data("messageBoardId")
-	var addUsers = [];
-	var deleteUsers = [];
+	var checkedAddUsers = [];
+	var checkedDeleteUsers = [];
 	var addUsersHiddenForm = $("#add-users-table input:hidden");
 	var deleteUsersHiddenForm = $("#delete-users-table input:hidden");
 	
 	for(var i=0 ; i < addUsersHiddenForm.length ; i++){
-		addUsers[i] = { "userId" : $(addUsersHiddenForm[i]).val() }
+		checkedAddUsers[i] = { "userId" : $(addUsersHiddenForm[i]).val() }
 	}
 
 	for(var i=0 ; i < deleteUsersHiddenForm.length ; i++){
-		deleteUsers[i] = { "userId" : $(deleteUsersHiddenForm[i]).val() }
+		checkedDeleteUsers[i] = { "userId" : $(deleteUsersHiddenForm[i]).val() }
 	}
 
 	var title = $("#input-edit-group-name").val();
@@ -367,8 +367,8 @@ function updateGroup(){
 				"messageBoardId" : messageBoardId,
 				"title" : title 
 			},
-			"checkedAddUsers" : addUsers,
-			"checkedDeleteUsers" : deleteUsers,
+			"checkedAddUsers" : checkedAddUsers,
+			"checkedDeleteUsers" : checkedDeleteUsers,
 	}
 	$.ajax({
 	     type : "post",
@@ -378,6 +378,7 @@ function updateGroup(){
     dataType : "json",
 	}).then(
 		function(data){
+			disconnect();
 			updateMessageBoard(data);
 			$.get(data.requestContextPath 
 					+ "/chat/message-board/" 

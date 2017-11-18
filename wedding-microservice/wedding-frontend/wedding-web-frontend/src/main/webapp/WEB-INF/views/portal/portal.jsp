@@ -55,7 +55,7 @@
               <tbody>
               <c:forEach var="information" items="${portalResource.informationList}" varStatus="status">
                 <tr>
-                  <td><fmt:formatDate value="${portalResource.user.lastLoginDate}" pattern="yyyy/MM/dd" /> </td>
+                  <td><fmt:formatDate value="${information.lastUpdatedDate}" pattern="yyyy/MM/dd HH:mm:ss" /> </td>
                   <td><a href="${pageContext.request.contextPath}/information/${information.infoId}"><c:out value="${information.title}"/></a></td>
                 </tr>
               </c:forEach>

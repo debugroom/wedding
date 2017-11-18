@@ -93,4 +93,19 @@ public class MessageRestController {
 				.messageBoardId(messageBoardId).build());
 	}
 
+	@RequestMapping(method=RequestMethod.POST, value="/user/new")
+	public User saveUser(@RequestBody User user){
+		return messageService.saveUser(user);
+	}
+
+	@RequestMapping(method=RequestMethod.PUT, value="/user/{userId}")
+	public User updateUser(@RequestBody User user){
+		return messageService.updateUser(user);
+	}
+	
+	@RequestMapping(method=RequestMethod.DELETE, value="/user/{userId}")
+	public User deleteUser(@RequestBody User user){
+		return messageService.deleteUser(user);
+	}
+
 }

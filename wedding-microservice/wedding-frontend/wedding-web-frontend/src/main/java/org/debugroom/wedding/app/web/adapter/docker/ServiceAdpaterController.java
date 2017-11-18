@@ -567,6 +567,7 @@ public class ServiceAdpaterController {
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 		
 		String serviceName = "management";
+		String serviceName2 = "message";
 
 		User user = mapper.map(newUserForm, User.class);
 		
@@ -582,6 +583,12 @@ public class ServiceAdpaterController {
 		}
 		RestTemplate restTemplate = new RestTemplate();
 		try{
+			restTemplate.postForObject(
+					RequestBuilder.buildUriComponents(serviceName2,
+							new StringBuilder()
+							.append(APP_NAME)
+							.append("/user/new")
+							.toString(), provider).toUri(), user, User.class);
 			redirectAttributes.addFlashAttribute("newUser", 
 				restTemplate.postForObject(
 						RequestBuilder.buildUriComponents(serviceName, 
@@ -651,6 +658,7 @@ public class ServiceAdpaterController {
 			RedirectAttributes redirectAttributes, Locale locale){
 		
 		String serviceName = "management";
+		String serviceName2 = "message";
 
 		User user = mapper.map(editUserForm, User.class);
 		if(bindingResult.hasErrors()){
@@ -677,6 +685,13 @@ public class ServiceAdpaterController {
 
 		RestTemplate restTemplate = new RestTemplate();
 		try{
+			restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName2, 
+					new StringBuilder()
+					.append(APP_NAME)
+					.append("/user/{userId}")
+					.toString(), provider)
+					.expand(editUserForm.getUserId()).toUri(), HttpMethod.PUT,
+					new HttpEntity<User>(user), User.class);
 			redirectAttributes.addFlashAttribute("updateResult", 
 					restTemplate.exchange(
 							RequestBuilder.buildUriComponents(serviceName, 
@@ -712,7 +727,9 @@ public class ServiceAdpaterController {
 			RedirectAttributes redirectAttributes){
 		
 		String serviceName = "management";
+		String serviceName2 = "message";
 
+		User deleteUser = mapper.map(deleteUserForm,  User.class);
 		if(bindingResult.hasErrors()){
 			return "common/error";
 		}
@@ -723,6 +740,13 @@ public class ServiceAdpaterController {
 
 		RestTemplate restTemplate = new RestTemplate();
 		try{
+			restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName2, 
+					new StringBuilder()
+					.append(APP_NAME)
+					.append("/user/{userId}")
+					.toString(), provider)
+					.expand(deleteUserForm.getUserId()).toUri(), 
+					HttpMethod.DELETE, new HttpEntity<User>(deleteUser), User.class);
 			redirectAttributes.addFlashAttribute("deleteUser", 
 					restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName, 
 							new StringBuilder()
@@ -731,7 +755,7 @@ public class ServiceAdpaterController {
 							.toString(), provider)
 							.expand(deleteUserForm.getUserId()).toUri(),
 					HttpMethod.DELETE, new HttpEntity<User>(
-						mapper.map(deleteUserForm, User.class)), User.class).getBody());
+						deleteUser), User.class).getBody());
 		} catch (Exception e){
 			//TODO Using Business Exception for serverside error.
 			model.addAttribute("errorCode", "");

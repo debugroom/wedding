@@ -1,5 +1,8 @@
 package org.debugroom.wedding.app.web.management;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import org.springframework.data.domain.Page;
@@ -24,6 +27,11 @@ import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.management.information.InformationFormResource;
 import org.debugroom.wedding.app.model.management.request.RequestFormResource;
 import org.debugroom.wedding.domain.entity.management.Request;
+import org.debugroom.wedding.domain.entity.Address;
+import org.debugroom.wedding.domain.entity.Credential;
+import org.debugroom.wedding.domain.entity.CredentialPK;
+import org.debugroom.wedding.domain.entity.Email;
+import org.debugroom.wedding.domain.entity.EmailPK;
 import org.debugroom.wedding.domain.entity.Information;
 import org.debugroom.wedding.domain.entity.User;
 import org.debugroom.wedding.domain.model.common.UpdateResult;
@@ -72,16 +80,80 @@ public class ManagementRestController {
 	public User createUserProfile(@RequestBody 
 			org.debugroom.wedding.app.model.management.user.User user) 
 			throws MappingException, BusinessException{
+		Set<Email> emails = new HashSet<Email>();
+		for(org.debugroom.wedding.app.model.management.user.Email email : user.getEmails()){
+			emails.add(Email.builder()
+					.id(EmailPK.builder().emailId(email.getId().getEmailId())
+							.userId(email.getId().getUserId()).build())
+					.email(email.getEmail())
+					.build());
+		}
+		Set<Credential> credentials = new HashSet<Credential>();
+		for(org.debugroom.wedding.app.model.management.user.Credential credential : user.getCredentials()){
+			credentials.add(Credential.builder()
+					.id(CredentialPK.builder()
+							.userId(credential.getId().getUserId())
+							.credentialType(credential.getId().getCredentialType())
+							.build())
+					.credentialKey(credential.getCredentialKey())
+					.build());
+		}
 		return userManagementService.createUserProfile(
-				mapper.map(user, User.class));
+				User.builder()
+				.userId(user.getUserId())
+				.firstName(user.getFirstName())
+				.lastName(user.getLastName())
+				.loginId(user.getLoginId())
+				.authorityLevel(user.getAuthorityLevel())
+				.imageFilePath(user.getImageFilePath())
+				.isBrideSide(user.isBrideSide())
+				.address(Address.builder()
+						.postCd(user.getAddress().getPostCd())
+						.address(user.getAddress().getAddress())
+						.build())
+				.emails(emails)
+				.credentials(credentials)
+				.build());
 	}
 
 	@RequestMapping(method=RequestMethod.POST, value="/user/{userId}")
 	public User saveUser(@RequestBody
 			org.debugroom.wedding.app.model.management.user.User user) 
 					throws MappingException, BusinessException{
+		Set<Email> emails = new HashSet<Email>();
+		for(org.debugroom.wedding.app.model.management.user.Email email : user.getEmails()){
+			emails.add(Email.builder()
+					.id(EmailPK.builder().emailId(email.getId().getEmailId())
+							.userId(email.getId().getUserId()).build())
+					.email(email.getEmail())
+					.build());
+		}
+		Set<Credential> credentials = new HashSet<Credential>();
+		for(org.debugroom.wedding.app.model.management.user.Credential credential : user.getCredentials()){
+			credentials.add(Credential.builder()
+					.id(CredentialPK.builder()
+							.userId(credential.getId().getUserId())
+							.credentialType(credential.getId().getCredentialType())
+							.build())
+					.credentialKey(credential.getCredentialKey())
+					.build());
+		}
 		return userManagementService.saveUser(
-				mapper.map(user, User.class));
+				User.builder()
+				.userId(user.getUserId())
+				.firstName(user.getFirstName())
+				.lastName(user.getLastName())
+				.loginId(user.getLoginId())
+				.authorityLevel(user.getAuthorityLevel())
+				.imageFilePath(user.getImageFilePath())
+				.isBrideSide(user.isBrideSide())
+				.address(Address.builder()
+						.postCd(user.getAddress().getPostCd())
+						.address(user.getAddress().getAddress())
+						.build())
+				.emails(emails)
+				.credentials(credentials)
+				.build());
 	}
 
 	@RequestMapping(method=RequestMethod.GET, value="/user/{userId}")
@@ -93,8 +165,40 @@ public class ManagementRestController {
 	public UpdateResult<User> updateUser(@RequestBody
 			org.debugroom.wedding.app.model.management.user.User user) 
 					throws MappingException, BusinessException{
+		Set<Email> emails = new HashSet<Email>();
+		for(org.debugroom.wedding.app.model.management.user.Email email : user.getEmails()){
+			emails.add(Email.builder()
+					.id(EmailPK.builder().emailId(email.getId().getEmailId())
+							.userId(email.getId().getUserId()).build())
+					.email(email.getEmail())
+					.build());
+		}
+		Set<Credential> credentials = new HashSet<Credential>();
+		for(org.debugroom.wedding.app.model.management.user.Credential credential : user.getCredentials()){
+			credentials.add(Credential.builder()
+					.id(CredentialPK.builder()
+							.userId(credential.getId().getUserId())
+							.credentialType(credential.getId().getCredentialType())
+							.build())
+					.credentialKey(credential.getCredentialKey())
+					.build());
+		}
 		return userManagementService.udpateUser(
-				mapper.map(user, User.class));
+				User.builder()
+				.userId(user.getUserId())
+				.firstName(user.getFirstName())
+				.lastName(user.getLastName())
+				.loginId(user.getLoginId())
+				.authorityLevel(user.getAuthorityLevel())
+				.imageFilePath(user.getImageFilePath())
+				.isBrideSide(user.isBrideSide())
+				.address(Address.builder()
+						.postCd(user.getAddress().getPostCd())
+						.address(user.getAddress().getAddress())
+						.build())
+				.emails(emails)
+				.credentials(credentials)
+				.build());
 	}
 
 	@RequestMapping(method=RequestMethod.DELETE, value="/user/{userId}")
