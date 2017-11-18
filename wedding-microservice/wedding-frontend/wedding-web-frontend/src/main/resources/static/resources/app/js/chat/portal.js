@@ -50,6 +50,8 @@ function getMessages(){
 						+ messageBoardId
 						+ '" data-user-id="' 
 						+ userId
+						+ '" data-request-context-path="'
+						+ data.requestContextPath
 						+ '"type="button">Send</button></div>'));
         $("#content-" + messageBoardId).append(
 			'<div class="group-update-link">グループの変更・削除は<a id="group-update-link-' 
@@ -292,9 +294,9 @@ function sendMessage() {
 	var messageBoardId = $(this).data("messageBoardId");
 	var userId = $(this).data("userId");
 	if(messageBoardId === 0){
-		endpoint = "/chat/messages/broadcast";
+		endpoint = $(this).data("requestContextPath") + "/chat/messages/broadcast";
 	}else{
-		endpoint = "/chat/messages/" + messageBoardId;
+		endpoint = $(this).data("requestContextPath") + "/chat/messages/" + messageBoardId;
 	}
     stompClient.send(endpoint, {}, JSON.stringify(
     		{'comment': $("#input-" + messageBoardId).val(),
