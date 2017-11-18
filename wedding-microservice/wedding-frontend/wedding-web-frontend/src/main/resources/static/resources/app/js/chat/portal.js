@@ -398,7 +398,9 @@ function updateGroup(){
 						classType = "message";
 					}
 					$("#form-" + val.messagepk.messageBoardId)
-							.before($('<p class="'+ classType + '"><span class="icon"><img src="/profile/image/'
+							.before($('<p class="'+ classType + '"><span class="icon"><img src="' 
+									+ data.requestContextPath
+									+ '/profile/image/'
 									+ val.user.userId + "/xxx" + getExtension(val.user.imageFilePath)
 									+ '"><span class="name">'
 									+ val.user.firstName + " " + val.user.lastName
@@ -483,7 +485,9 @@ function updateMessageBoard(data){
     $("#content-" + data.messageBoard.messageBoardId).append(
 			'<div class="group-update-link">グループの変更・削除は<a id="group-update-link-' 
 					+ data.messageBoard.messageBoardId
-					+ '" href="javascript:void(0)" data-url="/chat/update/message-board/' 
+					+ '" href="javascript:void(0)" data-url="' 
+					+ data.requestContextPath
+					+ '/chat/update/message-board/' 
 					+ data.messageBoard.messageBoardId
 					+ ' " onclick="getMessageBoard(this)">こちら</a></div>');
 	$("[id^=content-]").css("display", "none");
@@ -493,8 +497,8 @@ function updateMessageBoard(data){
     $("#tab-" + data.messageBoard.messageBoardId).on("click", getMessages);
     $("#tab-" + data.messageBoard.messageBoardId).on("click", connect);
     $("#send-" + data.messageBoard.messageBoardId).on("click", sendMessage);
-    var endpoint = "/messages/" + data.messageBoard.messageBoardId;
-    var subscription = "/topic/user-" + data.userId;
+    var endpoint = data.requestContextPath + "/messages/" + data.messageBoard.messageBoardId;
+    var subscription = data.requestContextPath + "/topic/user-" + data.userId;
 	socket = new SockJS(endpoint);
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {

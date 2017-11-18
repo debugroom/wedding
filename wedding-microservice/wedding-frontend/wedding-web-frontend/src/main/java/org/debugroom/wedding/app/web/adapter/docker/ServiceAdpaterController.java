@@ -2056,7 +2056,7 @@ public class ServiceAdpaterController {
 						.append(APP_NAME)
 						.append("/message-board/new")
 						.toString(), provider).toUri(), group, MessageBoard.class));
-		addMessageBoardResult.setRequestContextPath(getFrontendServerUri().toString());
+		addMessageBoardResult.setRequestContextPath(contextPath);
 		return ResponseEntity.status(HttpStatus.OK).body(addMessageBoardResult);
 	}
 
@@ -2120,7 +2120,7 @@ public class ServiceAdpaterController {
 				.expand(messageBoardId).toUri(), HttpMethod.PUT, 
 				new HttpEntity<UpdateMessageBoardForm>(updateMessageBoardForm), 
 				MessageBoard.class).getBody());
-		updateMessageBoardResult.setRequestContextPath(getFrontendServerUri().toString());
+		updateMessageBoardResult.setRequestContextPath(contextPath);
 		return ResponseEntity.status(HttpStatus.OK).body(updateMessageBoardResult);
 	}
 
