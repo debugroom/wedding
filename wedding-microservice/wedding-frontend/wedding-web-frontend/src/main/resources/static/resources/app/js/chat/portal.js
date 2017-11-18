@@ -52,7 +52,7 @@ function getMessages(){
 						+ userId
 						+ '" data-request-context-path="'
 						+ data.requestContextPath
-						+ '"type="button">Send</button></div>'));
+						+ '" type="button">Send</button></div>'));
         $("#content-" + messageBoardId).append(
 			'<div class="group-update-link">グループの変更・削除は<a id="group-update-link-' 
 					+ messageBoardId
@@ -199,7 +199,7 @@ function showMessage(message){
 			+ '/profile/image/'
 			+ message.user.userId + "/xxx" + getExtension(message.user.imageFilePath)
 			+ '"><span class="name">'
-			+ message.user.firstName + " " + message.user.lastName
+			+ message.user.lastName + " " + message.user.firstName
 			+ '</span></span><span class="body">'
 			+ message.comment
 			+ '</span></p>'));
@@ -410,7 +410,7 @@ function updateGroup(){
 									+ '/profile/image/'
 									+ val.user.userId + "/xxx" + getExtension(val.user.imageFilePath)
 									+ '"><span class="name">'
-									+ val.user.firstName + " " + val.user.lastName
+									+ val.user.lastName + " " + val.user.firstName
 									+ '</span></span><span class="body">'
 									+ val.comment
 									+ '</span></p>'));
@@ -490,6 +490,8 @@ function updateMessageBoard(data){
 			+ data.messageBoard.messageBoardId 
 			+ '" data-user-id="' 
 			+ data.userId
+			+ '" data-request-context-path="'
+			+ data.requestContextPath
 			+ '" type="button">Send</button></div>'));
     $("#content-" + data.messageBoard.messageBoardId).append(
 			'<div class="group-update-link">グループの変更・削除は<a id="group-update-link-' 
