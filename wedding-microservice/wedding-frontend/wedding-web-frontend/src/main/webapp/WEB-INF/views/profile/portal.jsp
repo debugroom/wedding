@@ -12,9 +12,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" >
 <title>Profile Portal</title>
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css" media="(min-width: 1280px)">
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/profile/portal.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/profile/portal.css" media="(min-width: 1280px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/profile/portal_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/profile/portal_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script type="text/javascript" 
+    src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
 <script type="text/javascript" 
     src="${pageContext.request.contextPath}/static/resources/app/js/common/UpdateDialog.js"></script>
 <script type="text/javascript" 
@@ -94,10 +105,10 @@
                     <td><label for="credentials[0].credentialKey">パスワード</label></td>
                     <td>
                       **********<br><form:errors path="credentials[0].credentialKey" cssStyle="color:red" />
-                      <input id="user.credentials[0].credentialKey" name="credentials[0].credentialKey" type="hidden" value=""/>
-                      <input id="user.credentials[0].id.credentialType" name="credentials[0].id.credentialType" type="hidden" value="PASSWORD"/>
-                      <input id="user.credentials[1].credentialKey" name="credentials[1].credentialKey" type="hidden" value=""/>
-                      <input id="user.credentials[1].id.credentialType" name="credentials[1].id.credentialType" type="hidden" value=""/>
+                      <input id="user.credentials[0].credentialKey" name="user.credentials[0].credentialKey" type="hidden" value=""/>
+                      <input id="user.credentials[0].id.credentialType" name="user.credentials[0].id.credentialType" type="hidden" value="PASSWORD"/>
+                      <input id="user.credentials[1].credentialKey" name="user.credentials[1].credentialKey" type="hidden" value=""/>
+                      <input id="user.credentials[1].id.credentialType" name="user.credentials[1].id.credentialType" type="hidden" value=""/>
                     </td>
                     <td><button id="password-button" name="password-button" type="button" value="user.credentials[0].credentialKey">変更</button></td>
                   </tr>

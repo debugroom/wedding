@@ -1,6 +1,8 @@
 package org.debugroom.wedding.app.web.management;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -272,8 +274,32 @@ public class ManagementRestController {
 	public UpdateResult<InformationDetail> updateInformation(@RequestBody
 			org.debugroom.wedding.app.model.management.information.InformationDraft informationDraft) 
 					throws MappingException, BusinessException{
+	//	return informationManagementService.updateInformation(
+	//			mapper.map(informationDraft, InformationDraft.class));
+		List<User> addUsers = new ArrayList<User>();
+		List<User> deleteUsers = new ArrayList<User>();
+		if(null != informationDraft.getCheckedAddUsers()){
+			for(org.debugroom.wedding.app.model.management.information.User user : informationDraft.getCheckedAddUsers()){
+				addUsers.add(User.builder().userId(user.getUserId()).build());
+			}
+		}
+		if(null != informationDraft.getCheckedDeleteUsers()){
+			for(org.debugroom.wedding.app.model.management.information.User user : informationDraft.getCheckedDeleteUsers()){
+				deleteUsers.add(User.builder().userId(user.getUserId()).build());
+			}
+		}
 		return informationManagementService.updateInformation(
-				mapper.map(informationDraft, InformationDraft.class));
+				InformationDraft.builder().information(
+						Information.builder()
+						.infoId(informationDraft.getInformation().getInfoId())
+						.infoPagePath(informationDraft.getInformation().getInfoPagePath())
+						.title(informationDraft.getInformation().getTitle())
+						.registratedDate(informationDraft.getInformation().getRegistratedDate())
+						.releaseDate(informationDraft.getInformation().getReleaseDate())
+						.build())
+				.excludeUsers(deleteUsers)
+				.viewUsers(addUsers)
+				.build());
 	}
 
 	@RequestMapping(method=RequestMethod.DELETE, value="/information/{infoId}")

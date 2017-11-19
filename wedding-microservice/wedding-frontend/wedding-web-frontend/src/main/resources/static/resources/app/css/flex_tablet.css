@@ -45,13 +45,16 @@ tbody > tr:nth-child(odd) > td{
 
 #flex-container .flex-item-2{
 	           width : auto;
-	    -webkit-flex : 1 0 900px;
-	       -moz-flex : 1 0 900px;
-	            flex : 1 0 900px;
+	    -webkit-flex : 1 0 518px;
+	       -moz-flex : 1 0 518px;
+	            flex : 1 0 518px;
+}
+
+@media screen and (min-width:480px) { 
 }
 
 .panel {
-	             width : 900px;
+	             width : auto;
 	            margin : 0 50px 50px 50px;
 	           padding : 0 20px 0;
 	            border : solid 1px #aaaaaa;
@@ -334,7 +337,6 @@ tbody > tr:nth-child(odd) > td{
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: 'liga';
 }
-
 .material-icons.md-18 { font-size: 18px; }
 .material-icons.md-24 { font-size: 24px; }
 .material-icons.md-36 { font-size: 36px; }
@@ -345,5 +347,5 @@ tbody > tr:nth-child(odd) > td{
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
 #menu_button {
-	display:none;
+    display:none;
 }

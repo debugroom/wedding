@@ -44,7 +44,9 @@ function getMessages(){
 						+ messageBoardId
 						+ '" class="form"><label for="comment">Type message.</label><input type="text" id="input-' 
 						+ messageBoardId
-						+ '" class="comment" name="comment" placeholder="message here..."/><button id="send-' 
+						+ '" class="comment" name="comment" data-message-board-id="' 
+						+ messageBoardId
+						+ '"placeholder="message here..." onkeypress="keyTypeHandler(event.keyCode, this);"/><button id="send-' 
 						+ messageBoardId
 						+ '" data-message-board-id="' 
 						+ messageBoardId
@@ -296,6 +298,23 @@ function showGroupPanel(event){
 	
 }
 
+function keyTypeHandler(code, form){
+	if(code == 13){
+		var endpoint = null;
+		var messageBoardId = $(form).data("messageBoardId");
+		var userId = $("#send-" + messageBoardId).data("userId");
+		if(messageBoardId === 0){
+			endpoint = $("#send-" + messageBoardId).data("requestContextPath") + "/chat/messages/broadcast";
+		}else{
+			endpoint = $("#send-" + messageBoardId).data("requestContextPath") + "/chat/messages/" + messageBoardId;
+		}
+	    stompClient.send(endpoint, {}, JSON.stringify(
+	    		{'comment': $("#input-" + messageBoardId).val(),
+	    			'user': { 'userId' : userId },
+	    		'messagepk': { 'messageBoardId' : messageBoardId }}));
+	}
+}
+
 function sendMessage() {
 	var endpoint = null;
 	var messageBoardId = $(this).data("messageBoardId");
@@ -484,7 +503,9 @@ function updateMessageBoard(data){
 			+ data.messageBoard.messageBoardId 
 			+ '" class="form"><label for="comment">Type message.</label><input type="text" id="input-' 
 			+ data.messageBoard.messageBoardId 
-			+ '" class="comment" name="comment" placeholder="message here..."><button id="send-'
+			+ '" class="comment" name="comment" data-message-board-id="' 
+			+ data.messageBoard.messageBoardId 
+			+ '"placeholder="message here..." onkeypress="keyTypeHandler(event.keyCode, this);"><button id="send-'
 			+ data.messageBoard.messageBoardId 
 			+ '" data-message-board-id="'
 			+ data.messageBoard.messageBoardId 

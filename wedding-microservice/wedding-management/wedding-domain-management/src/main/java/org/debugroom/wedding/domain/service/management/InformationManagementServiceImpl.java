@@ -89,9 +89,22 @@ public class InformationManagementServiceImpl implements InformationManagementSe
 		
 		InformationDetail updateTargetInformationDetail = getInformationDetail(information.getInfoId());
 		Information updateTargetInformation = updateTargetInformationDetail.getInformation();
-		InformationDetail beforeUpdate = mapper.map(updateTargetInformationDetail, InformationDetail.class,
-				"informationDetailMappingExcludingUserRelatedEntity");
+//		InformationDetail beforeUpdate = mapper.map(updateTargetInformationDetail, InformationDetail.class,
+//				"informationDetailMappingExcludingUserRelatedEntity");
 		
+		InformationDetail beforeUpdate = InformationDetail.builder()
+				.information(Information.builder()
+						.infoId(updateTargetInformation.getInfoId())
+						.infoPagePath(updateTargetInformation.getInfoPagePath())
+						.registratedDate(updateTargetInformation.getRegistratedDate())
+						.releaseDate(updateTargetInformation.getReleaseDate())
+						.title(updateTargetInformation.getTitle())
+						.ver(updateTargetInformation.getVer())
+						.build())
+				.accessedUsers(new ArrayList<User>(updateTargetInformationDetail.getAccessedUsers()))
+				.noAccessedUsers(new ArrayList<User>(updateTargetInformationDetail.getNoAccessedUsers()))
+				.build();
+
 		boolean isChangedInformation = false;
 		List<String> updateParamList = new ArrayList<String>();
 		

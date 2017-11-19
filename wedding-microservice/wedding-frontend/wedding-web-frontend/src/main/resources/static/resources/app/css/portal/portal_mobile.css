@@ -11,6 +11,9 @@
     opacity:                0.9;
 }
 
+.informationPanel {
+	margin : 10px;
+}
 .informationPanel td{
 	padding : 5px;
 }

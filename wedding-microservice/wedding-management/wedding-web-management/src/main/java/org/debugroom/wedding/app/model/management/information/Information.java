@@ -1,7 +1,7 @@
 package org.debugroom.wedding.app.model.management.information;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import lombok.Data;
@@ -22,8 +22,8 @@ public class Information implements Serializable{
 	private String infoName;
 	private String infoPagePath;
 	private String title;
-	private Date registratedDate;
-	private Date releaseDate;
+	private Timestamp registratedDate;
+	private Timestamp releaseDate;
 	private List<User> checkedUsers;
 	private List<User> users;
 	

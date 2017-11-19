@@ -1,9 +1,11 @@
 package org.debugroom.wedding.domain.service.common;
 
 import java.util.List;
+import java.util.Set;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 
 import javax.inject.Inject;
 
@@ -23,8 +25,11 @@ import org.debugroom.wedding.domain.repository.jpa.NotificationRepository;
 import org.debugroom.wedding.domain.repository.jpa.UserRepository;
 import org.debugroom.wedding.domain.entity.User;
 import org.debugroom.wedding.domain.model.common.UpdateResult;
+import org.debugroom.wedding.domain.entity.Address;
 import org.debugroom.wedding.domain.entity.Credential;
+import org.debugroom.wedding.domain.entity.CredentialPK;
 import org.debugroom.wedding.domain.entity.Email;
+import org.debugroom.wedding.domain.entity.EmailPK;
 import org.debugroom.wedding.domain.entity.Notification;
 
 @Transactional
@@ -79,6 +84,27 @@ public class UserSharedServiceImpl implements UserSharedService{
 		UpdateResult<User> updateResult = new UpdateResult<User>();
 
 		User updateTargetUser = getUser(user.getUserId());
+		Set<Email> beforeEmails = new HashSet<Email>();
+		Set<Credential> beforeCredentials = new HashSet<Credential>();
+		for(Email email : updateTargetUser.getEmails()){
+			beforeEmails.add(Email.builder()
+					.id(EmailPK.builder()
+							.userId(email.getId().getUserId())
+							.emailId(email.getId().getEmailId())
+							.build())
+					.email(email.getEmail())
+					.build());
+		}
+		for(Credential credential : updateTargetUser.getCredentials()){
+			beforeCredentials.add(Credential.builder()
+					.id(CredentialPK.builder()
+							.userId(credential.getId().getUserId())
+							.credentialType(credential.getId().getCredentialType())
+							.build())
+					.credentialKey(credential.getCredentialKey())
+					.build());
+		}
+
 		User beforeUpdate = User.builder()
 				.userId(updateTargetUser.getUserId())
 				.firstName(updateTargetUser.getFirstName())
@@ -90,9 +116,13 @@ public class UserSharedServiceImpl implements UserSharedService{
 				.lastLoginDate(updateTargetUser.getLastLoginDate())
 				.lastUpdatedDate(updateTargetUser.getLastUpdatedDate())
 				.ver(updateTargetUser.getVer())
-				.address(updateTargetUser.getAddress())
-				.credentials(updateTargetUser.getCredentials())
-				.emails(updateTargetUser.getEmails())
+				.address(Address.builder()
+						.userId(updateTargetUser.getAddress().getUserId())
+						.postCd(updateTargetUser.getAddress().getPostCd())
+						.address(updateTargetUser.getAddress().getAddress())
+						.build())
+				.credentials(beforeCredentials)
+				.emails(beforeEmails)
 				.build();
 
 		List<String> updateParamList = new ArrayList<String>();

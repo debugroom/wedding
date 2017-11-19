@@ -12,9 +12,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" >
 <title></title>
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css" media="(min-width: 1280px)">
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/portal/information.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/portal/information.css" media="(min-width: 1280px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/portal/information_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/portal/information_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script type="text/javascript" 
+    src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
+</head>
 </head>
 <body class="back-img">
   <c:import url="/WEB-INF/views/common/header.jsp" />

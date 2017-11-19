@@ -194,5 +194,7 @@
            </tbody>
         </table>
       </c:forEach>
+      <button class="main-button" type="button"
+                onclick="location.href='${pageContext.request.contextPath}/portal/${user.userId}'" >ポータルに戻る</button>
     </div>
 </div>

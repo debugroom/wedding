@@ -36,23 +36,85 @@ tbody > tr:nth-child(odd) > td{
 	display : -webkit-flex;
 	display : -moz-flex;
 	display : flex;
-	justify-content: center;
+	flex-direction : column;
 }
 
 #flex-container .flex-item-1{
-	           width : 250px;
+	display: none;
+	opacity: 0;
+}
+
+#flex-container .flex-item-1.visible{
+	display: block;
+	opacity: 1;
+    animation-duration: 0.5s;
+    animation-name: fade-in;
+    -moz-animation-duration: 0.5s;
+    -moz-animation-name: fade-in;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-name: fade-in;	
+}
+
+@keyframes fade-in {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fade-in {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fade-in {
+  0% {
+   display: none;
+   opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
 }
 
 #flex-container .flex-item-2{
 	           width : auto;
-	    -webkit-flex : 1 0 900px;
-	       -moz-flex : 1 0 900px;
-	            flex : 1 0 900px;
+	    -webkit-flex : 1 0 320px;
+	       -moz-flex : 1 0 320px;
+	            flex : 1 0 320px;
 }
 
 .panel {
-	             width : 900px;
-	            margin : 0 50px 50px 50px;
+	            margin : 20px;
 	           padding : 0 20px 0;
 	            border : solid 1px #aaaaaa;
 	     border-radius : 10px;
@@ -70,7 +132,7 @@ tbody > tr:nth-child(odd) > td{
 }
 
 .headerPanel img{
-	width: 30%;
+	width: 60%;
 	margin : 20px;
 }
 
@@ -87,14 +149,15 @@ tbody > tr:nth-child(odd) > td{
 }
 
 .menu {
-    width           : 250px;
+	margin : 20px;
+    width           : 100%;
     padding         : 0;
     margin          : 0;
     list-style-type : none;
 }
 
 .menu li{
-    width      : 200px;
+    width      : 90%;
     padding    : 0;
     margin     : 0;
     text-align : center;
@@ -162,17 +225,33 @@ tbody > tr:nth-child(odd) > td{
     background: linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
 }
 
+.header-menu{
+    display: none;
+    opacity: 0;
+}
+
+.header-menu.visible{
+    display: block;
+    opacity: 1;
+    animation-duration: 0.5s;
+    animation-name: fade-in;
+    -moz-animation-duration: 0.5s;
+    -moz-animation-name: fade-in;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-name: fade-in;    
+}
+
 .lined-menu{
     text-align: center;
 }
 
 .lined-menu ul{
-       margin : 0px 50px 0px;
+       margin : 0px 20px 0px;
        padding : 0px;
 }
 
 .lined-menu li{
-    width      : 120px;
+    width      : 100%;
     margin     : 0;
     padding    : 0;
     display    : inline-block;
@@ -184,7 +263,7 @@ tbody > tr:nth-child(odd) > td{
     color : #000000;
     font-size : 9px;
     padding : 10px 0px ;
-    width      : 120px;
+    width      : 100%;
     display : inline-block;
     text-decoration : none;
     /*全体のグラデーション*/
@@ -334,7 +413,6 @@ tbody > tr:nth-child(odd) > td{
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: 'liga';
 }
-
 .material-icons.md-18 { font-size: 18px; }
 .material-icons.md-24 { font-size: 24px; }
 .material-icons.md-36 { font-size: 36px; }
@@ -344,6 +422,7 @@ tbody > tr:nth-child(odd) > td{
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
-#menu_button {
-	display:none;
+.headerPanel i{
+	float:right;
+	margin:15px;
 }

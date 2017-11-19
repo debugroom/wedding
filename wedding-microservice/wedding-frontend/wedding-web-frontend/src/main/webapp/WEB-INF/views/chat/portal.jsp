@@ -13,16 +13,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" >
 <title>Chat</title>
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css" media="(min-width: 1280px)">
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/chat/portal.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/chat/portal.css" media="(min-width: 1280px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/chat/portal_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/chat/portal_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script type="text/javascript" 
+    src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/sockjs-client/sockjs.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/stomp-websocket/stomp.js"></script>
 </head>
 <body class="back-img">
   <c:import url="/WEB-INF/views/common/header.jsp" />
-  <c:import url="/WEB-INF/views/common/lined-menu.jsp" />
+  <div class="header-menu">
+      <c:import url="/WEB-INF/views/common/lined-menu.jsp" />
+  </div>
   <div id="flex-container">
     <div class="flex-item-2">
       <article>

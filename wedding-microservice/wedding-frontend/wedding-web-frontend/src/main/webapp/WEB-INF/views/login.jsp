@@ -12,9 +12,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" >
 <title>Wedding</title>
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css" media="(min-width: 1280px)">
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/login.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/login.css" media="(min-width: 1280px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/login_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/login_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
 </head>
 <body>
   <div class="back-img">
