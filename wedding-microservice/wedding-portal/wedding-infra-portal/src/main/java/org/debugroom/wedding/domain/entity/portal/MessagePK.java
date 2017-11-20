@@ -1,5 +1,8 @@
 package org.debugroom.wedding.domain.entity.portal;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -7,6 +10,8 @@ import javax.persistence.*;
  * The primary key class for the message database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Embeddable
 public class MessagePK implements Serializable {
 	//default serial version id, required for serializable classes.

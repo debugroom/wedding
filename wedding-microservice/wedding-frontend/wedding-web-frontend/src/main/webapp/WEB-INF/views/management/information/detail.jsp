@@ -61,7 +61,7 @@
                   <tr>
                     <td>登録日時</td>
                     <td>
-                      <fmt:formatDate value="${informationDetail.information.registratedDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                      <fmt:formatDate value="${informationDetail.information.registratedDate}" pattern="yyyy/MM/dd HH:mm:ss" />
                       <form:errors path="information.registratedDate" cssClass="errorMessage"/>
                       <input id="information.registratedDate" name="information.registratedDate" type="hidden" value='<fmt:formatDate value="${informationDetail.information.registratedDate}" pattern="yyyy/MM/dd HH:mm:ss" />'>
                     </td>

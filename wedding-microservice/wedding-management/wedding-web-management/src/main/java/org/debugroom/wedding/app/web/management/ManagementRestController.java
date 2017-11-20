@@ -230,17 +230,54 @@ public class ManagementRestController {
 	public InformationDraft createInformationDraft(@RequestBody 
 			org.debugroom.wedding.app.model.management.information.Information information) 
 					throws MappingException, BusinessException{
+//		return informationManagementService.createInformationDraft(
+//				mapper.map(information, InformationDraft.class));
+		List<User> users = new ArrayList<User>();
+		for(org.debugroom.wedding.app.model.management.information.User user : information.getCheckedUsers()){
+			users.add(User.builder()
+					.userId(user.getUserId())
+					.firstName(user.getFirstName())
+					.lastName(user.getLastName())
+					.build());
+		}
 		return informationManagementService.createInformationDraft(
-				mapper.map(information, InformationDraft.class));
-		
+				InformationDraft.builder()
+				.information(Information.builder()
+						.infoId(information.getInfoId())
+						.infoPagePath(information.getInfoPagePath())
+						.title(information.getTitle())
+						.registratedDate(information.getRegistratedDate())
+						.releaseDate(information.getReleaseDate())
+						.build())
+				.infoName(information.getInfoName())
+				.viewUsers(users)
+				.build());
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, value="/information/{infoId}")
 	public Information saveInformation(@RequestBody
 			org.debugroom.wedding.app.model.management.information.Information information)
 					throws MappingException, BusinessException{
+//		return informationManagementService.saveInformation(
+//				mapper.map(information, InformationDraft.class));
+		List<User> users = new ArrayList<User>();
+		for(org.debugroom.wedding.app.model.management.information.User user : information.getCheckedUsers()){
+			users.add(User.builder()
+					.userId(user.getUserId())
+					.build());
+		}
 		return informationManagementService.saveInformation(
-				mapper.map(information, InformationDraft.class));
+				InformationDraft.builder()
+				.information(Information.builder()
+						.infoId(information.getInfoId())
+						.infoPagePath(information.getInfoPagePath())
+						.title(information.getTitle())
+						.registratedDate(information.getRegistratedDate())
+						.releaseDate(information.getReleaseDate())
+						.build())
+				.infoName(information.getInfoName())
+				.viewUsers(users)
+				.build());
 	}
 
 	@RequestMapping(method=RequestMethod.GET, value="/information/{infoId}")
@@ -323,15 +360,59 @@ public class ManagementRestController {
 	@RequestMapping(method=RequestMethod.POST, value="/request/draft/new")
 	public RequestDraft createRequestDraft(@RequestBody
 			org.debugroom.wedding.app.model.management.request.Request request){
+//		return requestManagementService.createRequestDraft(
+//				mapper.map(request, RequestDraft.class));
+		List<org.debugroom.wedding.domain.entity.management.User> addUsers 
+			= new ArrayList<org.debugroom.wedding.domain.entity.management.User>();
+		if(null != request.getCheckedUsers() 
+				&& request.getCheckedUsers().size() != 0){
+		for(org.debugroom.wedding.app.model.management.request.User user 
+					: request.getCheckedUsers()){
+				addUsers.add(org.debugroom.wedding.domain.entity.management.User
+						.builder()
+						.userId(user.getUserId())
+						.firstName(user.getFirstName())
+						.lastName(user.getLastName())
+						.build());
+			}
+		}
 		return requestManagementService.createRequestDraft(
-				mapper.map(request, RequestDraft.class));
+				RequestDraft.builder()
+				.request(Request.builder()
+						.requestId(request.getRequestId())
+						.title(request.getTitle())
+						.requestContents(request.getRequestContents())
+						.registratedDate(request.getRegistratedDate())
+						.build())
+				.acceptors(addUsers)
+				.build());
 	}
 
 	@RequestMapping(method=RequestMethod.POST, value="/request/{requestId}")
 	public Request saveRequest(@RequestBody
 			org.debugroom.wedding.app.model.management.request.Request request){
+//		return requestManagementService.saveRequest(
+//				mapper.map(request, RequestDraft.class));
+		List<org.debugroom.wedding.domain.entity.management.User> addUsers 
+			= new ArrayList<org.debugroom.wedding.domain.entity.management.User>();
+		if(null != request.getCheckedUsers() 
+				&& request.getCheckedUsers().size() != 0){
+			for(org.debugroom.wedding.app.model.management.request.User user 
+					: request.getCheckedUsers()){
+				addUsers.add(org.debugroom.wedding.domain.entity.management.User
+						.builder().userId(user.getUserId()).build());
+			}
+		}
 		return requestManagementService.saveRequest(
-				mapper.map(request, RequestDraft.class));
+				RequestDraft.builder()
+				.request(Request.builder()
+						.requestId(request.getRequestId())
+						.title(request.getTitle())
+						.requestContents(request.getRequestContents())
+						.registratedDate(request.getRegistratedDate())
+						.build())
+				.acceptors(addUsers)
+				.build());
 	}
 	
 	@RequestMapping(method=RequestMethod.GET, value="/request/body/{requestId}",
@@ -348,8 +429,39 @@ public class ManagementRestController {
 	@RequestMapping(method=RequestMethod.PUT, value="/request/{requestId}")
 	public UpdateResult<RequestDetail> updateRequest(@RequestBody
 			org.debugroom.wedding.app.model.management.request.RequestDraft requestDraft){
+//		return requestManagementService.updateRequest(
+//				mapper.map(requestDraft, RequestDraft.class));
+		List<org.debugroom.wedding.domain.entity.management.User> addUsers 
+			= new ArrayList<org.debugroom.wedding.domain.entity.management.User>();
+		List<org.debugroom.wedding.domain.entity.management.User> deleteUsers 
+			= new ArrayList<org.debugroom.wedding.domain.entity.management.User>();
+		if(null != requestDraft.getCheckedAddUsers() 
+				&& requestDraft.getCheckedAddUsers().size() != 0){
+			for(org.debugroom.wedding.app.model.management.request.User user 
+					: requestDraft.getCheckedAddUsers()){
+				addUsers.add(org.debugroom.wedding.domain.entity.management.User
+						.builder().userId(user.getUserId()).build());
+			}
+		}
+		if(null != requestDraft.getCheckedDeleteUsers() 
+				&& requestDraft.getCheckedDeleteUsers().size() != 0){
+			for(org.debugroom.wedding.app.model.management.request.User user 
+					: requestDraft.getCheckedDeleteUsers()){
+				deleteUsers.add(org.debugroom.wedding.domain.entity.management.User
+						.builder().userId(user.getUserId()).build());
+			}
+		}
 		return requestManagementService.updateRequest(
-				mapper.map(requestDraft, RequestDraft.class));
+				RequestDraft.builder()
+				.request(Request.builder()
+						.requestId(requestDraft.getRequest().getRequestId())
+						.title(requestDraft.getRequest().getTitle())
+						.requestContents(requestDraft.getRequest().getRequestContents())
+						.registratedDate(requestDraft.getRequest().getRegistratedDate())
+						.build())
+				.acceptors(addUsers)
+				.excludeUsers(deleteUsers)
+				.build());
 	}
 
 	@RequestMapping(method=RequestMethod.DELETE, value="/request/{requestId}")

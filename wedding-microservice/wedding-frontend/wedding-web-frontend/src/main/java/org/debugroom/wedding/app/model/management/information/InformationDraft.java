@@ -3,9 +3,6 @@ package org.debugroom.wedding.app.model.management.information;
 import java.io.Serializable;
 import java.util.List;
 
-import org.debugroom.wedding.domain.entity.Information;
-import org.debugroom.wedding.domain.entity.User;
-
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

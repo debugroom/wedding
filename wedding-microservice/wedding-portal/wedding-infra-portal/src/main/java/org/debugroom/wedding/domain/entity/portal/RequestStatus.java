@@ -1,5 +1,8 @@
 package org.debugroom.wedding.domain.entity.portal;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -9,6 +12,8 @@ import java.sql.Timestamp;
  * The persistent class for the request_status database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name="request_status")
 @NamedQuery(name="RequestStatus.findAll", query="SELECT r FROM RequestStatus r")
@@ -29,6 +34,7 @@ public class RequestStatus implements Serializable {
 
 	private String response;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to Request

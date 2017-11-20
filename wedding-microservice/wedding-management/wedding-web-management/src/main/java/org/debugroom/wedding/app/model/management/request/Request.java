@@ -1,7 +1,7 @@
 package org.debugroom.wedding.app.model.management.request;
 
 import java.util.List;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ public class Request {
 	private String requestId;
 	private String title;
 	private String requestContents;
-	private Date registratedDate;
+	private Timestamp registratedDate;
 	private List<User> checkedUsers;
 	
 }

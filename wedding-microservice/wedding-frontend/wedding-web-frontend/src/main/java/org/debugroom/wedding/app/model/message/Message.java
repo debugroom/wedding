@@ -2,6 +2,8 @@ package org.debugroom.wedding.app.model.message;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Pattern;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +18,7 @@ public class Message implements Serializable{
 	public Message(){}
 	
 	private MessagePK messagepk;
+	@Pattern(regexp="^[^ =#$./<>?¥^¥~¥[¥]¥¥]+$")
 	private String comment;
 	private User user;
 	private int likeCount;

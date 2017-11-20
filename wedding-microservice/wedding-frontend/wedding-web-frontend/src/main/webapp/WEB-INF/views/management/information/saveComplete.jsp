@@ -40,13 +40,13 @@
                   <tr>
                     <td>登録日時</td>
                     <td>
-                      <fmt:formatDate value="${informationResource.information.registratedDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                      <fmt:formatDate value="${informationResource.information.registratedDate}" pattern="yyyy/MM/dd HH:mm:ss" />
                     </td>
                   </tr>
                   <tr>
                     <td>公開日時</td>
                     <td>
-                      <fmt:formatDate value="${informationResource.information.releaseDate}" pattern="yyyy/MM/dd hh:mm:ss" />
+                      <fmt:formatDate value="${informationResource.information.releaseDate}" pattern="yyyy/MM/dd HH:mm:ss" />
                     </td>
                   </tr>
                 </tbody>

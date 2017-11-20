@@ -18,4 +18,6 @@ public interface PortalService {
 
 	public User getUser(String userId) throws BusinessException;
 	
+	public boolean updateRequestStatus(String userId, String requestId, boolean isApproved);
+
 }

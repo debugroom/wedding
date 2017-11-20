@@ -1,7 +1,7 @@
 package org.debugroom.wedding.app.model.portal;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -26,9 +26,9 @@ public class Information implements Serializable{
 	@Pattern(regexp = "[0-9]*")
 	private String infoId;
 	private String infoPagePath;
-	private Timestamp lastUpdatedDate;
-	private Timestamp registratedDate;
-	private Timestamp releaseDate;
+	private Date lastUpdatedDate;
+	private Date registratedDate;
+	private Date releaseDate;
 	private String title;
 	private Integer ver;
 	private String infoRootPath;

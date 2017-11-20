@@ -1,5 +1,8 @@
 package org.debugroom.wedding.domain.entity.portal;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,6 +13,8 @@ import java.util.Set;
  * The persistent class for the message_board database table.
  * 
  */
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name="message_board")
 @NamedQuery(name="MessageBoard.findAll", query="SELECT m FROM MessageBoard m")
@@ -25,6 +30,7 @@ public class MessageBoard implements Serializable {
 
 	private String title;
 
+	@Version
 	private Integer ver;
 
 	//bi-directional many-to-one association to Message

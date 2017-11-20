@@ -4,7 +4,10 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -14,6 +17,7 @@ import javax.inject.Inject;
 import org.debugroom.wedding.app.model.message.Message;
 import org.debugroom.wedding.app.model.message.User;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
+import org.debugroom.wedding.app.web.security.CustomUserDetails;
 
 @Controller
 public class MessageController {
@@ -34,7 +38,8 @@ public class MessageController {
 	}
 
 	@MessageMapping("/messages/{messageBoardId}")
-	public void pushToSpecifiedUsers(@DestinationVariable Long messageBoardId, Message message){
+	public void pushToSpecifiedUsers(@DestinationVariable Long messageBoardId, 
+			@Validated Message message){
 		Message addMessage = postMessage(message);
 		String serviceName = "message";
 		RestTemplate restTemplate = new RestTemplate();

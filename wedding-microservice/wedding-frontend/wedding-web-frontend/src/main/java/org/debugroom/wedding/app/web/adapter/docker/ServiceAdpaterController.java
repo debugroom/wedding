@@ -128,6 +128,8 @@ import org.debugroom.wedding.app.model.management.user.EditUserForm.GetUser;
 import org.debugroom.wedding.app.model.management.user.EditUserForm.UpdateUser;
 import org.debugroom.wedding.app.model.management.user.NewUserForm.ConfirmUser;
 import org.debugroom.wedding.app.model.management.user.NewUserForm.SaveUser;
+import org.debugroom.wedding.app.model.portal.AnswerRequest;
+import org.debugroom.wedding.app.model.portal.AnswerRequestResult;
 import org.debugroom.wedding.app.model.portal.Information;
 import org.debugroom.wedding.app.model.portal.PortalResource;
 import org.debugroom.wedding.app.model.profile.EditProfileForm;
@@ -420,6 +422,32 @@ public class ServiceAdpaterController {
 		return ResponseEntity.ok().body(image);
 	}
 
+	@RequestMapping(method = RequestMethod.POST, 
+			value="/information/{userId:[0-9]+}/{requestId:[0-9]+}/status")
+	@ResponseBody
+	public ResponseEntity<AnswerRequestResult> answerRequest(@PathVariable String userId,
+			@PathVariable String requestId, @RequestBody AnswerRequest answerRequest, 
+			@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		if(!userId.equals(customUserDetails.getUser().getUserId())){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "portal";
+		RestTemplate restTemplate = new RestTemplate();
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("userId", userId);
+		paramMap.put("requestId", requestId);
+		return ResponseEntity.ok().body(AnswerRequestResult.builder()
+				.isApproved(restTemplate.exchange(
+						RequestBuilder.buildUriComponents(serviceName, 
+								new StringBuilder()
+								.append(APP_NAME)
+								.append("/{userId}/request/{requestId}")
+								.toString(), provider)
+						.expand(paramMap).toUri(), HttpMethod.PUT, 
+						new HttpEntity<AnswerRequest>(answerRequest), Boolean.class).getBody())
+				.build());
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/management/user/portal")
 	public String userManagementPortal(@Validated PageParam pageParam,
 			BindingResult bindingResult, Model model){
@@ -835,7 +863,7 @@ public class ServiceAdpaterController {
 	}
 
 	@RequestMapping(method=RequestMethod.POST, value="/management/information/draft/new")
-	public String newInformationDarft(
+	public String newInformationDraft(
 			@Validated(ConfirmInformation.class) NewInformationForm newInformationForm,
 			BindingResult bindingResult, Model model, Locale locale){
 		
@@ -898,8 +926,22 @@ public class ServiceAdpaterController {
 			RedirectAttributes redirectAttributes, Locale locale){
 
 		String serviceName = "management";
+//		InformationDraft informationDraft = 
+//				mapper.map(newInformationForm, InformationDraft.class);
 		InformationDraft informationDraft = 
-				mapper.map(newInformationForm, InformationDraft.class);
+				InformationDraft.builder()
+				.information(
+						org.debugroom.wedding.app.model.management.information.Information.builder()
+						.infoId(newInformationForm.getInfoId())
+						.infoPagePath(newInformationForm.getInfoPagePath())
+						.title(newInformationForm.getTitle())
+						.messageBody(newInformationForm.getMessageBody())
+						.registratedDate(newInformationForm.getRegistratedDate())
+						.releaseDate(newInformationForm.getReleaseDate())
+						.build())
+				.infoName(newInformationForm.getInfoName())
+				.viewUsers(newInformationForm.getCheckedUsers())
+				.build();
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 		params.set("temp", null);
 		params.set("infoPagePath", informationDraft.getInformation().getInfoPagePath());

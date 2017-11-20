@@ -58,7 +58,7 @@ public class NewInformationForm implements Serializable{
 
 	@NotNull(groups = {ConfirmInformation.class, SaveInformation.class})
 	@DateTimeFormat(pattern="yyyy/MM/dd HH:mm:ss")
-	@Future(groups = {ConfirmInformation.class, SaveInformation.class})
+//	@Future(groups = {ConfirmInformation.class, SaveInformation.class})
 	private Date releaseDate;
 
 	@NotNull(groups = {ConfirmInformation.class, SaveInformation.class})

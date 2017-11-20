@@ -26,6 +26,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script type="text/javascript" 
     src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/jquery/jquery.min.js"></script>
 </head>
 </head>
 <body class="back-img">
@@ -40,7 +41,7 @@
           <h1>お知らせ</h1>
           <h2><c:out value="${information.title}" /></h2>
           最終更新日時：<fmt:formatDate value="${information.registratedDate}" pattern="yyyy/MM/dd HH:mm:ss" />
-          <div id="messageBody" class="information-panel">
+          <div id="messageBody" class="information-panel" data-user-id="${user.userId}" data-request-context-path="${pageContext.request.contextPath}">
             <c:import url="${information.infoRootPath}" charEncoding="UTF-8"></c:import>
           </div>
           <button class="main-button" type="button"

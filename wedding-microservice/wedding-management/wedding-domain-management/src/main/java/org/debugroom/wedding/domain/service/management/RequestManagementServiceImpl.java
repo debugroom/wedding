@@ -87,8 +87,21 @@ public class RequestManagementServiceImpl implements RequestManagementService{
 		
 		RequestDetail updateTargetRequestDetail = getRequestDetail(request.getRequestId());
 		Request updateTargetRequest = updateTargetRequestDetail.getRequest();
-		RequestDetail beforeUpdate = 
-				mapper.map(updateTargetRequestDetail, RequestDetail.class);
+//		RequestDetail beforeUpdate = 
+//				mapper.map(updateTargetRequestDetail, RequestDetail.class);
+
+		RequestDetail beforeUpdate = RequestDetail.builder()
+				.request(Request.builder()
+						.requestId(updateTargetRequest.getRequestId())
+						.title(updateTargetRequest.getTitle())
+						.lastUpdatedDate(updateTargetRequest.getLastUpdatedDate())
+						.registratedDate(updateTargetRequest.getRegistratedDate())
+						.requestContents(updateTargetRequest.getRequestContents())
+						.ver(updateTargetRequest.getVer())
+						.build())
+				.approvedUsers(new ArrayList<User>(updateTargetRequestDetail.getApprovedUsers()))
+				.deniedUsers(new ArrayList<User>(updateTargetRequestDetail.getDeniedUsers()))
+				.build();
 
 		boolean isChangedRequest = false;
 		List<String> updateParamList = new ArrayList<String>();
