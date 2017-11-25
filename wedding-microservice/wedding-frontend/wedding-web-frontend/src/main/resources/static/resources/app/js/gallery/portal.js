@@ -1,16 +1,16 @@
 jQuery( document ).ready(function( $ ) {
     $( '#my-slider' ).sliderPro({
-        width: 800,
-        height: 600,
-        aspectRatio: 2,
+    	width : '100%',
+    	aspectRatio: 2,
         autoplayDelay : 4000,
         arrows : true,
-//        forceSize: 'fullWidth',
-        forceSize: 'none',
+        forceSize: 'fullWidth',
+        buttons : false,
         thumbnailPointer : true,
         thumbnailArrows : true,
         fadeThumbnailArrows : false,
     });
+    $("#my-slider").css({'margin':'0'});
 });
 
 jQuery("[id^=folder-icon-]").on("click", getFolderDetail);

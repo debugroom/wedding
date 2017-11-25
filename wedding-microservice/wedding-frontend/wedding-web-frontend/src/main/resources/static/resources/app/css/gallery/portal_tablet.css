@@ -1,5 +1,5 @@
 .gallery-panel{
-	margin : 100px 0px 100px;
+	margin : 75px 20px 75px;
 }
 
 .contents-panel h3{
@@ -33,7 +33,7 @@
 .contents-panel .delete-folder-icon {
     width : 50px;
     height : 40px;
-    margin : 10px 20px 10px 0px;
+    margin : 10px 20px 30px 0px;
 }
 
 .left-position{
@@ -329,7 +329,7 @@
 }
 
 .playerPanel {
-	margin : 100px 100px 50px;
+	margin : 100px auto 50px;
 }
 
 #video_player {

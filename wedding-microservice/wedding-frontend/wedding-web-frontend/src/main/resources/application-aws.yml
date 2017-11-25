@@ -1,0 +1,12 @@
+#profile:
+#  root:
+#    directory: http://data.debugroom.org.s3.amazonaws.com/wedding/profile
+#info:
+#  root:
+#    directory: http://data.debugroom.org.s3.amazonaws.com/wedding/info
+gallery:
+  root:
+    directory: wedding/gallery
+  distribution:
+    server: http://data.debugroom.org.s3.amazonaws.com
+    
