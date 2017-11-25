@@ -71,6 +71,9 @@
                 <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')=='MOV'}">
                   <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].filePath}" type="video/mp4">
                 </c:if>
+                <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')=='m4v'}">
+                  <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].filePath}" type="video/mp4">
+                </c:if>
                 <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')!='MOV'}">
                   <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].filePath}" type="video/${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}">
                 </c:if>
