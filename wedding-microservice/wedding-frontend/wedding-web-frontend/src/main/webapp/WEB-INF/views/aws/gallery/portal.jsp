@@ -57,7 +57,7 @@
                 <c:forEach items="${galleryPortalResource.randomPhotographs}" var="photo" varStatus="status">
                   <div class="sp-thumbnail">
                     <img class="sp-thumbnail-image" src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${photo.thumbnailFilePath}" />
-                    <p class="sp-thumbnail-text">test-${status.index+1}</p>
+                    <p class="sp-thumbnail-text">Image-${status.index+1} downloading...</p>
                   </div>
                 </c:forEach>
               </div>
@@ -78,7 +78,7 @@
               <figcaption>
                 <c:forEach items="${galleryPortalResource.randomMovies}" var="movie" varStatus="status">
                   <a href="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${movie.filePath}">
-                    <img src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${movie.thumbnail}" />
+                    <img src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${movie.thumbnailFilePath}" />
                   </a>
                 </c:forEach>
               </figcaption>
