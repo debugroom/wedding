@@ -62,7 +62,7 @@
                       <th>No</th>
                       <th>ユーザID</th>
                       <th>ユーザ名</th>
-                      <th>追加</th>
+                      <th>追加<br>一括切替：<input type="checkbox" id="allCheckbox" value="off" autocomplete="off" /></th>
                     </tr>
                   </thead>
                   <tbody>
