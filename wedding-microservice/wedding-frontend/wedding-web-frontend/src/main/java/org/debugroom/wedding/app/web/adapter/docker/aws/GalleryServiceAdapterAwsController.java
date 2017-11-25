@@ -23,7 +23,7 @@ public class GalleryServiceAdapterAwsController {
 	@Value("${gallery.distribution.server}")
 	private String distributionServerUrl;
 
-	@Value("${gallery.root.Path}")
+	@Value("${gallery.root.directory}")
 	private String galleryRootPath;
 	
 	@Inject
