@@ -49,14 +49,14 @@
               <div id="slider">
                 <c:forEach items="${galleryPortalResource.randomPhotographs}" var="photo" varStatus="status">
                   <div class="sp-slide">
-                    <img class="sp-image" src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/image/${photo.filePath}" />
+                    <img class="sp-image" src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${photo.filePath}" />
                   </div>
                 </c:forEach>
               </div>
               <div class="sp-thumbnails">
                 <c:forEach items="${galleryPortalResource.randomPhotographs}" var="photo" varStatus="status">
                   <div class="sp-thumbnail">
-                    <img class="sp-thumbnail-image" src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/image/${photo.thumbnailFilePath}" />
+                    <img class="sp-thumbnail-image" src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${photo.thumbnailFilePath}" />
                     <p class="sp-thumbnail-text">test-${status.index+1}</p>
                   </div>
                 </c:forEach>
@@ -67,18 +67,18 @@
           <c:if test="${!empty galleryPortalResource.randomMovies}">
           <div class="playerPanel">
             <figure id="video_player">
-              <video controls poster="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/movie/${galleryPortalResource.randomMovies[0].thumbnailFilePath}">
+              <video controls poster="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].thumbnailFilePath}">
                 <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')=='MOV'}">
-                  <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/movie/${galleryPortalResource.randomMovies[0].filePath}" type="video/mp4">
+                  <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].filePath}" type="video/mp4">
                 </c:if>
                 <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')!='MOV'}">
-                  <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/movie/${galleryPortalResource.randomMovies[0].filePath}" type="video/${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}">
+                  <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].filePath}" type="video/${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}">
                 </c:if>
               </video>
               <figcaption>
                 <c:forEach items="${galleryPortalResource.randomMovies}" var="movie" varStatus="status">
-                  <a href="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/movie/${movie.filePath}">
-                    <img src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/movie/${movie.thumbnail}" />
+                  <a href="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${movie.filePath}">
+                    <img src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${movie.thumbnail}" />
                   </a>
                 </c:forEach>
               </figcaption>
