@@ -67,7 +67,7 @@
           <c:if test="${!empty galleryPortalResource.randomMovies}">
           <div class="playerPanel">
             <figure id="video_player">
-              <video controls poster="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].thumbnailFilePath}">
+              <video controls muted poster="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].thumbnailFilePath}">
                 <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')=='MOV'}">
                   <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].filePath}" type="video/mp4">
                 </c:if>
@@ -108,6 +108,7 @@
           <video src="/gallery/movie/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}"></video>
 -->
         </div>
+<!--  
         <div class="contents-panel">
           <h3>Gallery Contents</h3>
           <div class="left-position">
@@ -145,6 +146,7 @@
           </div>
           <br/>
         </div>
+-->
       </article>
     </div>
   </div>

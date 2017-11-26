@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.dozer.Mapper;
 import org.dozer.MappingException;
@@ -42,6 +43,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 import org.debugroom.wedding.app.model.UserSearchCriteria;
 import org.debugroom.wedding.app.model.UserSearchResult;
 import org.debugroom.wedding.app.model.management.PageParam;
@@ -88,9 +90,7 @@ import org.debugroom.wedding.app.model.management.user.NewUserForm.ConfirmUser;
 import org.debugroom.wedding.app.model.management.user.NewUserForm.SaveUser;
 import org.debugroom.wedding.app.model.management.user.UpdateUserResult;
 import org.debugroom.wedding.app.web.helper.InformationMessageBodyHelper;
-import org.debugroom.wedding.app.web.helper.GalleryContentsUploadHelper;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
-import org.debugroom.wedding.app.web.helper.ProfileImageUploadHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
@@ -113,7 +113,8 @@ public class ManagementServiceAdpaterController {
 	ConnectPathProvider provider;
 	
 	@Inject
-	ProfileImageUploadHelper uploadHelper;
+	@Named("profileImageUploadHelper")
+	FileUploadHelper uploadHelper;
 	
 	@Inject
 	ImageDownloadHelper downloadHelper;
@@ -121,9 +122,6 @@ public class ManagementServiceAdpaterController {
 	@Inject
 	InformationMessageBodyHelper informationMessageBodyHelper;
 
-	@Inject
-	GalleryContentsUploadHelper galleryContentsUploadHelper;
-	
 	@Inject
 	AddressSearch addressSearch;
 	

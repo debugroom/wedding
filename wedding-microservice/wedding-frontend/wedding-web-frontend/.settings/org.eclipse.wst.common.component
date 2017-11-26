@@ -13,6 +13,15 @@
         <dependent-module archiveName="framework-test-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-test/framework-test">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="wedding-web-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-web-common/wedding-web-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wedding-domain-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-domain-common/wedding-domain-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wedding-infra-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wedding-infra-common/wedding-infra-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="wedding"/>
         <property name="java-output-path" value="/wedding-web-frontend/target/classes"/>
     </wb-module>

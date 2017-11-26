@@ -1,6 +1,7 @@
 package org.debugroom.wedding.app.web.helper;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,8 +14,9 @@ import org.apache.commons.io.FileUtils;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 
-@Component
-public class ProfileImageUploadHelper implements FileUploadHelper{
+@Profile("dev")
+@Component("profileImageUploadHelper")
+public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 
 	@Value("${profile.root.directory}")
 	private String profileRootDirectory;

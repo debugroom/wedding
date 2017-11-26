@@ -1,0 +1,25 @@
+server:
+  port: 8081
+  contextPath: 
+  tomcat:
+    additional-tld-skip-patterns : "javacpp.jar, *javacv*.jar, ffmpeg-*.jar"
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wedding
+    username: wedding_app
+    password: wedding_app
+    driverClassName: org.postgresql.Driver
+bucket:
+  name: data.debugroom.org
+profile:
+  root:
+    directory: wedding
+info:
+  root:
+    directory: wedding/information
+gallery:
+  root:
+    directory: wedding/gallery
+  distribution:
+    server: http://data.debugroom.org.s3.amazonaws.com
+    

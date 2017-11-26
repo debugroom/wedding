@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +31,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 import org.debugroom.wedding.app.model.profile.EditProfileForm;
 import org.debugroom.wedding.app.model.profile.PortalResource;
 import org.debugroom.wedding.app.model.profile.UpdateUserResult;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
-import org.debugroom.wedding.app.web.helper.ProfileImageUploadHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
 import org.debugroom.wedding.domain.entity.User;
@@ -55,7 +56,8 @@ public class ProfileServiceAdapterController {
 	ConnectPathProvider provider;
 	
 	@Inject
-	ProfileImageUploadHelper uploadHelper;
+	@Named("profileImageUploadHelper")
+	FileUploadHelper uploadHelper;
 	
 	@Inject
 	ImageDownloadHelper downloadHelper;

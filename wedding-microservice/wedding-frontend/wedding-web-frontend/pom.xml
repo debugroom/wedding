@@ -13,6 +13,8 @@
   <properties>
     <org.bytedeco_javacv_version>1.3</org.bytedeco_javacv_version>
     <org.bytedeco.javacpp-presets_opencv_version>3.2.0-1.3</org.bytedeco.javacpp-presets_opencv_version>
+    <org.springframework.cloud_spring-cloud-starter-aws_version>1.2.2.RELEASE</org.springframework.cloud_spring-cloud-starter-aws_version>
+    <org.springframework.cloud_spring-cloud-context_version>1.2.2.RELEASE</org.springframework.cloud_spring-cloud-context_version>
   </properties>
 
   <dependencies>
@@ -33,6 +35,16 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-aws</artifactId>
+      <version>${org.springframework.cloud_spring-cloud-starter-aws_version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-context</artifactId>
+      <version>${org.springframework.cloud_spring-cloud-context_version}</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>

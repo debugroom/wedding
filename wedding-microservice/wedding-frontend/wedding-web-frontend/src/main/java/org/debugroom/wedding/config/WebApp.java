@@ -1,21 +1,17 @@
 package org.debugroom.wedding.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dozer.DozerBeanMapper;
 import org.dozer.spring.DozerBeanMapperFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cloud.aws.autoconfigure.cache.ElastiCacheAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 
@@ -23,7 +19,7 @@ import org.springframework.core.io.Resource;
 @ComponentScan(basePackages = {"org.debugroom.wedding.external",
 		"org.debugroom.wedding.config"
 })
-@SpringBootApplication
+@SpringBootApplication(exclude={ElastiCacheAutoConfiguration.class})
 public class WebApp extends SpringBootServletInitializer{
 
 	public static void main(String[] args){

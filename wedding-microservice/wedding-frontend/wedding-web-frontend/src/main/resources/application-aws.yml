@@ -1,12 +1,20 @@
-#profile:
-#  root:
-#    directory: http://data.debugroom.org.s3.amazonaws.com/wedding/profile
-#info:
-#  root:
-#    directory: http://data.debugroom.org.s3.amazonaws.com/wedding/info
+bucket:
+  name: data.debugroom.org
+profile:
+  root:
+    directory: wedding
+info:
+  root:
+    directory: wedding/infomation
 gallery:
   root:
     directory: wedding/gallery
   distribution:
     server: http://data.debugroom.org.s3.amazonaws.com
-    
+cloud:
+  aws:
+    credentials:
+      accessKey: ${aws.access.key.id}
+      secretKey: ${aws.secret.access.key}
+    region:
+      static: ${aws.default.resion}

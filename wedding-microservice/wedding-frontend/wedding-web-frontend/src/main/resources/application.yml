@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev,jpa
+    active: LocalAws,jpa
   http:
     multipart:
       enabled: true
@@ -43,3 +43,12 @@ gallery:
       height: 75
       frame:
         start: 100
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: false
+      profileName: 
+    region:
+      auto: false
