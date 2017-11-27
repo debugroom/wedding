@@ -29,7 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 
-@Profile("LocalAws")
+@Profile({"LocalAws","aws"})
 @Component("profileImageUploadHelper")
 public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 

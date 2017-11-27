@@ -5,7 +5,7 @@ profile:
     directory: wedding
 info:
   root:
-    directory: wedding/infomation
+    directory: wedding/information
 gallery:
   root:
     directory: wedding/gallery
