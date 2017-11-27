@@ -425,7 +425,7 @@ CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding
 
 バックエンドと同様、GitクローンしたDockerfileを使用して、バックエンドのサービスアプリケーション用のコンテナイメージを作成する。本アプリケーションでは、画面にJSPを使用しているため、組み込みTomcatを内包したアプリケーションで実行できないため、アプリケーションをWarファイル化し、Tomcatにデプロイして実行する。
 
-1. Dockerfileを使用して、フロントエンドアプリケーション用のコンテナイメージを作成する。なお、DBサーバのIPとポート以外にもアプリケーション内で参照する環境変数を指定して実行している。
+1. Dockerfileを使用して、フロントエンドアプリケーション用のコンテナイメージを作成する。なお、DBサーバのIPとポート以外にもアプリケーション内で参照する環境変数を指定して実行している。フロントエンドアプリケーションはロードバランサを設定して振り分けたときのためにドメイン名を設定しておく。
 2. 作成したコンテナイメージを実行する。ポート80がコンテナ内で実行されているAPサーバへ8080で繋がるようにオプション指定する。加えて、同一ホストマシン上で実行されているバックエンドサービスアプリケーションへ接続するためにリンクオプションで環境変数名と実行コンテナ名を紐付ける。
 3. アプリケーションが必要とする環境変数を適宜設定し、アプリケーションを起動する。
 
@@ -433,7 +433,7 @@ CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding
 
 [1の手順]
 [centos@ip-XXXX-XXX-XXX-XXX ~]$ cd /var/local/wedding
-[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker build --build-arg DBSERVER_PORT_5432_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_5432_TCP_PORT=ZZZ --build-arg DBSERVER_PORT_9042_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_9042_TCP_PORT=ZZZ --build-arg FRONTEND_PORT_8080_TCP_ADDR=YYY.YYY.YYY.YYZ --build-arg FRONTEND_PORT_8080_TCP_PORT=ZZZ --build-arg LOGIN_PORT_8080_TCP_ADDR=YYY.YYY.YYY.YYZ --build-arg LOGIN_PORT_8080_TCP_PORT=ZZZ -t debugroom/wedding:frontend build-production-servers/build-apps/build-frontend/
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker build --build-arg DBSERVER_PORT_5432_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_5432_TCP_PORT=ZZZ --build-arg DBSERVER_PORT_9042_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_9042_TCP_PORT=ZZZ --build-arg FRONTEND_PORT_8080_TCP_ADDR=www.debugroom.org --build-arg FRONTEND_PORT_8080_TCP_PORT=ZZZ --build-arg LOGIN_PORT_8080_TCP_ADDR=www.debugroom.org --build-arg LOGIN_PORT_8080_TCP_PORT=ZZZ -t debugroom/wedding:frontend build-production-servers/build-apps/build-frontend/
 
 //omit
 
