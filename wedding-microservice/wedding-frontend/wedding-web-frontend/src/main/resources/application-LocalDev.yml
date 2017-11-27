@@ -12,4 +12,10 @@ info:
 gallery:
   root:
     directory: /Users/kawabatakouhei/Documents/work/apps/gallery
-    
+cloud:
+  aws:
+    credentials:
+      accessKey: dummy 
+      secretKey: dummy 
+    region:
+      static: ap-northeast-1
