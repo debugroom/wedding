@@ -1,7 +1,7 @@
 jQuery( document ).ready(function( $ ) {
     $( '#my-slider' ).sliderPro({
     	width : '100%',
-    	aspectRatio: 1.3,
+    	aspectRatio: 1.5,
         autoplayDelay : 4000,
         arrows : true,
         forceSize: 'fullWidth',
