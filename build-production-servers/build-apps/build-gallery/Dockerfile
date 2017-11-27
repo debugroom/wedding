@@ -21,6 +21,7 @@ RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-boot-parent/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-domain-common/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-web-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-batch-common/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-gallery/pom.xml
 
 ENV DBSERVER_APP_USERNAME=app
