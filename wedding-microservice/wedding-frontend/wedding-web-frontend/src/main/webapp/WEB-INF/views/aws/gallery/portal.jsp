@@ -67,7 +67,7 @@
           <c:if test="${!empty galleryPortalResource.randomMovies}">
           <div class="playerPanel">
             <figure id="video_player">
-              <video controls muted poster="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].thumbnailFilePath}">
+              <video controls muted preload="none" poster="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].thumbnailFilePath}">
                 <c:if test="${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')=='MOV'}">
                   <source src="${awsResource.distributionServerUrl}/${awsResource.galleryRootPath}/${galleryPortalResource.randomMovies[0].filePath}" type="video/mp4">
                 </c:if>

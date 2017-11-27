@@ -128,7 +128,15 @@ public class ProfileServiceAdapterController {
 			editProfileForm.setNewImageFile(null);
 		}
 		String serviceName = "profile";
+		String serviceName2 = "message";
 		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName2, 
+				new StringBuilder().append(APP_NAME)
+				.append("/user/{userId}")
+				.toString(), provider)
+				.expand(userId).toUri(), HttpMethod.PUT, 
+				new HttpEntity<org.debugroom.wedding.app.model.profile.User>
+		(editProfileForm.getUser()), User.class);
 		model.addAttribute("updateResult", restTemplate.exchange(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()

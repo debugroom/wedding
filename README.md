@@ -427,6 +427,7 @@ CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding
 
 1. Dockerfileを使用して、フロントエンドアプリケーション用のコンテナイメージを作成する。なお、DBサーバのIPとポート以外にもアプリケーション内で参照する環境変数を指定して実行している。
 2. 作成したコンテナイメージを実行する。ポート80がコンテナ内で実行されているAPサーバへ8080で繋がるようにオプション指定する。加えて、同一ホストマシン上で実行されているバックエンドサービスアプリケーションへ接続するためにリンクオプションで環境変数名と実行コンテナ名を紐付ける。
+3. アプリケーションが必要とする環境変数を適宜設定し、アプリケーションを起動する。
 
 ```bash:
 
@@ -452,10 +453,17 @@ e5c37433ae42        debugroom/wedding:portal                "/bin/sh -c 'java -j
 
 [centos@ip-XXXX-XXX-XXX-XXX ~]$ docker run -itd --name apserver6 -p 80:8080 --link apserver1:portal --link apserver2:profile --link apserver3:management --link apserver4:gallery --link apserver5:message debugroom/wedding:frontend
 [centos@ip-XXXX-XXX-XXX-XXX ~]$ docker exec -ti apserver6 /bin/bash
+[root@755de24a6e22 /]# export CLOUD_AWS_CREDENTIALS_ACCESSKEY=XXXX
+[root@755de24a6e22 /]# export CLOUD_AWS_CREDENTIALS_SECRETKEY=XXXX
+[root@755de24a6e22 /]# export CLOUD_AWS_REGION_STATIC=XXXX
 [root@755de24a6e22 /]# /var/local/apache-tomcat/bin/startup.sh
 Tomcat started.
 
 ```
+
+<details><summary>フロントエンドアプリケーションで設定する環境変数</summary>
+ここでは、Spring Cloud AWSにて使用するIAMアカウントのCredentialsとリージョンを環境変数として設定している。
+</details>
 
 なお、実行するDockerfileは以下の通りである。
 
@@ -511,9 +519,9 @@ ENV LOGIN_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
 RUN git clone -b feature/framework-spring https://github.com/debugroom/framework.git /var/local/framework
 RUN mvn install -f /var/local/framework/pom.xml
 
-# アプリケーションをクローンし、デフォルトのプロファイルをproductionに変更
+# アプリケーションをクローンし、デフォルトのプロファイルをproduction, awsに変更
 RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
-RUN sed -i s/dev\,jpa/production\,jpa/g /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/src/main/resources/application.yml
+RUN sed -i s/LocalAws\,jpa/production\,jpa\,aws/g /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/src/main/resources/application.yml
 
 # アプリケーションをビルド
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/pom.xml
