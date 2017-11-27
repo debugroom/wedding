@@ -18,7 +18,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.WritableResource;
 import org.springframework.stereotype.Component;
 
-@Profile("LocalAws")
+@Profile({"LocalAws","aws"})
 @Component
 public class InformationMessageBodyHelperImpl implements InformationMessageBodyHelper{
 

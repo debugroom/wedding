@@ -22,7 +22,7 @@ import org.debugroom.wedding.app.model.gallery.Movie;
 import org.debugroom.wedding.app.model.gallery.Photo;
 import org.debugroom.wedding.domain.entity.User;
 
-@Profile("dev")
+@Profile({"dev", "LocalDev"})
 @Component
 public class ImageDownloadHelperImpl implements ImageDownloadHelper{
 
