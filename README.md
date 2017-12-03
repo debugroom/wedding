@@ -184,6 +184,39 @@ RUN             /var/local/wedding/build-production-servers/build-postgresql/scr
 docker runで作成したイメージからコンテナを実行し、データベースのデータを確認する場合は、docker run -it --name dbserver debugroom/wedding:postgres /bin/bashにて、コンテナを実行し、su - postgresにて、ユーザを切り替え、pg_ctl start -w;psql -d weddingにて、データベースに接続する。
 </details>
 
+<details><summary>APサーバからアクセス許可</summary>
+APサーバからのアクセス許可を設定する場合は、AWSコンソールを用いて、セキュリティグループで、APサーバからのアクセスを許可する設定を行うこと。
+</details>
+
+<details><summary>APサーバからPostgreSQLへのコネクション</summary>
+アプリケーションサービスを起動していくと、設定次第ではPostgreSQLコネクションが枯渇する(SpringBoot1アプリケーションあたりデフォルト10で、PostgreSQLのデフォルト閾値100を越えるとアプリが起動できないエラーが発生する。)
+アプリケーションサービスx10コネクションxAPサーバ台数分PostgreSQLコネクションのプールが必要となるため、/var/lib/pgsql/data/postgresql.confのmax_connections及び、shared_buffersを変更する。なお、
+　shared_bufferesの設定値の目安としては、コネクション数x2MBとなるよう、設定変更を行うこと。
+</details>
+
+<details><summary>CentOS7におけるPostgreSQLのサービス再起動</summary>
+CentOS7では、設定ファイルを変更した後、以下のコマンドでサービスの再起動を行う。
+```
+systemctl restart postgresql
+```
+</details>
+
+<details><summary>PostgreSQLにおけるコネクション状況の確認方法</summary>
+設定の最大コネクション数は、以下で確認できる。
+```
+psql> SHOW max_connections;
+```
+PostgreSQLのコネクションの現在の占有数は、以下で確認できる。
+```
+psql> SELECT count(*) FROM pg_stat_activity;
+```
+占有しているクライアントを確認するには、以下のSQLを実行すると良い。
+```
+SELECT client_addr, query FROM pg_stat_activity;
+```
+</details>
+
+
 #### 1-3. Install Apache Cassandra on CentOS7 in docker container
 
 Cassandraをコンテナ内のCentOS7へインストールする。コンテナのサーバは3台のクラスタ構成とし、構築した環境はイメージとしてDocker Hubに保存しておく。[1-2-2](https://github.com/debugroom/wedding/tree/develop#1-2-2-postgresqlのインストールコンテナイメージ作成)と同様、git clonseしたプロジェクト内にあるDockerfileから構築を行う。[Cassadraクラスタサーバを構築](http://debugroom.github.io/doc/memo/work/docker/article/usage.html#cassandra)も合わせて参照のこと。

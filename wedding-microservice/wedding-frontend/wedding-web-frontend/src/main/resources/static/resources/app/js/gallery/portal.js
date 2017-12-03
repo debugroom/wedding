@@ -1,6 +1,6 @@
 jQuery( document ).ready(function( $ ) {
     $( '#my-slider' ).sliderPro({
-    	width : '100%',
+    	width : '1000px',
     	aspectRatio: 1.5,
         autoplayDelay : 4000,
         arrows : true,
@@ -10,7 +10,7 @@ jQuery( document ).ready(function( $ ) {
         thumbnailArrows : true,
         fadeThumbnailArrows : false,
     });
-    $("#my-slider").css({'margin':'0'});
+    $("#my-slider").css({'margin':'0 100 0'});
 });
 
 jQuery("[id^=folder-icon-]").on("click", getFolderDetail);
