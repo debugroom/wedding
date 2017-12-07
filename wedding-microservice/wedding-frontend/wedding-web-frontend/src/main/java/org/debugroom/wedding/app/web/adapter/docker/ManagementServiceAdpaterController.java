@@ -774,6 +774,7 @@ public class ManagementServiceAdpaterController {
 		informationDetail.setNoAccessedUsersUrl(
 				RequestBuilder.getServicePath("frontend", 
 						new StringBuilder()
+						.append(contextPath)
 						.append("/search/users")
 						.toString(), provider, params));
 		model.addAttribute(informationDetail);
@@ -852,6 +853,7 @@ public class ManagementServiceAdpaterController {
 			informationDetail.setNoAccessedUsersUrl(
 					RequestBuilder.getServicePath("frontend", 
 							new StringBuilder()
+							.append(contextPath)
 							.append("/search/users")
 							.toString(), provider, params));
 
@@ -1127,6 +1129,7 @@ public class ManagementServiceAdpaterController {
 		requestDetail.setNotRequestUsersUrl(
 				RequestBuilder.getServicePath("frontend", 
 					new StringBuilder()
+					.append(contextPath)
 					.append("/search/users")
 					.toString(), provider, params));
 		model.addAttribute(requestDetail);
@@ -1156,6 +1159,7 @@ public class ManagementServiceAdpaterController {
 			requestDetail.setNotRequestUsersUrl(
 					RequestBuilder.getServicePath("frontend", 
 							new StringBuilder()
+							.append(contextPath)
 							.append("/search/users")
 							.toString(), provider, params));
 			model.addAttribute(requestDetail);
