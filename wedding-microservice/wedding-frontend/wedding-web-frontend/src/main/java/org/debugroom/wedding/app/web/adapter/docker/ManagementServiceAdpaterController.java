@@ -764,6 +764,7 @@ public class ManagementServiceAdpaterController {
 		informationDetail.setMessageBodyUrl(
 				RequestBuilder.buildUriComponents(protocol, "frontend", 
 						new StringBuilder()
+						.append(contextPath)
 						.append("/information/body/{infoId}")
 						.toString(), provider, uriVariables).toString());
 
