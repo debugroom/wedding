@@ -92,7 +92,7 @@
               </div>
               <hr>
               <div id="messageBody" class="information-panel">
-                <c:import url="${informationDetail.messageBodyUrl}"></c:import>
+                <c:import url="${informationDetail.messageBodyUrl}" charEncoding="UTF-8"></c:import>
               </div>
               <form:hidden path="information.infoPagePath"/>
               <hr>

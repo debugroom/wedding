@@ -74,7 +74,7 @@
               </table>
               <h3 id="contents2">メッセージ本文</h3>
               <div id="messageBody" class="messageBodyPanel">
-                <c:import url="${informationDraft.tempInfoUrl}"></c:import>
+                <c:import url="${informationDraft.tempInfoUrl}" charEncoding="UTF-8"></c:import>
               </div>
               <input type="hidden" name="infoPagePath" value="<c:out value='${informationDraft.information.infoPagePath}' />" /><br/>
               <h3>メッセージ通知先</h3>

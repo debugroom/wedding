@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.portal.AnswerRequest;
@@ -30,6 +31,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -125,7 +128,8 @@ public class PortalServiceAdapterController {
 	}
 
 	@RequestMapping(value="/information/{infoId:[0-9]+}", method=RequestMethod.GET)
-	public String information(@Validated Information information, Model model) 
+	public String information(HttpServletRequest request, 
+			@Validated Information information, Model model) 
 			throws URISyntaxException{
 		String serviceName = "information";
 		RestTemplate restTemplate = new RestTemplate();
@@ -136,13 +140,14 @@ public class PortalServiceAdapterController {
 						.append("/information/{infoId}")
 						.toString(), provider).expand(information.getInfoId()).toUri(),
 				Information.class);
+		Map<String, String> uriVariables = new HashMap<String, String>();
+		uriVariables.put("infoId", information.getInfoId());
 		resultInformation.setInfoRootPath(
-				RequestBuilder.buildUriComponents("frontend", 
+				RequestBuilder.buildUriComponents(request.getScheme(), "frontend", 
 						new StringBuilder()
 						.append(contextPath)
-						.append("/information/body/")
-						.append(information.getInfoId())
-						.toString(), provider).toString());
+						.append("/information/body/{infoId}")
+						.toString(), provider, uriVariables).toString());
 		model.addAttribute(resultInformation);
 		return "portal/information";
 	}

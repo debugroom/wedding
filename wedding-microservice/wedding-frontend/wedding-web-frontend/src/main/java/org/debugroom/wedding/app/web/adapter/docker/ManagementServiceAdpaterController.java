@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import org.dozer.Mapper;
 import org.dozer.MappingException;
@@ -593,7 +596,7 @@ public class ManagementServiceAdpaterController {
 	@RequestMapping(method=RequestMethod.POST, value="/management/information/draft/new")
 	public String newInformationDraft(
 			@Validated(ConfirmInformation.class) NewInformationForm newInformationForm,
-			BindingResult bindingResult, Model model, Locale locale){
+			BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request){
 		
 		String serviceName = "management";
 		
@@ -615,15 +618,19 @@ public class ManagementServiceAdpaterController {
 		try {
 			informationMessageBodyHelper.saveMessageBody(informationDraft, 
 					newInformationForm.getMessageBody());
+
+			Map<String, String> uriVariables = new HashMap<String, String>();
+			uriVariables.put("infoId", informationDraft.getInformation().getInfoId());
+
 			MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 			params.set("temp", null);
 			params.set("infoPagePath", informationDraft.getInformation().getInfoPagePath());
-			informationDraft.setTempInfoUrl(RequestBuilder.buildUriComponents("frontend", 
+			informationDraft.setTempInfoUrl(RequestBuilder.buildUriComponents(
+					request.getScheme(), "frontend", 
 					new StringBuilder()
 					.append(contextPath)
 					.append("/information/body/{infoId}")
-					.toString(), provider, params)
-					.expand(informationDraft.getInformation().getInfoId()).toString());
+					.toString(), provider, uriVariables, params).toString());
 			model.addAttribute(informationDraft);
 		} catch (BusinessException e) {
 			model.addAttribute("errorMessage", messageSource.getMessage(
@@ -650,7 +657,7 @@ public class ManagementServiceAdpaterController {
 	@RequestMapping(method=RequestMethod.POST, value="/management/information/new")
 	public String saveInformation(
 			@Validated(SaveInformation.class) NewInformationForm newInformationForm,
-			BindingResult bindingResult, Model model, 
+			BindingResult bindingResult, Model model, HttpServletRequest request,
 			RedirectAttributes redirectAttributes, Locale locale){
 
 		String serviceName = "management";
@@ -670,16 +677,17 @@ public class ManagementServiceAdpaterController {
 				.infoName(newInformationForm.getInfoName())
 				.viewUsers(newInformationForm.getCheckedUsers())
 				.build();
+		Map<String, String> uriVariables = new HashMap<String, String>();
+		uriVariables.put("infoId", informationDraft.getInformation().getInfoId());
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 		params.set("temp", null);
 		params.set("infoPagePath", informationDraft.getInformation().getInfoPagePath());
 		informationDraft.setTempInfoUrl(
-				RequestBuilder.buildUriComponents("frontend", 
+				RequestBuilder.buildUriComponents(request.getScheme(), "frontend", 
 						new StringBuilder()
 						.append(contextPath)
 						.append("/information/body/{infoId}")
-						.toString(), provider, params)
-				.expand(informationDraft.getInformation().getInfoId()).toString());
+						.toString(), provider, uriVariables ,params).toString());
 		
 		if(bindingResult.hasErrors()){
 			model.addAttribute(informationDraft);
@@ -729,7 +737,7 @@ public class ManagementServiceAdpaterController {
 	}
 
 	@RequestMapping(method=RequestMethod.GET, value="/management/information/{infoId:[0-9]+}")
-	public String getInformation(
+	public String getInformation(HttpServletRequest request,
 			@Validated(GetInformation.class) InformationDetailForm informationDetailForm, 
 			BindingResult bindingResult, Model model){
 		
@@ -749,26 +757,23 @@ public class ManagementServiceAdpaterController {
 						.toString(), provider)
 				.expand(informationDetailForm.getInfoId()).toUri(), InformationDetail.class);
 
+		Map<String, String> uriVariables = new HashMap<String, String>();
+		uriVariables.put("infoId", informationDetailForm.getInfoId());
 		informationDetail.setMessageBodyUrl(
-				RequestBuilder.buildUriComponents("frontend", 
+				RequestBuilder.buildUriComponents(request.getScheme(), "frontend", 
 						new StringBuilder()
-						.append(contextPath)
 						.append("/information/body/{infoId}")
-						.toString(), provider).expand(informationDetailForm.getInfoId())
-				.toString());
+						.toString(), provider, uriVariables).toString());
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 		params.set("type", "not-information-viewers");
 		params.set("infoId", "");
 		informationDetail.setNoAccessedUsersUrl(
-				RequestBuilder.buildUriComponents("frontend", 
+				RequestBuilder.getServicePath("frontend", 
 						new StringBuilder()
-						.append(contextPath)
 						.append("/search/users")
-						.toString(), provider, params).toString());
-		
+						.toString(), provider, params));
 		model.addAttribute(informationDetail);
-		
 		if("detail".equals(informationDetailForm.getType())){
 			return "management/information/detail";
 		}else{
@@ -826,7 +831,7 @@ public class ManagementServiceAdpaterController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, value="/management/information/{information.infoId:[0-9]+}")
-	public String updateInformation(
+	public String updateInformation(HttpServletRequest request, 
 			@Validated(UpdateInformation.class) UpdateInformationForm updateInformationForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 			
@@ -842,18 +847,19 @@ public class ManagementServiceAdpaterController {
 			params.set("type", "not-information-viewers");
 			params.set("infoId", "");
 			informationDetail.setNoAccessedUsersUrl(
-					RequestBuilder.buildUriComponents("frontend", 
+					RequestBuilder.getServicePath("frontend", 
 							new StringBuilder()
-							.append(contextPath)
 							.append("/search/users")
-							.toString(), provider, params).toString());
+							.toString(), provider, params));
+
+			Map<String, String> uriVariables = new HashMap<String, String>();
+			uriVariables.put("infoId", informationDetail.getInformation().getInfoId());
 			informationDetail.setMessageBodyUrl(
-					RequestBuilder.buildUriComponents("frontend", 
+					RequestBuilder.buildUriComponents(request.getScheme(), "frontend", 
 							new StringBuilder()
 							.append(contextPath)
 							.append("/information/body/{infoId}")
-							.toString(), provider)
-					.expand(informationDetail.getInformation().getInfoId()).toString());
+							.toString(), provider, uriVariables).toString());
 			model.addAttribute(informationDetail);
 			model.addAttribute(BindingResult.class.getName() + ".informationDetail", bindingResult);
 			return "/management/information/detail";
@@ -1116,11 +1122,10 @@ public class ManagementServiceAdpaterController {
 		params.set("type", "not-request-users");
 		params.set("requestId", "");
 		requestDetail.setNotRequestUsersUrl(
-				RequestBuilder.buildUriComponents("frontend", 
+				RequestBuilder.getServicePath("frontend", 
 					new StringBuilder()
-					.append(contextPath)
 					.append("/search/users")
-					.toString(), provider, params).toString());
+					.toString(), provider, params));
 		model.addAttribute(requestDetail);
 		
 		if("detail".equals(requestDetailForm.getType())){
@@ -1146,11 +1151,10 @@ public class ManagementServiceAdpaterController {
 			params.set("type", "not-request-users");
 			params.set("requestId", "");
 			requestDetail.setNotRequestUsersUrl(
-					RequestBuilder.buildUriComponents("frontend", 
+					RequestBuilder.getServicePath("frontend", 
 							new StringBuilder()
-							.append(contextPath)
 							.append("/search/users")
-							.toString(), provider, params).toString());
+							.toString(), provider, params));
 			model.addAttribute(requestDetail);
 			model.addAttribute(BindingResult.class.getName() + ".requestDetail", bindingResult);
 			return "/management/request/detail";

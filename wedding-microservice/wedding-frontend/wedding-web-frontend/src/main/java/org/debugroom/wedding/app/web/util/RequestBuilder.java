@@ -4,12 +4,15 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -121,4 +124,82 @@ public class RequestBuilder {
 				.queryParams(params)
 				.build();
 	}
+
+	public static UriComponents buildUriComponents(
+			String protocol, String serviceName, String path, ConnectPathProvider provider,
+			Map<String, String> uriVariables){
+		return UriComponentsBuilder.newInstance()
+				.scheme(protocol)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(path)
+				.buildAndExpand(uriVariables);
+	}
+
+	public static UriComponents buildUriComponents(
+			String protocol, String serviceName, String path, ConnectPathProvider provider,
+			Map<String, String> uriVariables, MultiValueMap<String, String> params){
+		return UriComponentsBuilder.newInstance()
+				.scheme(protocol)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(path)
+				.queryParams(params)
+				.buildAndExpand(uriVariables);
+	}
+	
+	public static String getServicePath(String serviceName,
+			String path, ConnectPathProvider provider,
+			MultiValueMap<String, String> params){
+		
+		UriComponents uriComponents = UriComponentsBuilder.newInstance()
+				.scheme(PROTOCOL)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(path)
+				.queryParams(params)
+				.build();
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(uriComponents.getPath());
+		if(null != uriComponents.getQuery()){
+			stringBuilder.append("?").append(uriComponents.getQuery());
+		}
+		return stringBuilder.toString();
+	}
+
+	public static String getServicePath(String serviceName,
+			String path, ConnectPathProvider provider,
+			Map<String, String> uriVariables){
+		
+		UriComponents uriComponents = UriComponentsBuilder.newInstance()
+				.scheme(PROTOCOL)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(path)
+				.buildAndExpand(uriVariables);
+		
+		return uriComponents.getPath();
+	}
+	
+	public static String getServicePath(String serviceName,
+			String path, ConnectPathProvider provider,
+			Map<String, String> uriVariables, MultiValueMap<String, String> params){
+		
+		UriComponents uriComponents = UriComponentsBuilder.newInstance()
+				.scheme(PROTOCOL)
+				.host(provider.getIpAddr(serviceName))
+				.port(provider.getPort(serviceName))
+				.path(path)
+				.queryParams(params)
+				.buildAndExpand(uriVariables);
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(uriComponents.getPath());
+		if(null != uriComponents.getQuery()){
+			stringBuilder.append("?").append(uriComponents.getQuery());
+		}
+		return stringBuilder.toString();
+	}
+
 }
