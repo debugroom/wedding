@@ -43,6 +43,7 @@ gallery:
       height: 75
       frame:
         start: 100
+protocol: http
 cloud:
   aws:
     stack:

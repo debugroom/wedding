@@ -128,6 +128,13 @@ public class RequestBuilder {
 	public static UriComponents buildUriComponents(
 			String protocol, String serviceName, String path, ConnectPathProvider provider,
 			Map<String, String> uriVariables){
+		if("https".equals(protocol)){
+			return UriComponentsBuilder.newInstance()
+				.scheme(protocol)
+				.host(provider.getIpAddr(serviceName))
+				.path(path)
+				.buildAndExpand(uriVariables);
+		}
 		return UriComponentsBuilder.newInstance()
 				.scheme(protocol)
 				.host(provider.getIpAddr(serviceName))
@@ -139,6 +146,14 @@ public class RequestBuilder {
 	public static UriComponents buildUriComponents(
 			String protocol, String serviceName, String path, ConnectPathProvider provider,
 			Map<String, String> uriVariables, MultiValueMap<String, String> params){
+		if("https".equals(protocol)){
+			return UriComponentsBuilder.newInstance()
+				.scheme(protocol)
+				.host(provider.getIpAddr(serviceName))
+				.path(path)
+				.queryParams(params)
+				.buildAndExpand(uriVariables);
+		}
 		return UriComponentsBuilder.newInstance()
 				.scheme(protocol)
 				.host(provider.getIpAddr(serviceName))

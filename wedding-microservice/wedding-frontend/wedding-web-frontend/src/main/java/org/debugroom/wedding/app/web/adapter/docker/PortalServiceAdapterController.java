@@ -53,6 +53,9 @@ public class PortalServiceAdapterController {
 	@Value("${server.contextPath}")
 	private String contextPath;
 
+	@Value("${protocol}")
+	private String protocol;
+	
 	@Inject
 	Mapper mapper;
 	
@@ -128,7 +131,7 @@ public class PortalServiceAdapterController {
 	}
 
 	@RequestMapping(value="/information/{infoId:[0-9]+}", method=RequestMethod.GET)
-	public String information(HttpServletRequest request, 
+	public String information( 
 			@Validated Information information, Model model) 
 			throws URISyntaxException{
 		String serviceName = "information";
@@ -143,7 +146,7 @@ public class PortalServiceAdapterController {
 		Map<String, String> uriVariables = new HashMap<String, String>();
 		uriVariables.put("infoId", information.getInfoId());
 		resultInformation.setInfoRootPath(
-				RequestBuilder.buildUriComponents(request.getScheme(), "frontend", 
+				RequestBuilder.buildUriComponents(protocol, "frontend", 
 						new StringBuilder()
 						.append(contextPath)
 						.append("/information/body/{infoId}")

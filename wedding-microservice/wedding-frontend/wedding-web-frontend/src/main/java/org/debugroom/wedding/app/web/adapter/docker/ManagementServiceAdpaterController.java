@@ -12,7 +12,6 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 
 import org.dozer.Mapper;
 import org.dozer.MappingException;
@@ -106,6 +105,9 @@ public class ManagementServiceAdpaterController {
 
 	private static final String APP_NAME = "api/v1";
 
+	@Value("${protocol}")
+	private String protocol;
+	
 	@Value("${server.contextPath}")
 	private String contextPath;
 	
@@ -596,7 +598,7 @@ public class ManagementServiceAdpaterController {
 	@RequestMapping(method=RequestMethod.POST, value="/management/information/draft/new")
 	public String newInformationDraft(
 			@Validated(ConfirmInformation.class) NewInformationForm newInformationForm,
-			BindingResult bindingResult, Model model, Locale locale, HttpServletRequest request){
+			BindingResult bindingResult, Model model, Locale locale){
 		
 		String serviceName = "management";
 		
@@ -626,7 +628,7 @@ public class ManagementServiceAdpaterController {
 			params.set("temp", null);
 			params.set("infoPagePath", informationDraft.getInformation().getInfoPagePath());
 			informationDraft.setTempInfoUrl(RequestBuilder.buildUriComponents(
-					request.getScheme(), "frontend", 
+					protocol, "frontend", 
 					new StringBuilder()
 					.append(contextPath)
 					.append("/information/body/{infoId}")
@@ -657,7 +659,7 @@ public class ManagementServiceAdpaterController {
 	@RequestMapping(method=RequestMethod.POST, value="/management/information/new")
 	public String saveInformation(
 			@Validated(SaveInformation.class) NewInformationForm newInformationForm,
-			BindingResult bindingResult, Model model, HttpServletRequest request,
+			BindingResult bindingResult, Model model, 
 			RedirectAttributes redirectAttributes, Locale locale){
 
 		String serviceName = "management";
@@ -683,7 +685,7 @@ public class ManagementServiceAdpaterController {
 		params.set("temp", null);
 		params.set("infoPagePath", informationDraft.getInformation().getInfoPagePath());
 		informationDraft.setTempInfoUrl(
-				RequestBuilder.buildUriComponents(request.getScheme(), "frontend", 
+				RequestBuilder.buildUriComponents(protocol, "frontend", 
 						new StringBuilder()
 						.append(contextPath)
 						.append("/information/body/{infoId}")
@@ -737,7 +739,7 @@ public class ManagementServiceAdpaterController {
 	}
 
 	@RequestMapping(method=RequestMethod.GET, value="/management/information/{infoId:[0-9]+}")
-	public String getInformation(HttpServletRequest request,
+	public String getInformation(
 			@Validated(GetInformation.class) InformationDetailForm informationDetailForm, 
 			BindingResult bindingResult, Model model){
 		
@@ -760,7 +762,7 @@ public class ManagementServiceAdpaterController {
 		Map<String, String> uriVariables = new HashMap<String, String>();
 		uriVariables.put("infoId", informationDetailForm.getInfoId());
 		informationDetail.setMessageBodyUrl(
-				RequestBuilder.buildUriComponents(request.getScheme(), "frontend", 
+				RequestBuilder.buildUriComponents(protocol, "frontend", 
 						new StringBuilder()
 						.append("/information/body/{infoId}")
 						.toString(), provider, uriVariables).toString());
@@ -831,7 +833,7 @@ public class ManagementServiceAdpaterController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, value="/management/information/{information.infoId:[0-9]+}")
-	public String updateInformation(HttpServletRequest request, 
+	public String updateInformation(
 			@Validated(UpdateInformation.class) UpdateInformationForm updateInformationForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
 			
@@ -855,7 +857,7 @@ public class ManagementServiceAdpaterController {
 			Map<String, String> uriVariables = new HashMap<String, String>();
 			uriVariables.put("infoId", informationDetail.getInformation().getInfoId());
 			informationDetail.setMessageBodyUrl(
-					RequestBuilder.buildUriComponents(request.getScheme(), "frontend", 
+					RequestBuilder.buildUriComponents(protocol, "frontend", 
 							new StringBuilder()
 							.append(contextPath)
 							.append("/information/body/{infoId}")

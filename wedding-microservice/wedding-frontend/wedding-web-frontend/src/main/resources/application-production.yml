@@ -9,6 +9,7 @@ logging:
   file: logs/app.log
   level:
     org.springframework.web: INFO
+protocol: https
 server:
     port: 8080
     contextPath: /wedding
