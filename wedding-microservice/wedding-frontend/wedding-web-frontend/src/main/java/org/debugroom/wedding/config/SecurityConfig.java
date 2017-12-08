@@ -63,6 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.passwordParameter("password")
 			.permitAll()
 		.and()
+		    .exceptionHandling()
+		    	.authenticationEntryPoint(authenticationEntryPoint())
+		.and()
 			.logout()
 			.logoutSuccessUrl("/login")
 			.permitAll();

@@ -29,6 +29,7 @@ public class SessionExpiredDetectingLoginUrlAuthenticationEntryPoint
 				RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();
 				urlBuilder.setScheme("https");
 				urlBuilder.setServerName(request.getServerName());
+				urlBuilder.setPort(443);
 				urlBuilder.setContextPath(request.getContextPath());
 				urlBuilder.setPathInfo("/login");
 				redirectUrl = urlBuilder.getUrl();
