@@ -53,6 +53,9 @@ public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 			case MediaType.IMAGE_GIF_VALUE :
 				stringBuilder.append(".gif");
 				break;
+			default:
+				stringBuilder.append(".jpg");
+				break;
 		}
 		File uploadFile = new File(uploadDirectoryAbsolutePath, stringBuilder.toString());
 		try {

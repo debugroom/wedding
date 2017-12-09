@@ -105,6 +105,9 @@ public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 			case MediaType.IMAGE_GIF_VALUE :
 				stringBuilder.append(".gif");
 				break;
+			default:
+				stringBuilder.append(".jpg");
+				break;
 		}
 		String objectKey = stringBuilder.toString();
 		WritableResource writableResource = (WritableResource)resourceLoader.getResource(
