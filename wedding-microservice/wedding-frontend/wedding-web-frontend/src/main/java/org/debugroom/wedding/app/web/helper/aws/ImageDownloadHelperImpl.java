@@ -2,6 +2,7 @@ package org.debugroom.wedding.app.web.helper.aws;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -44,12 +45,20 @@ public class ImageDownloadHelperImpl implements ImageDownloadHelper{
 				.append(user.getImageFilePath())
 				.toString());
 		BufferedImage image = null;
+		InputStream inputStream = null;
 		try {
-			image = ImageIO.read(resource.getInputStream());
+			inputStream = resource.getInputStream();
+			image = ImageIO.read(inputStream);
+			return image;
 		} catch (IOException e) {
 			throw new SystemException("imageDownloadHelper.error.0001", e);
+		} finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return image;
 	}
 
 	@Override
