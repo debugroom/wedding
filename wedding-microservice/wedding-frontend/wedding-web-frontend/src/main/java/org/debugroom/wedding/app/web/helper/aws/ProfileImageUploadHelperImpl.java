@@ -71,6 +71,9 @@ public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 				.append("/")
 				.append(uuidString)
 				.toString();
+		ObjectMetadata metadata = new ObjectMetadata();
+		metadata.setContentLength(0);
+		InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
 		try {
 			List<Resource> resources = Arrays.asList(resourcePatternResolver.getResources(
 					new StringBuilder()
@@ -78,9 +81,6 @@ public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 					.append(userDirectory)
 					.append("/**")
 					.toString()));
-			ObjectMetadata metadata = new ObjectMetadata();
-			metadata.setContentLength(0);
-			InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
 			if(resources.size() == 0){
 				PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,
 						new StringBuilder().append(userDirectory).append("/").toString(), 
@@ -93,6 +93,12 @@ public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 			amazonS3.putObject(putObjectRequest);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally{
+			try {
+				emptyContent.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		StringBuilder stringBuilder = new StringBuilder().append(profileImageFileName);
 		switch (multipartFile.getContentType()) {

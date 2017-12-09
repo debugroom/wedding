@@ -1,6 +1,7 @@
 package org.debugroom.wedding.app.web.helper.aws;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.inject.Inject;
@@ -39,12 +40,22 @@ public class InformationMessageBodyHelperImpl implements InformationMessageBodyH
 				.append("/")
 				.append(information.getInfoPagePath())
 				.toString());
+		InputStream inputStream = null;
 		try {
-			return IOUtils.toString(resource.getInputStream(), "UTF-8");
+		    inputStream = resource.getInputStream();
+		    String messageBody = IOUtils.toString(inputStream, "UTF-8");
+		    return messageBody;
 		} catch (IOException e) {
 			throw new BusinessException(
 					"informationMessageBodyHelper.error.0002", e, information.getInfoId());
+		} finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		
 	}
 
 	@Override
