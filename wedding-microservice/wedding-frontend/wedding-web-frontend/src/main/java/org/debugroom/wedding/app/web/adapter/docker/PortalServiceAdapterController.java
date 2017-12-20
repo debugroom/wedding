@@ -3,12 +3,13 @@ package org.debugroom.wedding.app.web.adapter.docker;
 import java.awt.image.BufferedImage;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.portal.AnswerRequest;
@@ -20,6 +21,7 @@ import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
 import org.debugroom.wedding.app.web.helper.InformationMessageBodyHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
+import org.debugroom.wedding.app.model.Menu;
 import org.debugroom.wedding.domain.entity.User;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,7 +91,7 @@ public class PortalServiceAdapterController {
 			return "common/error";
 		}
 		String serviceName = "portal";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		PortalResource portalResource = restTemplate.getForObject(
 			RequestBuilder.buildUriComponents(serviceName, 
 				new StringBuilder()
@@ -113,7 +115,7 @@ public class PortalServiceAdapterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		String serviceName = "portal";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		User user = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -135,7 +137,7 @@ public class PortalServiceAdapterController {
 			@Validated Information information, Model model) 
 			throws URISyntaxException{
 		String serviceName = "information";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		Information resultInformation = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -160,7 +162,7 @@ public class PortalServiceAdapterController {
 	@ResponseBody
 	public String infomationBody(@PathVariable String infoId){
 		String serviceName = "information";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		try {
 			return informationMessageBodyHelper.getMessageBody(restTemplate.getForObject(
 						RequestBuilder.buildUriComponents(serviceName, 
@@ -186,7 +188,7 @@ public class PortalServiceAdapterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		String serviceName = "portal";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("userId", userId);
 		paramMap.put("requestId", requestId);
@@ -202,4 +204,18 @@ public class PortalServiceAdapterController {
 				.build());
 	}
 
+	public List<Menu> getUsableMenu(String userId){
+		String serviceName = "portal";
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("userId", userId);
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
+		Menu[] menu = restTemplate.getForObject(RequestBuilder.buildUriComponents(
+				serviceName, new StringBuilder()
+				.append(APP_NAME)
+				.append("/{userId}/menu").toString(), provider)
+				.expand(paramMap).toUri(), Menu[].class);
+		return Arrays.asList(menu);
+	}
+
 }
+

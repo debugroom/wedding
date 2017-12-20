@@ -1,7 +1,5 @@
 package org.debugroom.wedding.domain.service.management;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,10 +9,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.dozer.Mapper;
-import org.hibernate.dialect.lock.OptimisticEntityLockException;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

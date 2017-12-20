@@ -70,7 +70,7 @@ public class MessageServiceAdapterController {
 			return "common/error";
 		}
 		String serviceName = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		model.addAttribute(restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -89,7 +89,7 @@ public class MessageServiceAdapterController {
 	public ResponseEntity<BufferedImage> getChatProfileImage(@PathVariable String userId,
 			@AuthenticationPrincipal CustomUserDetails customUserDetails){
 		String serviceName = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		User user = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -120,7 +120,7 @@ public class MessageServiceAdapterController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getMessagesResult);
 		}
 		String serviceName = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		getMessagesResult.setMessages(Arrays.asList(restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -136,7 +136,7 @@ public class MessageServiceAdapterController {
 	@RequestMapping(method=RequestMethod.GET, value="/chat/users")
 	public ResponseEntity<UserSearchResult> chatUsers(){
 		String serviceName = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		User[] users = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -166,7 +166,7 @@ public class MessageServiceAdapterController {
 		}
 		
 		String serviceName = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		addMessageBoardResult.setMessageBoard(restTemplate.postForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -186,7 +186,7 @@ public class MessageServiceAdapterController {
 			UpdateMessageBoardResource.builder().build();
 		
 		String serviceName = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		updateMessageBoardResource.setMessageBoard(
 				restTemplate.getForObject(
 						RequestBuilder.buildUriComponents(serviceName, 
@@ -228,7 +228,7 @@ public class MessageServiceAdapterController {
 		}
 		
 		String serviceName = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		updateMessageBoardResult.setMessageBoard(restTemplate.exchange(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -251,7 +251,7 @@ public class MessageServiceAdapterController {
 				.builder().build();
 	
 		String serviceName = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		deleteMessageBoardResult.setMessageBoard(
 				restTemplate.exchange(
 						RequestBuilder.buildUriComponents(serviceName, 

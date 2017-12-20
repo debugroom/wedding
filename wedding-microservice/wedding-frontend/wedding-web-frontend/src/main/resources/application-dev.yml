@@ -9,13 +9,16 @@ spring:
     username: wedding_app
     password: wedding_app
     driverClassName: org.postgresql.Driver
+bucket:
+  name: data.debugroom.org
 profile:
   root:
-    directory: /Users/kawabatakouhei/Documents/work/apps
+    directory: wedding
 info:
   root:
-    directory: /Users/kawabatakouhei/Documents/work/apps
+    directory: wedding/information
 gallery:
   root:
-    directory: /Users/kawabatakouhei/Documents/work/apps/gallery
-    
+    directory: wedding/gallery
+  distribution:
+    server: http://data.debugroom.org.s3.amazonaws.com

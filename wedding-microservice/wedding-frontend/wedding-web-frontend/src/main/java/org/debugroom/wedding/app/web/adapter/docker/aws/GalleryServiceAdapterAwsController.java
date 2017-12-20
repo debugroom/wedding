@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.debugroom.wedding.app.web.adapter.docker.GalleryServiceAdapterController;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 
-@Profile({"LocalAws", "aws"})
 @Controller
 public class GalleryServiceAdapterAwsController {
 

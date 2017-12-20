@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: LocalAws,jpa
+    active: dev,jpa
   http:
     multipart:
       enabled: true

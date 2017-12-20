@@ -13,3 +13,23 @@ protocol: https
 server:
     port: 8080
     contextPath: /wedding
+bucket:
+  name: data.debugroom.org
+profile:
+  root:
+    directory: wedding
+info:
+  root:
+    directory: wedding/information
+gallery:
+  root:
+    directory: wedding/gallery
+  distribution:
+    server: http://data.debugroom.org.s3.amazonaws.com
+cloud:
+  aws:
+    credentials:
+      accessKey: ${aws.access.key.id}
+      secretKey: ${aws.secret.access.key}
+    region:
+      static: ${aws.default.resion}

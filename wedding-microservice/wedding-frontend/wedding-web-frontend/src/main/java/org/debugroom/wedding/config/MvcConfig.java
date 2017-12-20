@@ -5,7 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import org.debugroom.wedding.app.web.filter.MDCFilter;
+import org.debugroom.wedding.app.web.helper.AuditLoggingHelper;
+import org.debugroom.wedding.app.web.helper.docker.AuditLoggingHelperImpl;
 import org.debugroom.wedding.app.web.interceptor.AddUserInfoInterceptor;
+import org.debugroom.wedding.app.web.interceptor.FrontendAuditLoggingInterceptor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -27,9 +34,28 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 public class MvcConfig extends WebMvcConfigurerAdapter{
 	
+	/* Interceptorでインジェクションが行われないため、手動でコンストラクタインジェクションを行う。
+	 * See : https://stackoverflow.com/questions/23349180/java-config-for-spring-interceptor-where-interceptor-is-using-autowired-spring-b
+	 */
+	@Inject
+	AuditLoggingHelper auditLoggingHelper;
+
 	@Bean
 	public AddUserInfoInterceptor addUserInfoInterceptor(){
 		return new AddUserInfoInterceptor();
+	}
+	
+	@Bean
+	public FrontendAuditLoggingInterceptor auditLoggingInterceptor(){
+		return new FrontendAuditLoggingInterceptor(auditLoggingHelper);
+	}
+
+	@Bean
+	public FilterRegistrationBean mdcFilter(){
+		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+		filterRegistrationBean.setFilter(new MDCFilter());
+		filterRegistrationBean.setOrder(0);
+		return filterRegistrationBean;
 	}
 	
 	@Bean
@@ -89,6 +115,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(addUserInfoInterceptor());
+		registry.addInterceptor(auditLoggingInterceptor());
 	}
 
 	

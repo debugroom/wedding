@@ -188,7 +188,7 @@ public class ManagementServiceAdpaterController {
 			return "management/user/portal";
 		}
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 	    params.set("page", Integer.toString(pageParam.getPage()));
 	    params.set("size", Integer.toString(pageParam.getSize()));
@@ -228,7 +228,7 @@ public class ManagementServiceAdpaterController {
 		}
 
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		User user = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 					new StringBuilder()
@@ -300,7 +300,7 @@ public class ManagementServiceAdpaterController {
 			model.addAttribute(BindingResult.class.getName() + ".newUserForm", bindingResult);
 			return "management/user/form";
 		}
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		user = restTemplate.postForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -342,7 +342,7 @@ public class ManagementServiceAdpaterController {
 			model.addAttribute("newUser", user);
 			return "management/user/form";
 		}
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		try{
 			restTemplate.postForObject(
 					RequestBuilder.buildUriComponents(serviceName2,
@@ -389,7 +389,7 @@ public class ManagementServiceAdpaterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		User user = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -416,7 +416,7 @@ public class ManagementServiceAdpaterController {
 		}
 		User user = null;
 		try{
-			RestTemplate restTemplate = new RestTemplate();
+			RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 			user = restTemplate.getForObject(
 					RequestBuilder.buildUriComponents(serviceName, 
 					new StringBuilder()
@@ -471,7 +471,7 @@ public class ManagementServiceAdpaterController {
 			}
 		}
 
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		try{
 			restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName2, 
 					new StringBuilder()
@@ -526,7 +526,7 @@ public class ManagementServiceAdpaterController {
 			return "redirect:/management/user/portal";
 		}
 
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		try{
 			restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName2, 
 					new StringBuilder()
@@ -569,7 +569,7 @@ public class ManagementServiceAdpaterController {
 			return "common/error";
 		}
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 	    params.set("page", Integer.toString(pageParam.getPage()));
 	    params.set("size", Integer.toString(pageParam.getSize()));
@@ -585,7 +585,7 @@ public class ManagementServiceAdpaterController {
 	@RequestMapping(method=RequestMethod.GET, value="/management/information/new")
 	public String newInformationForm(Model model){
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		model.addAttribute("users", restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -609,7 +609,7 @@ public class ManagementServiceAdpaterController {
 			return newInformationForm(model);
 		}
 
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		InformationDraft informationDraft = restTemplate.postForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -701,7 +701,7 @@ public class ManagementServiceAdpaterController {
 			return newInformationForm(model);
 		}
 
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		try{
 			redirectAttributes.addFlashAttribute(
 				InformationResource
@@ -749,7 +749,7 @@ public class ManagementServiceAdpaterController {
 		}
 
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 
 		InformationDetail informationDetail = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
@@ -804,7 +804,7 @@ public class ManagementServiceAdpaterController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userSearchResult);
 		}
 
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		String serviceName = null;
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 		switch (userSearchCriteria.getType()){
@@ -871,7 +871,7 @@ public class ManagementServiceAdpaterController {
 		}
 
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 
 		try{
 
@@ -932,7 +932,7 @@ public class ManagementServiceAdpaterController {
 
 		String serviceName = "management";
 
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		try{
 			InformationDetail informationDetail = InformationDetail
 					.builder()
@@ -976,7 +976,7 @@ public class ManagementServiceAdpaterController {
 		}
 		
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 	    params.set("page", Integer.toString(pageParam.getPage()));
 	    params.set("size", Integer.toString(pageParam.getSize()));
@@ -1018,7 +1018,7 @@ public class ManagementServiceAdpaterController {
 			return newRequestForm(model);
 		}
 
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		RequestDraft requestDraft = restTemplate.postForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -1050,7 +1050,7 @@ public class ManagementServiceAdpaterController {
 		
 		String serviceName = "management";
 	
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 
 		Request request = restTemplate.postForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
@@ -1061,7 +1061,7 @@ public class ManagementServiceAdpaterController {
 				.expand(newRequestForm.getRequestId()).toUri(), 
 				newRequestForm, Request.class);
 		
-		HttpHeaders headers = new HttpHeaders();
+		HttpHeaders headers = RequestBuilder.getMDCLoggableHttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 
 		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
@@ -1100,7 +1100,7 @@ public class ManagementServiceAdpaterController {
 		
 		String serviceName = "management";
 		
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		RequestDetail requestDetail = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -1109,7 +1109,7 @@ public class ManagementServiceAdpaterController {
 						.toString(), provider)
 				.expand(requestDetailForm.getRequestId()).toUri(), RequestDetail.class);
 
-		HttpHeaders headers = new HttpHeaders();
+		HttpHeaders headers = RequestBuilder.getMDCLoggableHttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 
 		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
@@ -1168,8 +1168,8 @@ public class ManagementServiceAdpaterController {
 		}
 
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
+		HttpHeaders headers = RequestBuilder.getMDCLoggableHttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 
 		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
@@ -1233,9 +1233,9 @@ public class ManagementServiceAdpaterController {
 		}
 		
 		String serviceName = "management";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 
-		HttpHeaders headers = new HttpHeaders();
+		HttpHeaders headers = RequestBuilder.getMDCLoggableHttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 		HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
 

@@ -14,7 +14,8 @@ import org.apache.commons.io.FileUtils;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 
-@Profile({"dev", "LocalDev"})
+//@Profile({"dev", "LocalDev"})
+@Profile({"local"})
 @Component("profileImageUploadHelper")
 public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 

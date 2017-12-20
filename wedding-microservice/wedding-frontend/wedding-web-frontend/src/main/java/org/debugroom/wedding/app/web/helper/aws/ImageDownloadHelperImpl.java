@@ -20,7 +20,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-@Profile({"LocalAws","aws"})
 @Component
 public class ImageDownloadHelperImpl implements ImageDownloadHelper{
 

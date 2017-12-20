@@ -105,7 +105,7 @@ public class GalleryServiceAdapterController {
 			return "common/error";
 		}
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		model.addAttribute("user", customUserDetails.getUser());
 		model.addAttribute(restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
@@ -127,7 +127,7 @@ public class GalleryServiceAdapterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		Photo target = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -153,7 +153,7 @@ public class GalleryServiceAdapterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		Photo target = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -206,7 +206,7 @@ public class GalleryServiceAdapterController {
 		}
 
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		Photo[] photographs = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -234,7 +234,7 @@ public class GalleryServiceAdapterController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(movieSearchResult);
 		}
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		Movie[] movies = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -264,7 +264,7 @@ public class GalleryServiceAdapterController {
 		}
 
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		User[] users = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -295,7 +295,7 @@ public class GalleryServiceAdapterController {
 		}
 
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		User[] users = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -329,7 +329,7 @@ public class GalleryServiceAdapterController {
 
 		String serviceName = "gallery";
 	
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		//TODO setUserId form http session.
 		createFolderForm.setUserId(customUserDetails.getUser().getUserId());
 		createFolderResult.setFolder(restTemplate.postForObject(
@@ -361,7 +361,7 @@ public class GalleryServiceAdapterController {
 		}
 		
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		//TODO setUserId form http session.
 		updateFolderForm.setUserId(customUserDetails.getUser().getUserId());
 		updateFolderResult.setFolder(restTemplate.exchange(
@@ -393,7 +393,7 @@ public class GalleryServiceAdapterController {
 			return ResponseEntity.status(HttpStatus.OK).body(deleteFolderResult);
 		}
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		deleteFolderResult.setFolder(restTemplate.exchange(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -442,7 +442,7 @@ public class GalleryServiceAdapterController {
 					uploadFileForm.getFolderId());
 
 			String serviceName = "gallery";
-			RestTemplate restTemplate = new RestTemplate();
+			RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 			uploadFileResult.setMedia(restTemplate.postForObject(
 					RequestBuilder.buildUriComponents(serviceName, 
 							new StringBuilder()
@@ -476,7 +476,7 @@ public class GalleryServiceAdapterController {
 		}
 
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		List<Photo> photographs = new ArrayList<Photo>();
 		deleteMediaResult.setPhotographs(photographs);
 		List<Movie> movies = new ArrayList<Movie>();
@@ -519,7 +519,7 @@ public class GalleryServiceAdapterController {
 		}
 
 		String serviceName = "gallery-batch";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		String accessKey = restTemplate.postForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
@@ -573,7 +573,7 @@ public class GalleryServiceAdapterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		String serviceName = "gallery";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		Movie target = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()

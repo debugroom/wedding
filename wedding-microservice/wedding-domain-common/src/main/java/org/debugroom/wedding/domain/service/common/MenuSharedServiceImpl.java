@@ -22,12 +22,14 @@ public class MenuSharedServiceImpl implements MenuSharedService{
 	@Override
 	public List<Menu> getUsableMenu(User user) throws BusinessException {
 		// Check existing User.
+		User targetUser = null;
 		try {
-			userSharedService.exists(user);
+			targetUser = userSharedService.getUser(user.getUserId());
 		} catch (BusinessException e) {
 			throw new BusinessException("userSharedService.error.0002");
 		}
-		List<Menu> menuList = menuRepository.findByAuthorityLevelLessThanOrderByMenuIdAsc(user.getAuthorityLevel());
+		List<Menu> menuList = menuRepository
+				.findByAuthorityLevelLessThanOrderByMenuIdAsc(targetUser.getAuthorityLevel());
 		return menuList;
 	}
 

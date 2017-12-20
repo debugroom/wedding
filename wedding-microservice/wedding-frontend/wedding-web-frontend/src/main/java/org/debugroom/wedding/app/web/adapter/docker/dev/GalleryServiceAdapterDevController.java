@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.debugroom.wedding.app.web.adapter.docker.GalleryServiceAdapterController;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 
-@Profile("dev")
+@Profile("local")
 @Controller
 public class GalleryServiceAdapterDevController {
 

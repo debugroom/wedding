@@ -85,7 +85,7 @@ public class ProfileServiceAdapterController {
 			return "common/error";
 		}
 		String serviceName = "profile";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		PortalResource portalResource = PortalResource.builder() 
 				.user(restTemplate.getForObject(
 							RequestBuilder.buildUriComponents(serviceName, 
@@ -129,7 +129,7 @@ public class ProfileServiceAdapterController {
 		}
 		String serviceName = "profile";
 		String serviceName2 = "message";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName2, 
 				new StringBuilder().append(APP_NAME)
 				.append("/user/{userId}")
@@ -162,7 +162,7 @@ public class ProfileServiceAdapterController {
 			}
 		}
 		String serviceName = "profile";
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		User user = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()

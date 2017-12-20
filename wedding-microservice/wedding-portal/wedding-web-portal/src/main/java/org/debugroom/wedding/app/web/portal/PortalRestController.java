@@ -1,5 +1,8 @@
 package org.debugroom.wedding.app.web.portal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
@@ -18,8 +21,10 @@ import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.portal.AnswerRequest;
 import org.debugroom.wedding.app.model.portal.Information;
 import org.debugroom.wedding.app.model.portal.PortalResource;
+import org.debugroom.wedding.domain.entity.Menu;
 import org.debugroom.wedding.domain.entity.User;
 import org.debugroom.wedding.domain.model.portal.PortalInfoOutput;
+import org.debugroom.wedding.domain.service.common.MenuSharedService;
 import org.debugroom.wedding.domain.service.portal.PortalService;
 
 @RestController
@@ -31,6 +36,9 @@ public class PortalRestController {
 	
 	@Inject
 	PortalService portalService;
+	
+	@Inject
+	MenuSharedService menuSharedService;
 	
 	@RequestMapping(method=RequestMethod.GET, value="/portal/{userId}")
 	@ResponseStatus(HttpStatus.OK)
@@ -65,6 +73,30 @@ public class PortalRestController {
 			@PathVariable String requestId, @RequestBody AnswerRequest answerRequest){
 		return portalService.updateRequestStatus(userId, requestId, 
 				answerRequest.isApproved());
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/{userId:[0-9]+}/menu")
+	public List<org.debugroom.wedding.app.model.portal.Menu> getUsableMenu(
+			@PathVariable String userId) throws BusinessException{
+		List<Menu> menuList = menuSharedService.getUsableMenu(User.builder().userId(userId).build());
+		/*
+		 ResponseEntityで、boolean型はisXXXXという命名形式でなければ、シリアライズ対象から外れる模様。 
+		 シリアライズされるようにオブジェクトをマッピングする。
+		 */
+		List<org.debugroom.wedding.app.model.portal.Menu> newMenuList =
+				new ArrayList<org.debugroom.wedding.app.model.portal.Menu>();
+		for(Menu menu : menuList){
+			newMenuList.add(org.debugroom.wedding.app.model.portal.Menu.builder()
+					.menuId(menu.getMenuId())
+					.menuName(menu.getMenuName())
+					.authorityLevel(menu.getAuthorityLevel())
+					.pathvariables(menu.hasPathvariables())
+					.url(menu.getUrl())
+					.usableStartDate(menu.getUsableStartDate())
+					.usableEndDate(menu.getUsableEndDate())
+					.build());
+		}
+		return newMenuList;
 	}
 
 }

@@ -21,5 +21,6 @@
     <module>wedding-portal</module>
     <module>wedding-message</module>
     <module>wedding-infra-cassandra</module>
+    <module>wedding-operation</module>
   </modules>
 </project>

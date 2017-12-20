@@ -12,7 +12,8 @@ import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.management.information.InformationDraft;
 import org.debugroom.wedding.domain.entity.Information;
 
-@Profile({"dev", "LocalDev"})
+//@Profile({"dev", "LocalDev"})
+@Profile("local")
 @Component
 public class InformationMessageBodyHelperImpl implements InformationMessageBodyHelper{
 
