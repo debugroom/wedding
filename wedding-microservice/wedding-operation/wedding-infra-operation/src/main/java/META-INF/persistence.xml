@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="wedding-infra-operation">
+		<class>org.debugroom.wedding.domain.entity.operation.Folder</class>
+		<class>org.debugroom.wedding.domain.entity.operation.GroupFolder</class>
+		<class>org.debugroom.wedding.domain.entity.operation.GroupFolderPK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.GroupNotification</class>
+		<class>org.debugroom.wedding.domain.entity.operation.GroupNotificationPK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.GroupVisibleMovie</class>
+		<class>org.debugroom.wedding.domain.entity.operation.GroupVisibleMoviePK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.GroupVisiblePhoto</class>
+		<class>org.debugroom.wedding.domain.entity.operation.GroupVisiblePhotoPK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.Group</class>
+		<class>org.debugroom.wedding.domain.entity.operation.Movie</class>
+		<class>org.debugroom.wedding.domain.entity.operation.MovieRelatedFolder</class>
+		<class>org.debugroom.wedding.domain.entity.operation.MovieRelatedFolderPK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.MovieRelatedUser</class>
+		<class>org.debugroom.wedding.domain.entity.operation.MovieRelatedUserPK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.Photo</class>
+		<class>org.debugroom.wedding.domain.entity.operation.PhotoRelatedFolder</class>
+		<class>org.debugroom.wedding.domain.entity.operation.PhotoRelatedFolderPK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.PhotoRelatedUser</class>
+		<class>org.debugroom.wedding.domain.entity.operation.PhotoRelatedUserPK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.UserRelatedFolder</class>
+		<class>org.debugroom.wedding.domain.entity.operation.UserRelatedFolderPK</class>
+		<class>org.debugroom.wedding.domain.entity.operation.User</class>
+		<class>org.debugroom.wedding.domain.entity.operation.Request</class>
+		<class>org.debugroom.wedding.domain.entity.operation.RequestStatus</class>
+		<class>org.debugroom.wedding.domain.entity.operation.RequestStatusPK</class>
+	</persistence-unit>
+</persistence>

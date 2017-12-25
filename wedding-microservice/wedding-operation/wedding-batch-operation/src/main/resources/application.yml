@@ -1,0 +1,34 @@
+spring:
+  profiles:
+    active: dev,jpa
+operation:
+  backup:
+    directory: backup
+    data:
+      postgres:
+        address: address.csv
+        affiliation: affilication.csv
+        credential: credential.csv
+        email: email.csv
+        function: fnction.csv
+        folder: folder.csv
+        group: grp.csv
+        groupFolder: group_folder.csv
+        groupNotification: group_notification.csv
+        groupVisibleMovie: group_visible_movie.csv
+        groupVisiblePhoto: group_visible_photo.csv
+        information: information.csv
+        menu: menu.csv
+        movie: movie.csv
+        movieRelatedFolder: movie_related_folder.csv
+        movieRelatedUser: movie_related_user.csv
+        notification: notification.csv
+        photo: photo.csv
+        photoRelatedFolder: photo_related_folder.csv
+        photoRelatedUser: photo_related_user.csv
+        request: request.csv
+        requestStatus: request_status.csv
+        userRelatedFolder: user_related_folder.csv
+        user: usr.csv
+        
+  

@@ -10,7 +10,7 @@ import org.debugroom.wedding.config.infra.CassandraConfig;
 @Configuration
 @Profile("dev")
 @EnableCassandraRepositories("org.debugroom.wedding.domain.repository.cassandra.operation")
-public class OperationLocalConfig extends CassandraConfig{
+public class OperationCassandraLocalConfig extends CassandraConfig{
 
 	@Override
 	public String[] getEntityBasePackages(){
@@ -24,7 +24,7 @@ public class OperationLocalConfig extends CassandraConfig{
 
 	@Override
 	public SchemaAction getSchemaAction(){
-		return SchemaAction.RECREATE;
+		return SchemaAction.CREATE_IF_NOT_EXISTS;
 	}
 
 }

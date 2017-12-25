@@ -42,7 +42,7 @@ public class UserRepositoryTest {
 		
 		@RunWith(Theories.class)
 		@ContextConfiguration(classes = TestConfig.class)
-		@ActiveProfiles(profiles = {"jpa", "LocalDev"})
+		@ActiveProfiles(profiles = {"jpa", "junit"})
 		public static class findTopByOrderByUserIdDescTest{
 			@Inject
 			UserRepository userRepository;
@@ -71,7 +71,7 @@ public class UserRepositoryTest {
 
 		@RunWith(Theories.class)
 		@ContextConfiguration(classes = TestConfig.class)
-		@ActiveProfiles(profiles = {"jpa", "LocalDev"})
+		@ActiveProfiles(profiles = {"jpa", "junit"})
 		public static class CountUserTest{
 			
 			@Inject
@@ -189,7 +189,7 @@ public class UserRepositoryTest {
 
 		@RunWith(Theories.class)
 		@ContextConfiguration(classes = TestConfig.class)
-		@ActiveProfiles(profiles = {"jpa", "LocalDev"})
+		@ActiveProfiles(profiles = {"jpa", "junit"})
 		public static class FindUsersByInfoIdAndIsAccessed{
 
 			@Inject

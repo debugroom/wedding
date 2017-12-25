@@ -47,6 +47,7 @@ public class DownloadMediaPreProcessTasklet implements Tasklet{
 				.getJobExecution()
 				.getExecutionContext();
 		
+		//作業用のディレクトリを作成する。
 		String path = new StringBuilder()
 				.append(galleryBatchProperties.getGalleryDownloadWorkRootDirectory())
 				.append(java.io.File.separator)
@@ -57,6 +58,7 @@ public class DownloadMediaPreProcessTasklet implements Tasklet{
 		String downloadDirectoryPath = fileSystemSharedService.createDirectory(
 				path, randomString);
 		
+		//ジョブの実行パラメータから、ダウンロード対象となるPhotoの一覧ファイルを作成する。
 		String downloadPhotoList = stepExecution.getJobParameters().getString("photoIds");
 
 		if(downloadPhotoList != null){
@@ -80,11 +82,13 @@ public class DownloadMediaPreProcessTasklet implements Tasklet{
 				downloadPhotoListWriter.close();
 			}
 
+			//ダウンロード対象となるPhotoの一覧ファイルをパラメータとして、executionContextへ引き渡す。
 			jobExecutionContext.put("downloadPhotoListFilename", new StringBuilder()
 				.append("file:").append(downloadPhotoListFile.getAbsolutePath()).toString());
 
 		}
 
+		//ジョブの実行パラメータから、ダウンロード対象となるMovieの一覧ファイルを作成する。
 		String downloadMovieList = stepExecution.getJobParameters().getString("movieIds");
 		
 		if(downloadMovieList != null){
@@ -107,11 +111,13 @@ public class DownloadMediaPreProcessTasklet implements Tasklet{
 				downloadMovieListWriter.close();
 			}
 
+			//ダウンロード対象となるMovieの一覧ファイルをパラメータとして、executionContextへ引き渡す。
 			jobExecutionContext.put("downloadMovieListFilename", new StringBuilder()
 				.append("file:").append(downloadMovieListFile.getAbsolutePath()).toString());
 		
 		}
 
+		// その他、後続ジョブで必要な実行パラメータをexecutionContextへ設定する。
 		jobExecutionContext.put("accessKey", randomString);
 		jobExecutionContext.put("downloadDirectoryPath", downloadDirectoryPath);
 

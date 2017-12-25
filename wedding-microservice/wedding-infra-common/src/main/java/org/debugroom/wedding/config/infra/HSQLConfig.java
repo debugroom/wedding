@@ -1,4 +1,4 @@
-package org.debugroom.wedding.config.env;
+package org.debugroom.wedding.config.infra;
 
 import javax.sql.DataSource;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-@Profile("LocalDev")
+@Profile("junit")
 @Configuration
 public class HSQLConfig {
 

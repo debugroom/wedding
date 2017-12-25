@@ -13,5 +13,6 @@
   	<module>wedding-infra-operation</module>
   	<module>wedding-domain-operation</module>
   	<module>wedding-web-operation</module>
+  	<module>wedding-batch-operation</module>
   </modules>
 </project>
