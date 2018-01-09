@@ -10,7 +10,22 @@
   <name>wedding-batch-operation</name>
   <description>wedding-batch-operation</description>
   
+  <properties>
+    <org.springframework.cloud_spring-cloud-starter-aws_version>1.2.2.RELEASE</org.springframework.cloud_spring-cloud-starter-aws_version>
+    <org.springframework.cloud_spring-cloud-context_version>1.2.2.RELEASE</org.springframework.cloud_spring-cloud-context_version>
+  </properties>
+  
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-aws</artifactId>
+      <version>${org.springframework.cloud_spring-cloud-starter-aws_version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-context</artifactId>
+      <version>${org.springframework.cloud_spring-cloud-context_version}</version>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>wedding-common</artifactId>
@@ -29,6 +44,10 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
     </dependency>
   </dependencies>
 

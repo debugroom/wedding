@@ -3,33 +3,31 @@ package org.debugroom.wedding.config;
 import javax.sql.DataSource;
 import javax.inject.Inject;
 
-import org.debugroom.wedding.app.batch.operation.step.BackupAddressTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupAffiliationTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupCredentialTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupDataPreProcessTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupEmailTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupFolderTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupFunctionTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupGroupFolderTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupGroupNotificationTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupGroupTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupGroupVisibleMovieTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupGroupVisiblePhotoTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupInformationTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupMenuTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupMovieRelatedFolderTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupMovieRelatedUserTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupMovieTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupNotificationTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupPhotoRelatedFolderTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupPhotoRelatedUserTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupPhotoTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupRequestStatusTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupRequestTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupUserRelatedFolderTasklet;
-import org.debugroom.wedding.app.batch.operation.step.BackupUserTasklet;
-import org.debugroom.wedding.domain.entity.User;
-import org.debugroom.wedding.domain.repository.jpa.UserRepository;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupAddressTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupAffiliationTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupCredentialTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupDataPreProcessTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupEmailTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupFolderTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupFunctionTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupGroupFolderTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupGroupNotificationTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupGroupTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupGroupVisibleMovieTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupGroupVisiblePhotoTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupInformationTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupMenuTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupMovieRelatedFolderTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupMovieRelatedUserTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupMovieTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupNotificationTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupPhotoRelatedFolderTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupPhotoRelatedUserTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupPhotoTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupRequestStatusTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupRequestTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupUserRelatedFolderTasklet;
+import org.debugroom.wedding.app.batch.operation.step.backup.postgres.BackupUserTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
@@ -61,21 +59,24 @@ public class BatchAppConfig extends DefaultBatchConfigurer{
 	private StepBuilderFactory stepBuilderFactory;
 	
 	@Bean
-	public Job job(@Qualifier("step1") Step step1, @Qualifier("step2") Step step2){
+	public Job job(@Qualifier("step1") Step step1, @Qualifier("step2") Step step2,
+			@Qualifier("step3") Step step3, @Qualifier("step4") Step step4){
 		return jobBuilderFactory
 				.get("job")
 				.start(step1)
 				.next(step2)
+				.next(step3)
+				.next(step4)
 				.build();
 	}
 	
 	@Bean
 	protected Step step1(){
 		return stepBuilderFactory.get("step1")
-				.tasklet(backupDatePreProcessTasklet())
+				.tasklet(backupDataPreProcessTasklet())
 				.build();
 	}
-	
+
 	@Bean
 	protected Step step2(){
 		Flow flow1 = new FlowBuilder<Flow>("subflow1")
@@ -110,13 +111,43 @@ public class BatchAppConfig extends DefaultBatchConfigurer{
 				.next(backupPhotoRelatedFolderStep())
 				.next(backupUserRelatedFolderStep())
 				.end();
-		Flow splitFlow = new FlowBuilder<Flow>("splitflow")
+		Flow splitFlow1 = new FlowBuilder<Flow>("splitFlow1")
 				.split(new SimpleAsyncTaskExecutor()).add(flow1, flow2, flow3, flow4).build();
 		return stepBuilderFactory.get("step2")
-				.flow(splitFlow)
+				.flow(splitFlow1)
+				.build();
+	}
+	
+	@Bean
+	protected Step step4(){
+		Flow flow5 = new FlowBuilder<Flow>("subflow5")
+				.from(backupCassandraGroupStep())
+				.next(backupCassandraMessageStep())
+				.next(backupCassandraUserStep())
+				.end();
+		Flow flow6 = new FlowBuilder<Flow>("subflow6")
+				.from(backupCassandraGroupRelatedMessageBoardStep())
+				.next(backupCassandraMessageBoardStep())
+				.next(backupCassandraUserRelatedGroupStep())
+				.end();
+		Flow flow7 = new FlowBuilder<Flow>("subflow7")
+				.from(backupCassandraGroupRelatedUserStep())
+				.next(backupCassandraMessagseBoardRelatedGroupStep())
+				.end();
+		Flow splitFlow2 = new FlowBuilder<Flow>("splitFlow2")
+				.split(new SimpleAsyncTaskExecutor()).add(flow5, flow6, flow7)
+				.build();
+		return stepBuilderFactory.get("step4")
+				.flow(splitFlow2)
 				.build();
 	}
 
+	@Bean
+	protected Step step3(){
+		return stepBuilderFactory.get("step3")
+				.tasklet(backupCassandraDataPreProcessTasklet())
+				.build();
+	}
 	@Bean
 	protected Step backupUserStep(){
 		return stepBuilderFactory.get("backupUserStep")
@@ -286,7 +317,70 @@ public class BatchAppConfig extends DefaultBatchConfigurer{
 	}
 
 	@Bean
-	public Tasklet backupDatePreProcessTasklet(){
+	protected Step backupCassandraDataPreProcessStep(){
+		return stepBuilderFactory.get("backupCassandraDataPreProcessStep")
+				.tasklet(backupCassandraDataPreProcessTasklet())
+				.build();
+	}
+	
+	@Bean
+	protected Step backupCassandraGroupStep(){
+		return stepBuilderFactory.get("backupCassandraGroupStep")
+				.tasklet(backupCassandraGroupTasklet())
+				.build();
+	}
+
+	@Bean
+	protected Step backupCassandraGroupRelatedMessageBoardStep(){
+		return stepBuilderFactory.get("backupCassandraGroupRelatedMessageBoardStep")
+				.tasklet(backupCassandraGroupRelatedMessageBoardTasklet())
+				.build();
+	}
+	
+	@Bean
+	protected Step backupCassandraGroupRelatedUserStep(){
+		return stepBuilderFactory.get("backupCassandraGroupRelatedUserStep")
+				.tasklet(backupCassandraGroupRelatedUserTasklet())
+				.build();
+	}
+	
+	@Bean
+	protected Step backupCassandraMessageStep(){
+		return stepBuilderFactory.get("backupCassandraMessageStep")
+				.tasklet(backupCassandraMessageTasklet())
+				.build();
+	}
+
+	@Bean
+	protected Step backupCassandraMessageBoardStep(){
+		return stepBuilderFactory.get("backupCassandraMessageBoardStep")
+				.tasklet(backupCassandraMessageBoardTasklet())
+				.build();
+	}
+	
+	@Bean
+	protected Step backupCassandraMessagseBoardRelatedGroupStep(){
+		return stepBuilderFactory.get("backupCassandraMessageBoardRelatedGroupStep")
+				.tasklet(backupCassandraMessageBoardRelatedGroupTasklet())
+				.build();
+	}
+
+	@Bean
+	protected Step backupCassandraUserStep(){
+		return stepBuilderFactory.get("backupCassandraUserStep")
+				.tasklet(backupCassandraUserTasklet())
+				.build();
+	}
+	
+	@Bean
+	protected Step backupCassandraUserRelatedGroupStep(){
+		return stepBuilderFactory.get("backupCassandraUserRelatedGroupStep")
+				.tasklet(backupCassandraUserRelatedGroupTasklet())
+				.build();
+	}
+
+	@Bean
+	public Tasklet backupDataPreProcessTasklet(){
 		return new BackupDataPreProcessTasklet();
 	}
 	
@@ -408,6 +502,51 @@ public class BatchAppConfig extends DefaultBatchConfigurer{
 	@Bean
 	public Tasklet backupUserRelatedFolderTasklet(){
 		return new BackupUserRelatedFolderTasklet();
+	}
+
+	@Bean
+	public Tasklet backupCassandraDataPreProcessTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupDataPreProcessTasklet();
+	}
+
+	@Bean
+	public Tasklet backupCassandraGroupTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupGroupTasklet();
+	}
+
+	@Bean
+	public Tasklet backupCassandraGroupRelatedMessageBoardTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupGroupRelatedMessageBoardTasklet();
+	}
+
+	@Bean
+	public Tasklet backupCassandraGroupRelatedUserTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupGroupRelatedUserTasklet();
+	}
+
+	@Bean
+	public Tasklet backupCassandraMessageTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupMessageTasklet();
+	}
+	
+	@Bean
+	public Tasklet backupCassandraMessageBoardTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupMessageBoardTasklet();
+	}
+
+	@Bean
+	public Tasklet backupCassandraMessageBoardRelatedGroupTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupMessageBoardRelatedGroupTasklet();
+	}
+	
+	@Bean
+	public Tasklet backupCassandraUserTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupUserTasklet();
+	}
+	
+	@Bean
+	public Tasklet backupCassandraUserRelatedGroupTasklet(){
+		return new org.debugroom.wedding.app.batch.operation.step.backup.cassandra.BackupUserRelatedGroupTasklet();
 	}
 
 	@Bean

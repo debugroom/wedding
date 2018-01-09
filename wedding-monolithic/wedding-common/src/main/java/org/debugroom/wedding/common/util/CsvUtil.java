@@ -30,6 +30,9 @@ public class CsvUtil {
 		if(object instanceof Integer){
 			return new StringBuilder().append(object).toString();
 		}
+		if(object instanceof Long){
+			return new StringBuilder().append(object).toString();
+		}
 		if(object instanceof Timestamp){
 			return new StringBuilder(SINGLE_QUOTE).append(object).append(SINGLE_QUOTE).toString();
 		}

@@ -8,7 +8,7 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 import org.debugroom.wedding.config.infra.CassandraConfig;
 
 @Configuration
-@Profile("dev")
+@Profile("operation")
 @EnableCassandraRepositories("org.debugroom.wedding.domain.repository.cassandra.operation")
 public class OperationCassandraLocalConfig extends CassandraConfig{
 

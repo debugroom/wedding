@@ -7,4 +7,6 @@ spring:
 operation:
   backup:
     root:
-      directory: /Users/kawabatakouhei/Documents/work/apps
+      directory: wedding/operation
+bucket:
+  name: data.debugroom.org

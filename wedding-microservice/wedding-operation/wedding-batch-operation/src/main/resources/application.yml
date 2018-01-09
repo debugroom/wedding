@@ -1,9 +1,11 @@
 spring:
   profiles:
-    active: dev,jpa
+    active: dev,jpa,cassandra,message
 operation:
   backup:
-    directory: backup
+    directory: 
+      postgres: backup/postgres
+      cassandra: backup/cassandra
     data:
       postgres:
         address: address.csv
@@ -30,5 +32,23 @@ operation:
         requestStatus: request_status.csv
         userRelatedFolder: user_related_folder.csv
         user: usr.csv
+      cassandra:
+        group: group.csv
+        groupRelatedMessageBoard: group_related_message_board.csv
+        groupRelatedUser: group_related_user.csv
+        message: message.csv
+        messageBoard: message_board.csv
+        messageBoardRelatedGroup: message_board_related_group.csv
+        user: users.csv
+        userRelatedGroup: user_related_group.csv
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: false
+      profileName: 
+    region:
+      auto: false
         
   

@@ -12,8 +12,11 @@ public class OperationBatchProperties {
 	@Value("${operation.backup.root.directory}")
 	private String operationBackupRootDirectory;
 	
-	@Value("${operation.backup.directory}")
-	private String operationBackupDirectory;
+	@Value("${operation.backup.directory.postgres}")
+	private String operationBackupPostgresDirectory;
+	
+	@Value("${operation.backup.directory.cassandra}")
+	private String operationBackupCassandraDirectory;
 	
 	@Value("${operation.backup.data.postgres.address}")
 	private String operationBackupDataPostgresAddress;
@@ -86,5 +89,30 @@ public class OperationBatchProperties {
 	
 	@Value("${operation.backup.data.postgres.user}")
 	private String operationBackupDataPostgresUser;
+	
+	@Value("${operation.backup.data.cassandra.group}")
+	private String operationBackupDataCassandraGroup;
+
+	@Value("${operation.backup.data.cassandra.groupRelatedMessageBoard}")
+	private String operationBackupDataCassandraGroupRelatedMessageBoard;
+
+	@Value("${operation.backup.data.cassandra.groupRelatedUser}")
+	private String operationBackupDataCassandraGroupRelatedUser;
+
+	@Value("${operation.backup.data.cassandra.message}")
+	private String operationBackupDataCassandraMessage;
+
+	@Value("${operation.backup.data.cassandra.messageBoard}")
+	private String operationBackupDataCassandraMessageBoard;
+
+	@Value("${operation.backup.data.cassandra.messageBoardRelatedGroup}")
+	private String operationBackupDataCassandraMessageBoardRelatedGroup;
+
+	@Value("${operation.backup.data.cassandra.user}")
+	private String operationBackupDataCassandraUser;
+
+	@Value("${operation.backup.data.cassandra.userRelatedGroup}")
+	private String operationBackupDataCassandraUserRelatedGroup;
+
 	
 }
