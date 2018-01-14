@@ -118,7 +118,7 @@ public class UserRepositoryTest {
 		}
 		@RunWith(Theories.class)
 		@ContextConfiguration(classes = TestConfig.class)
-		@ActiveProfiles(profiles = {"jpa", "LocalDev"})
+		@ActiveProfiles(profiles = {"jpa", "junit"})
 	    public static class FindUserTest{
 			 
 			@Inject
