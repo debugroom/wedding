@@ -22,7 +22,6 @@ RUN chown -R tomcat:tomcat /var/local/apache-tomcat
 RUN git clone -b feature/framework-spring https://github.com/debugroom/framework.git /var/local/framework
 RUN mvn install -f /var/local/framework/pom.xml
 
-RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
 
 ENV DBSERVER_APP_USERNAME=app
 ENV DBSERVER_APP_PASSWORD=app
@@ -42,6 +41,8 @@ ENV FRONTEND_PORT_8080_TCP_ADDR ${LOGIN_PORT_8080_TCP_ADDR:-localhost}
 ENV FRONTEND_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
 ENV LOGIN_PORT_8080_TCP_ADDR ${LOGIN_PORT_8080_TCP_ADDR:-localhost}
 ENV LOGIN_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
+
+RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
 
 RUN sed -i s/LocalAws\,jpa/production\,jpa\,aws/g /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/src/main/resources/application.yml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/pom.xml
