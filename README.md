@@ -576,3 +576,153 @@ EXPOSE 8080
 RUN cp /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/target/wedding.war /var/local/apache-tomcat/webapps/
 
 ```
+
+##### 2-3. バッチアプリケーションの構築
+
+Dockerfileを使用して、定時時刻に起動するバッチアプリケーションのコンテナイメージを作成する。本アプリケーションでは、実行するアプリケーションはExecutableJarで実行するため、バッチアプリケーションのpom.xmlはspring-boot-maven-pluginで実行するMainクラスを指定して、ビルドしておく。
+
+```xml:wedding-opearation-batchのpom.xml
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.debugroom</groupId>
+    <artifactId>wedding-boot-parent</artifactId>
+    <relativePath>../../wedding-boot-parent</relativePath>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>wedding-batch-operation</artifactId>
+  <name>wedding-batch-operation</name>
+  <description>wedding-batch-operation</description>
+
+  <!-- omit -->
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <mainClass>org.debugroom.wedding.app.batch.operation.launcher.BatchAppLauncher</mainClass>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+```
+
+1. オンラインアプリケーション同様、Dockerfileを使用して、バッチアプリケーション用のコンテナイメージを作成する。DBサーバのIPとポート以外にもアプリケーション内で参照する環境変数を指定して実行している。
+2. 作成したコンテナイメージを実行する。
+
+```bash:
+
+[1の手順]
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ cd /var/local/wedding
+[centos@ip-XXX-XXX-XXX-XXX wedding]$ docker build --build-arg DBSERVER_PORT_5432_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_5432_TCP_PORT=ZZZ --build-arg DBSERVER_PORT_9042_TCP_ADDR=YYY.YYY.YYY.YYY --build-arg DBSERVER_PORT_9042_TCP_PORT=ZZZ --build-arg CLOUD_AWS_CREDENTIALS_ACCESSKEY=XXX --build-arg CLOUD_AWS_CREDENTIALS_SECRETKEY=XXX --build-arg CLOUD_AWS_REGION_STATIC=XXX -t debugroom/wedding_app-operation-batch:1.0.0.SNAPSHOT  build-production-servers/build-apps/build-operation-batch
+
+//omit
+
+[centos@ip-XXXX-XXX-XXX-XXX wedding]$ docker images
+REPOSITORY                              TAG                 IMAGE ID            CREATED             SIZE
+debugroom/wedding_app-operation-batch   1.0.0.SNAPSHOT      eeb5854def41        4 hours ago         1.69 GB
+
+[centos@ip-XXX-XXX-XXX-XXX wedding]$ docker run -itd --name batchserver1 debugroom/wedding_app-operation-batch:1.0.0.SNAPSHOT
+
+```
+実行するDockerfileは以下の通りである。バッチ実行はCronを使用して指定した時間に起動するため、アプリケーションを起動する際に環境変数を指定するには外部ファイル等から取得する必要がある。
+
+<details><summary>Cronから実行されるスクリプトでのコマンドや環境変数</summary>
+Cronでスクリプトを実行する場合、ターミナルで設定していた環境変数やコマンドは引き継がれないため、ここでは、スクリプト(backup.sh)内で外部ファイル(.bashrc)などをsourceコマンドを実行し、パスや環境変数を取得する。
+</details>
+
+```bash:
+
+FROM       docker.io/debugroom/wedding:centos7
+MAINTAINER debugroom
+
+# JDKのインストール
+RUN yum install -y \
+       java-1.8.0-openjdk \
+       java-1.8.0-openjdk-devel \
+       wget tar iproute
+
+# Mavenのインストール
+RUN wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+RUN sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+RUN yum install -y apache-maven
+
+# JAVA_HOME環境変数を設定
+ENV JAVA_HOME /etc/alternatives/jre
+
+# アプリケーションで必要になるMavenCentralにないライブラリの取得とローカルレポジトリへインストール
+RUN git clone -b feature/framework-spring https://github.com/debugroom/framework.git /var/local/framework
+RUN mvn install -f /var/local/framework/pom.xml
+
+# アプリケーションをGitHubから取得
+RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
+
+# アプリケーションで使用する環境変数の設定
+ENV DBSERVER_APP_USERNAME=app
+ENV DBSERVER_APP_PASSWORD=app
+ARG DBSERVER_PORT_5432_TCP_ADDR
+ARG DBSERVER_PORT_5432_TCP_PORT
+ARG DBSERVER_PORT_9042_TCP_ADDR
+ARG DBSERVER_PORT_9042_TCP_PORT
+ENV DBSERVER_PORT_5432_TCP_ADDR ${DBSERVER_PORT_5432_TCP_ADDR:-localhost}
+ENV DBSERVER_PORT_5432_TCP_PORT ${DBSERVER_PORT_5432_TCP_PORT:-localhost}
+ENV DBSERVER_PORT_9042_TCP_ADDR ${DBSERVER_PORT_9042_TCP_ADDR:-localhost}
+ENV DBSERVER_PORT_9042_TCP_PORT ${DBSERVER_PORT_9042_TCP_PORT:-localhost}
+
+# アプリケーションをビルド
+RUN mvn install -Dmaven.test.skip=true -f /var/local/wedding/wedding-microservice/wedding-infra-cassandra/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-boot-parent/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-domain-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-batch-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-web-common/pom.xml
+RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-operation/pom.xml
+
+# Cronのインストール
+RUN yum install -y cronie-noanacron
+
+# バッチ実行環境の作成
+RUN mkdir -p /usr/local/app/operation
+RUN mkdir -p /logs
+ADD scripts/backup.sh /usr/local/app/operation/
+RUN chmod 755 /usr/local/app/operation/backup.sh
+
+# Cronの実行指定。１時間に1度スクリプトを実行するよう設定
+RUN echo "0 * * * * /usr/local/app/operation/backup.sh" > /var/spool/cron/root
+
+# Cronから実行する場合、実行するスクリプト内で、環境変数を外部ファイル(.bashrc)から取得するよう、変数を.bashrcへ書き込む。
+ARG CLOUD_AWS_CREDENTIALS_ACCESSKEY
+ARG CLOUD_AWS_CREDENTIALS_SECRETKEY
+ARG CLOUD_AWS_REGION_STATIC
+ENV CLOUD_AWS_CREDENTIALS_ACCESSKEY ${CLOUD_AWS_CREDENTIALS_ACCESSKEY:-XXX}
+ENV CLOUD_AWS_CREDENTIALS_SECRETKEY ${CLOUD_AWS_CREDENTIALS_SECRETKEY:-XXX}
+ENV CLOUD_AWS_REGION_STATIC ${CLOUD_AWS_REGION_STATIC:-XXX}
+RUN echo "DBSERVER_APP_USERNAME="$DBSERVER_APP_USERNAME >> ~/.bashrc
+RUN echo "DBSERVER_APP_PASSWORD="$DBSERVER_APP_PASSWORD >> ~/.bashrc
+RUN echo "DBSERVER_PORT_5432_TCP_ADDR="$DBSERVER_PORT_5432_TCP_ADDR >> ~/.bashrc
+RUN echo "DBSERVER_PORT_5432_TCP_PORT="$DBSERVER_PORT_5432_TCP_PORT >> ~/.bashrc
+RUN echo "DBSERVER_PORT_9042_TCP_ADDR="$DBSERVER_PORT_9042_TCP_ADDR >> ~/.bashrc
+RUN echo "DBSERVER_PORT_9042_TCP_PORT="$DBSERVER_PORT_9042_TCP_PORT >> ~/.bashrc
+RUN echo "CLOUD_AWS_CREDENTIALS_ACCESSKEY="$CLOUD_AWS_CREDENTIALS_ACCESSKEY >> ~/.bashrc
+RUN echo "CLOUD_AWS_CREDENTIALS_SECRETKEY="$CLOUD_AWS_CREDENTIALS_SECRETKEY >> ~/.bashrc
+RUN echo "CLOUD_AWS_REGION_STATIC="$CLOUD_AWS_REGION_STATIC >> ~/.bashrc
+
+# 実行するJavaコマンドのコマンドパスを.bashrcへ追加しておく。
+RUN echo "PATH="$PATH >> ~/.bashrc
+
+＃ Cronがコンテナ起動時に実行されるようCMDコマンドでcronデーモンを起動。
+CMD crond -n
+
+```
