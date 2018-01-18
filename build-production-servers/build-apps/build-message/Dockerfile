@@ -32,6 +32,7 @@ RUN sed -i 's/"dev\"\,\ \"cassandra/"cluster\"\,\ \"cassandra/g' /var/local/wedd
 # RUN mvn install -f /var/local/wedding/wedding-microservice/pom.xml
 RUN mvn install -Dmaven.test.skip=true -f /var/local/wedding/wedding-microservice/wedding-infra-cassandra/pom.xml
 RUN mvn install -Dmaven.test.skip=true -f /var/local/wedding/wedding-microservice/wedding-boot-parent/pom.xml
+RUN mvn install -Dmaven.test.skip=true -f /var/local/wedding/wedding-microservice/wedding-web-common/pom.xml
 RUN mvn install -Dmaven.test.skip=true -f /var/local/wedding/wedding-microservice/wedding-message/pom.xml
 
 EXPOSE 8080
