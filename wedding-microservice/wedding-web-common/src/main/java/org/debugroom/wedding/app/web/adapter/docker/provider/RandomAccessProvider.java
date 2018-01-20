@@ -14,19 +14,6 @@ public class RandomAccessProvider implements ConnectPathProvider{
 	ConnectPathHolder connectPathHolder;
 	
 	@Override
-	public String getPath(String serviceName) {
-		List<String> paths = connectPathHolder.getPaths().get(serviceName);
-		String path = null;
-		if(1 == paths.size()){
-			path = paths.get(0);
-		}else if(0 != paths.size()){
-			Random random = new Random();
-			path = paths.get(random.nextInt(paths.size()));
-		}
-		return path;
-	}
-
-	@Override
 	public String getIpAddr(String serviceName) {
 		List<String> ipAddrs = connectPathHolder.getIpAddrs().get(serviceName);
 		String ipAddr = null;
