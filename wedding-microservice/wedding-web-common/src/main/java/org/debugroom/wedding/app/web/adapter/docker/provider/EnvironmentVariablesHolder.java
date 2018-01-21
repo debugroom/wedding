@@ -36,14 +36,13 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 					for(String propertyName : ((EnumerablePropertySource<?>)propertySource).getPropertyNames()){
 						if("name".equals(StringUtils.substringAfterLast(propertyName, "."))){
 							List<String> serviceAddrList = new ArrayList<String>();
-							Object addrList = propertySource.getProperty(new StringBuilder()
-									.append(StringUtils.substringBeforeLast(propertyName, ".")).append(".addr").toString());
-							if(addrList instanceof String){
-								for(String portString : StringUtils.split((String)addrList, ",")){
+							String addrKey = new StringBuilder()
+									.append(StringUtils.substringBeforeLast(propertyName, ".")).append(".addr").toString();
+							if(environment.containsProperty(addrKey)){
+								String addrListString = environment.getProperty(addrKey);
+								for(String portString : StringUtils.split(addrListString, ",")){
 									serviceAddrList.add(StringUtils.deleteWhitespace(portString));
 								}
-							}else if(addrList instanceof Integer){
-								serviceAddrList.add(Integer.toString((Integer)addrList));
 							}
 							ipAddrMap.put((String)propertySource.getProperty(propertyName), serviceAddrList);
 						}
@@ -70,14 +69,14 @@ public class EnvironmentVariablesHolder implements ConnectPathHolder{
 					for(String propertyName : ((EnumerablePropertySource<?>)propertySource).getPropertyNames()){
 						if("name".equals(StringUtils.substringAfterLast(propertyName, "."))){
 							List<String> servicePortList = new ArrayList<String>();
-							Object portList = propertySource.getProperty(new StringBuilder()
-									.append(StringUtils.substringBeforeLast(propertyName, ".")).append(".port").toString());
-							if(portList instanceof String){
-								for(String portString : StringUtils.split((String)portList, ",")){
+							String portKey = new StringBuilder()
+									.append(StringUtils.substringBeforeLast(propertyName, ".")).append(".port").toString();
+							if(environment.containsProperty(portKey)){
+								String portListString = environment.getProperty(portKey);
+								for(String portString : StringUtils.split(portListString, ",")){
 									servicePortList.add(StringUtils.deleteWhitespace(portString));
 								}
-							}else if(portList instanceof Integer){
-								servicePortList.add(Integer.toString((Integer)portList));
+								
 							}
 							portMap.put((String)propertySource.getProperty(propertyName), servicePortList);
 						}
