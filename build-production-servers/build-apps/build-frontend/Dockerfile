@@ -14,14 +14,13 @@ RUN yum install -y apache-maven
 ENV JAVA_HOME /etc/alternatives/jre
 
 RUN useradd -s /sbin/nologin tomcat
-RUN wget http://ftp.jaist.ac.jp/pub/apache/tomcat/tomcat-8/v8.5.23/bin/apache-tomcat-8.5.23.tar.gz -O /var/local/apache-tomcat-8.5.23.tar.gz  
-RUN tar xvzf /var/local/apache-tomcat-8.5.23.tar.gz -C /var/local
-RUN ln -s /var/local/apache-tomcat-8.5.23 /var/local/apache-tomcat
+RUN wget http://ftp.jaist.ac.jp/pub/apache/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz -O /var/local/apache-tomcat-8.5.24.tar.gz  
+RUN tar xvzf /var/local/apache-tomcat-8.5.24.tar.gz -C /var/local
+RUN ln -s /var/local/apache-tomcat-8.5.24 /var/local/apache-tomcat
 RUN chown -R tomcat:tomcat /var/local/apache-tomcat
 
 RUN git clone -b feature/framework-spring https://github.com/debugroom/framework.git /var/local/framework
 RUN mvn install -f /var/local/framework/pom.xml
-
 
 ENV DBSERVER_APP_USERNAME=app
 ENV DBSERVER_APP_PASSWORD=app
@@ -37,14 +36,14 @@ ENV DBSERVER_PORT_5432_TCP_ADDR ${DBSERVER_PORT_5432_TCP_ADDR:-localhost}
 ENV DBSERVER_PORT_5432_TCP_PORT ${DBSERVER_PORT_5432_TCP_PORT:-localhost}
 ENV DBSERVER_PORT_9042_TCP_ADDR ${DBSERVER_PORT_9042_TCP_ADDR:-localhost}
 ENV DBSERVER_PORT_9042_TCP_PORT ${DBSERVER_PORT_9042_TCP_PORT:-localhost}
-ENV FRONTEND_PORT_8080_TCP_ADDR ${LOGIN_PORT_8080_TCP_ADDR:-localhost}
-ENV FRONTEND_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
+ENV FRONTEND_PORT_8080_TCP_ADDR ${FRONTEND_PORT_8080_TCP_ADDR:-localhost}
+ENV FRONTEND_PORT_8080_TCP_PORT ${FRONTEND_PORT_8080_TCP_PORT:-localhost}
 ENV LOGIN_PORT_8080_TCP_ADDR ${LOGIN_PORT_8080_TCP_ADDR:-localhost}
 ENV LOGIN_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
 
 RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
 
-RUN sed -i s/LocalAws\,jpa/production\,jpa\,aws/g /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/src/main/resources/application.yml
+RUN sed -i s/dev\,jpa/production\,jpa/g /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/src/main/resources/application.yml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-boot-parent/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-domain-common/pom.xml

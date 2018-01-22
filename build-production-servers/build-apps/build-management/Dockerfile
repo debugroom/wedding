@@ -21,22 +21,13 @@ ARG DBSERVER_PORT_5432_TCP_ADDR
 ARG DBSERVER_PORT_5432_TCP_PORT
 ARG DBSERVER_PORT_9042_TCP_ADDR
 ARG DBSERVER_PORT_9042_TCP_PORT
-ARG FRONTEND_PORT_8080_TCP_PORT
-ARG FRONTEND_PORT_8080_TCP_ADDR
-ARG LOGIN_PORT_8080_TCP_PORT
-ARG LOGIN_PORT_8080_TCP_ADDR
 ENV DBSERVER_PORT_5432_TCP_ADDR ${DBSERVER_PORT_5432_TCP_ADDR:-localhost}
 ENV DBSERVER_PORT_5432_TCP_PORT ${DBSERVER_PORT_5432_TCP_PORT:-localhost}
 ENV DBSERVER_PORT_9042_TCP_ADDR ${DBSERVER_PORT_9042_TCP_ADDR:-localhost}
 ENV DBSERVER_PORT_9042_TCP_PORT ${DBSERVER_PORT_9042_TCP_PORT:-localhost}
-ENV FRONTEND_PORT_8080_TCP_ADDR ${LOGIN_PORT_8080_TCP_ADDR:-localhost}
-ENV FRONTEND_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
-ENV LOGIN_PORT_8080_TCP_ADDR ${LOGIN_PORT_8080_TCP_ADDR:-localhost}
-ENV LOGIN_PORT_8080_TCP_PORT ${LOGIN_PORT_8080_TCP_PORT:-localhost}
 
 RUN git clone -b develop https://github.com/debugroom/wedding.git /var/local/wedding
 
-# RUN mvn install -f /var/local/wedding/wedding-microservice/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-infra-common/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-boot-parent/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-domain-common/pom.xml
