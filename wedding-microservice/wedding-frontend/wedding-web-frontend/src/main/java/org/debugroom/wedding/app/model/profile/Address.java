@@ -26,7 +26,7 @@ public class Address implements Serializable{
 	private String postCd;
 	@NotNull
 	@Size(min = 0, max=256)
-	@Pattern(regexp="^[^ =#$%&./<>?¥^¥~¥[¥]¥(¥)¥¥]+$")
+	@Pattern(regexp="^[^=#$%&./<>?¥^¥~¥[¥]¥(¥)¥¥]+$")
 	private String address;
 
 }

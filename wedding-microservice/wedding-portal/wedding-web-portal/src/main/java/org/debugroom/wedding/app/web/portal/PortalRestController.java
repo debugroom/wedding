@@ -19,6 +19,7 @@ import org.dozer.Mapper;
 import org.dozer.MappingException;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.portal.AnswerRequest;
+import org.debugroom.wedding.app.model.portal.ConfirmInformation;
 import org.debugroom.wedding.app.model.portal.Information;
 import org.debugroom.wedding.app.model.portal.PortalResource;
 import org.debugroom.wedding.domain.entity.Menu;
@@ -40,7 +41,7 @@ public class PortalRestController {
 	@Inject
 	MenuSharedService menuSharedService;
 	
-	@RequestMapping(method=RequestMethod.GET, value="/portal/{userId}")
+	@RequestMapping(method=RequestMethod.GET, value="/portal/{userId:[0-9]+}")
 	@ResponseStatus(HttpStatus.OK)
 	public PortalResource getPortalResource(@PathVariable String userId) 
 			throws MappingException, BusinessException{
@@ -50,21 +51,31 @@ public class PortalRestController {
 
 		return PortalResource.builder()
 				.user(output.getUser())
+				.isUnWatched(output.isUnWatched())
 				.informationList(output.getInformationList())
+				.isNotAnswered(output.isNotAnswered())
+				.requestList(output.getRequestList())
 				.build();
 	}
 	
-	@RequestMapping(method=RequestMethod.GET, value="/profile/{userId}")
+	@RequestMapping(method=RequestMethod.GET, value="/profile/{userId:[0-9]+}")
 	@ResponseStatus(HttpStatus.OK)
 	public User getProfile(@PathVariable String userId) throws BusinessException{
 		return portalService.getUser(userId);
 	}
 
-	@RequestMapping(method=RequestMethod.GET, value="/information/{infoId}")
+	@RequestMapping(method=RequestMethod.GET, value="/information/{infoId:[0-9]+}")
 	@ResponseStatus(HttpStatus.OK)
 	public Information information(@Validated Information information){
 		return mapper.map(portalService.getInformation(information.getInfoId()),
 				Information.class);
+	}
+	
+	@RequestMapping(method=RequestMethod.PUT, value="/notification/{infoId:[0-9]+}/{userId:[0-9]+}")
+	public boolean updateNotification(@PathVariable String infoId,
+			@PathVariable String userId, @RequestBody ConfirmInformation confirmInformation){
+		return portalService.updateNotification(infoId, userId, 
+				confirmInformation.isWatched());
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT, value="/{userId:[0-9]+}/request/{requestId:[0-9]+}")

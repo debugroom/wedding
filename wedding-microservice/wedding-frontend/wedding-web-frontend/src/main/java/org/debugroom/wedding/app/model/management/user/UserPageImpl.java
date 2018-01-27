@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import org.debugroom.wedding.domain.entity.User;
+import org.debugroom.wedding.app.model.User;
 
 public class UserPageImpl extends PageImpl<User>{
 

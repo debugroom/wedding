@@ -91,13 +91,13 @@ import org.debugroom.wedding.app.model.management.user.EditUserForm.UpdateUser;
 import org.debugroom.wedding.app.model.management.user.NewUserForm.ConfirmUser;
 import org.debugroom.wedding.app.model.management.user.NewUserForm.SaveUser;
 import org.debugroom.wedding.app.model.management.user.UpdateUserResult;
+import org.debugroom.wedding.app.model.management.user.User;
 import org.debugroom.wedding.app.web.helper.InformationMessageBodyHelper;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
 import org.debugroom.wedding.app.web.validator.PasswordEqualsValidator;
-import org.debugroom.wedding.domain.entity.User;
 import org.debugroom.wedding.external.api.AddressSearch;
 
 @Controller
@@ -192,7 +192,7 @@ public class ManagementServiceAdpaterController {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 	    params.set("page", Integer.toString(pageParam.getPage()));
 	    params.set("size", Integer.toString(pageParam.getSize()));
-		Page<User> page = restTemplate.getForObject(
+		Page<org.debugroom.wedding.app.model.User> page = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
 						.append(APP_NAME)
@@ -280,7 +280,8 @@ public class ManagementServiceAdpaterController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		try {
-			image = downloadHelper.getProfileImage(User.builder()
+			image = downloadHelper.getProfileImage(
+					org.debugroom.wedding.app.model.User.builder()
 					.userId(imageParam.getUserId())
 					.imageFilePath(imageParam.getImageFilePath())
 					.build());
@@ -306,8 +307,7 @@ public class ManagementServiceAdpaterController {
 						new StringBuilder()
 						.append(APP_NAME)
 						.append("/user/profile/new")
-						.toString(), provider).toUri(), 
-				user, User.class);
+						.toString(), provider).toUri(), user, User.class);
 		if(null != newUserForm.getNewImageFile()){
 			try {
 				user.setImageFilePath(uploadHelper.saveFile(
@@ -390,12 +390,13 @@ public class ManagementServiceAdpaterController {
 		}
 		String serviceName = "management";
 		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
-		User user = restTemplate.getForObject(
+		org.debugroom.wedding.app.model.User user = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
 						.append(APP_NAME)
 						.append("/profile/{userId}")
-						.toString(), provider).expand(userId).toUri(), User.class);
+						.toString(), provider).expand(userId).toUri(), 
+				org.debugroom.wedding.app.model.User.class);
 		BufferedImage image = null;
 		try{
 			image = downloadHelper.getProfileImage(user);
@@ -487,9 +488,8 @@ public class ManagementServiceAdpaterController {
 									.append(APP_NAME)
 									.append("/user/{userId}")
 									.toString(), provider)
-							.expand(editUserForm.getUserId()).toUri(),
-							HttpMethod.PUT, new HttpEntity<User>(user), 
-							UpdateUserResult.class).getBody());
+							.expand(editUserForm.getUserId()).toUri(), HttpMethod.PUT, 
+							new HttpEntity<User>(user), UpdateUserResult.class).getBody());
 		} catch (Exception e){
 			//TODO Using Business Exception for optimistic rock error.
 			model.addAttribute("errorCode", "");

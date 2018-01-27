@@ -35,11 +35,11 @@ import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 import org.debugroom.wedding.app.model.profile.EditProfileForm;
 import org.debugroom.wedding.app.model.profile.PortalResource;
 import org.debugroom.wedding.app.model.profile.UpdateUserResult;
+import org.debugroom.wedding.app.model.profile.User;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
-import org.debugroom.wedding.domain.entity.User;
 
 @Controller
 public class ProfileServiceAdapterController {
@@ -163,12 +163,13 @@ public class ProfileServiceAdapterController {
 		}
 		String serviceName = "profile";
 		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
-		User user = restTemplate.getForObject(
+		org.debugroom.wedding.app.model.User user = restTemplate.getForObject(
 				RequestBuilder.buildUriComponents(serviceName, 
 						new StringBuilder()
 						.append(APP_NAME)
 						.append("/profile/{userId}")
-						.toString(), provider).expand(userId).toUri(), User.class);
+						.toString(), provider).expand(userId).toUri(), 
+				org.debugroom.wedding.app.model.User.class);
 		BufferedImage image = null;
 		try {
 			image = downloadHelper.getProfileImage(user);

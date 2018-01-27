@@ -77,14 +77,15 @@ function updateParam(event){
 	var displayValue = updateRootNode.firstChild;
 	var inputItem = updatePanel.firstElementChild;
 
-	addWarningMessage(event, updateRootNode);
-
 	if(inputItem.id == "information.releaseDate-edit"){
 		var reg = /[¥-]/g;
 		inputItem.value = inputItem.value.replace(reg, "/");
 	}
 
-	document.getElementById(event.currentTarget.name).value = inputItem.value;
-	displayValue.textContent = inputItem.value;
+	if(inputItem.value != ""){
+		document.getElementById(event.currentTarget.name).value = inputItem.value;
+		displayValue.textContent = inputItem.value;
+		addWarningMessage(event, updateRootNode);
+	}
 	updateRootNode.removeChild(updatePanel);
 }	

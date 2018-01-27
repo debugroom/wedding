@@ -20,7 +20,7 @@ import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.common.exception.SystemException;
 import org.debugroom.wedding.app.model.gallery.Movie;
 import org.debugroom.wedding.app.model.gallery.Photo;
-import org.debugroom.wedding.domain.entity.User;
+import org.debugroom.wedding.app.model.User;
 
 //@Profile({"dev", "LocalDev"})
 @Profile({"local"})

@@ -349,3 +349,7 @@ tbody > tr:nth-child(odd) > td{
 #menu_button {
     display:none;
 }
+
+.white{
+	color: white;
+}

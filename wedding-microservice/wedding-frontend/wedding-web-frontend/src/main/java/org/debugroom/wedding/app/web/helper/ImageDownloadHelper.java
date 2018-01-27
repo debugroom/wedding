@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.gallery.Movie;
 import org.debugroom.wedding.app.model.gallery.Photo;
-import org.debugroom.wedding.domain.entity.User;
+import org.debugroom.wedding.app.model.User;
 import org.springframework.http.HttpHeaders;
 
 public interface ImageDownloadHelper {

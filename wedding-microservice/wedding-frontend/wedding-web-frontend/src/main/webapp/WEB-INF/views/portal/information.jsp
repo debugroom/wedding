@@ -28,9 +28,15 @@
     src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/jquery/jquery.min.js"></script>
 </head>
-</head>
+<jsp:useBean id="now" class="java.util.Date" />
+<fmt:formatDate var="hour" value="${now}" pattern="HH" />
+<c:if test="${6 <= hour && hour < 18}">
 <body class="back-img">
-  <c:import url="/WEB-INF/views/common/header.jsp" />
+</c:if>
+<c:if test="${hour < 6 || 18 <= hour}">
+<body class="back-img-night">
+</c:if>
+  <c:import url="/WEB-INF/views/common/switchable-header.jsp" />
   <article>
     <div id="flex-container">
       <div class="flex-item-1">

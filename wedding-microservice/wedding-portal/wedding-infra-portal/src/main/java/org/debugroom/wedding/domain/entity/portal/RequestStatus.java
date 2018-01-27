@@ -5,6 +5,9 @@ import lombok.Builder;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 
 
@@ -93,6 +96,7 @@ public class RequestStatus implements Serializable {
 		this.ver = ver;
 	}
 
+	@JsonIgnore
 	public Request getRequest() {
 		return this.request;
 	}

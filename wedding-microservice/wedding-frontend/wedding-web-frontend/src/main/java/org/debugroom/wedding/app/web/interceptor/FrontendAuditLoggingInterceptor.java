@@ -78,7 +78,6 @@ public class FrontendAuditLoggingInterceptor extends AbstractAuditLoggingInterce
 			auditLog.setViewName(handler.toString());
 		}
 		auditLoggingHelper.saveAuditLog(auditLog);
-		MDC.remove(HEADER_USER_ID_KEY_NAME);
 	}
 
 }

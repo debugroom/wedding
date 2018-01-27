@@ -51,38 +51,45 @@ function updateParam(event){
 	}else if(inputItem.type == "password"){
 		var inputItem1 = document.getElementById("user.credentials[0].credentialKey-edit");
 		var inputItem2 = document.getElementById("user.credentials[1].credentialKey-edit");
-		document.getElementById("user.credentials[0].credentialKey").value = 
-			inputItem1.value;
-		document.getElementById("user.credentials[1].credentialKey").value = 
-			inputItem2.value;
-		if(inputItem1.value == inputItem2.value){
-			addWarningMessage(event, updateRootNode);
-			updateRootNode.removeChild(updatePanel);
+		if(inputItem1.value != "" && inputItem2.value != ""){
+			document.getElementById("user.credentials[0].credentialKey").value = 
+				inputItem1.value;
+			document.getElementById("user.credentials[1].credentialKey").value = 
+				inputItem2.value;
+			if(inputItem1.value == inputItem2.value){
+				addWarningMessage(event, updateRootNode);
+				updateRootNode.removeChild(updatePanel);
+			}else{
+				addErrorMessage(event, updateRootNode);
+			}
 		}else{
-			addErrorMessage(event, updateRootNode);
+			updateRootNode.removeChild(updatePanel);
 		}
 	}else if(inputItem.id == "user.lastName-edit"){
 		var inputItem1 = document.getElementById("user.lastName-edit");
 		var inputItem2 = document.getElementById("user.firstName-edit");
 		if(inputItem1.value != ""){
 			document.getElementById("user.lastName").value = inputItem1.value;
+			addWarningMessage(event, updateRootNode);
 		}else{
 			inputItem1.value = document.getElementById("user.lastName").value;
 		}
 		if(inputItem2.value != ""){
 			document.getElementById("user.firstName").value = inputItem2.value;
+			addWarningMessage(event, updateRootNode);
 		}else{
 			inputItem2.value = document.getElementById("user.firstName").value;
 		}
 		document.getElementById("userName").textContent = inputItem1.value + " " + inputItem2.value;
-		addWarningMessage(event, updateRootNode);
 		updateRootNode.removeChild(updatePanel);
 	}else{
         //ファイルアップロード以外には、Hidden項目の変更
-		document.getElementById(event.currentTarget.name).value
-			= inputItem.value;
-		displayValue.textContent = inputItem.value;
-		addWarningMessage(event, updateRootNode);
+		if(inputItem.value != ""){
+			document.getElementById(event.currentTarget.name).value
+				= inputItem.value;
+			displayValue.textContent = inputItem.value;
+			addWarningMessage(event, updateRootNode);
+		}
 		updateRootNode.removeChild(updatePanel);
 	}
 }

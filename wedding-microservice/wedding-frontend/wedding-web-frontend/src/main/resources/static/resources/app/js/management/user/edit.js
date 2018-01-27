@@ -18,7 +18,6 @@ function updateParam(event){
 	var displayValue = updateRootNode.firstChild;
 	var inputItem = updatePanel.firstElementChild;
 
-	addWarningMessage(event, updateRootNode);
 
 	//ファイルアップロード時にform属性にenctype属性を付与し、Hiddenを追加
 	if(inputItem.type == "file"){
@@ -36,42 +35,51 @@ function updateParam(event){
 		}
 		inputItem.setAttribute("id", "newImageFile");
 		inputItem.setAttribute("name", "newImageFile");
+		addWarningMessage(event, updateRootNode);
    	    updateRootNode.removeChild(updatePanel);
 	}else if(inputItem.type == "password"){
 		var inputItem1 = document.getElementById("credentials[0].credentialKey-edit");
 		var inputItem2 = document.getElementById("credentials[1].credentialKey-edit");
-		document.getElementById("credentials[0].credentialKey").value = 
-			inputItem1.value;
-		document.getElementById("credentials[1].credentialKey").value = 
-			inputItem2.value;
-		if(inputItem1.value == inputItem2.value){
-			addWarningMessage(event, updateRootNode);
-			updateRootNode.removeChild(updatePanel);
+		if(inputItem1.value != "" && inputItem2.value != ""){
+			document.getElementById("credentials[0].credentialKey").value = 
+				inputItem1.value;
+			document.getElementById("credentials[1].credentialKey").value = 
+				inputItem2.value;
+			if(inputItem1.value == inputItem2.value){
+				addWarningMessage(event, updateRootNode);
+				updateRootNode.removeChild(updatePanel);
+			}else{
+				addErrorMessage(event, updateRootNode);
+			}
 		}else{
-			addErrorMessage(event, updateRootNode);
+				updateRootNode.removeChild(updatePanel);
 		}
 	}else if(inputItem.id == "lastName-edit"){
 		var inputItem1 = document.getElementById("lastName-edit");
 		var inputItem2 = document.getElementById("firstName-edit");
 		if(inputItem1.value != ""){
 			document.getElementById("lastName").value = inputItem1.value;
+			addWarningMessage(event, updateRootNode);
 		}else{
 			inputItem1.value = document.getElementById("lastName").value;
 		}
 		if(inputItem2.value != ""){
 			document.getElementById("firstName").value = inputItem2.value;
+			addWarningMessage(event, updateRootNode);
 		}else{
 			inputItem2.value = document.getElementById("firstName").value;
 		}
 		document.getElementById("userName").textContent = inputItem1.value + " " + inputItem2.value;
-		addWarningMessage(event, updateRootNode);
    	    updateRootNode.removeChild(updatePanel);
 	}else{
         //ファイルアップロード以外には、Hidden項目の変更
-		document.getElementById(event.currentTarget.name).value
-			= inputItem.value;
-		displayValue.textContent = inputItem.value;
-   	    updateRootNode.removeChild(updatePanel);
+		if(inputItem.value != ""){
+			document.getElementById(event.currentTarget.name).value
+				= inputItem.value;
+			displayValue.textContent = inputItem.value;
+			addWarningMessage(event, updateRootNode);
+		}
+		updateRootNode.removeChild(updatePanel);
 	}
 }
 

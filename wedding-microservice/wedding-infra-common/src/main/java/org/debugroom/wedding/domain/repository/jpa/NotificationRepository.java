@@ -19,7 +19,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Noti
 	@Transactional
 	@Query("UPDATE Notification n SET n.isAccessed = :isAccessed "
 			+ "WHERE n.id.infoId = :infoId")
-	public void updateIsAccessedNyInfoId(@Param("isAccessed") boolean isAccessee,
+	public void updateIsAccessedByInfoId(@Param("isAccessed") boolean isAccessee,
 			@Param("infoId") String infoId);
 
 	public List<Notification> findByIdUserId(String userId);

@@ -12,9 +12,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" >
 <title>Complete new request</title>
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css" media="(min-width: 1280px)">
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/management/request/saveComplete.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/management/request/saveComplete.css" media="(min-width: 1280px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/management/request/saveComplete_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/management/request/saveComplete_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script type="text/javascript" 
+    src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
 </head>
 <body>
   <c:import url="/WEB-INF/views/common/header.jsp" />

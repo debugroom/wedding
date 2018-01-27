@@ -43,7 +43,7 @@ import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
-import org.debugroom.wedding.domain.entity.User;
+import org.debugroom.wedding.app.model.User;
 
 @Controller
 public class MessageServiceAdapterController {

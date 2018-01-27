@@ -74,9 +74,10 @@ function updateParam(event){
 	var displayValue = updateRootNode.firstChild;
 	var inputItem = updatePanel.firstElementChild;
 
-	addWarningMessage(event, updateRootNode);
-
-	document.getElementById(event.currentTarget.name).value = inputItem.value;
-	displayValue.textContent = inputItem.value;
+	if(inputItem.value != ""){
+		addWarningMessage(event, updateRootNode);
+		document.getElementById(event.currentTarget.name).value = inputItem.value;
+		displayValue.textContent = inputItem.value;
+	}
 	updateRootNode.removeChild(updatePanel);
 }

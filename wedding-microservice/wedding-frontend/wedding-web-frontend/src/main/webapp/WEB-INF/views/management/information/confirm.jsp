@@ -12,9 +12,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" >
 <title>Confirm new information</title>
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex.css" media="(min-width: 1280px)">
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/static/resources/app/css/management/information/confirm.css">
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/flex_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/management/information/confirm.css" media="(min-width: 1280px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/management/information/confirm_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+<link rel="stylesheet"
+    href="${pageContext.request.contextPath}/static/resources/app/css/management/information/confirm_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script type="text/javascript" 
+    src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
 </head>
 <body>
   <c:import url="/WEB-INF/views/common/header.jsp" />
@@ -39,7 +50,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td><form:label path="information.title">タイトル</form:label></td>
+                    <td><form:label path="information.title">タイトル</form:label></td>
                     <td>
                       <c:out value="${informationDraft.information.title}" />
                       <input type="hidden" name="title" value="<c:out value='${informationDraft.information.title}' />" /><br/>
@@ -47,7 +58,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td><form:label path="infoName">インフォメーション名</form:label></td>
+                    <td><form:label path="infoName">インフォメーション名</form:label></td>
                     <td>
                       <c:out value="${informationDraft.infoName}" />
                       <input type="hidden" name="infoName" value="<c:out value='${informationDraft.infoName}' />" /><br/>
@@ -78,7 +89,7 @@
               </div>
               <input type="hidden" name="infoPagePath" value="<c:out value='${informationDraft.information.infoPagePath}' />" /><br/>
               <h3>メッセージ通知先</h3>
-              <table>
+              <table class="users-table">
                 <tbody>
                   <tr>
                     <th>No</th>

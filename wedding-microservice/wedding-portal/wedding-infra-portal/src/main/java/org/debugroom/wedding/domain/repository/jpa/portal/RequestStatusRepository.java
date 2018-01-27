@@ -1,5 +1,7 @@
 package org.debugroom.wedding.domain.repository.jpa.portal;
 
+import java.util.List;
+
 import org.debugroom.wedding.domain.entity.portal.RequestStatus;
 import org.debugroom.wedding.domain.entity.portal.RequestStatusPK;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +19,6 @@ public interface RequestStatusRepository extends JpaRepository<RequestStatus, Re
 	public void updateIsAnsweredByRequestId(@Param("isAnswered") boolean isAnswered,
 			@Param("requestId") String requestId);
 	
+	public List<RequestStatus> findByIdUserId(String userId);
+
 }

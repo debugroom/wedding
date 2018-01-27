@@ -1,17 +1,22 @@
 package org.debugroom.wedding.domain.service.portal;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.domain.entity.Information;
+import org.debugroom.wedding.domain.entity.Notification;
+import org.debugroom.wedding.domain.entity.NotificationPK;
 import org.debugroom.wedding.domain.entity.User;
 import org.debugroom.wedding.domain.entity.portal.Request;
 import org.debugroom.wedding.domain.entity.portal.RequestStatus;
 import org.debugroom.wedding.domain.entity.portal.RequestStatusPK;
 import org.debugroom.wedding.domain.model.portal.PortalInfoOutput;
 import org.debugroom.wedding.domain.repository.jpa.InformationRepository;
+import org.debugroom.wedding.domain.repository.jpa.NotificationRepository;
 import org.debugroom.wedding.domain.repository.jpa.portal.RequestRepository;
 import org.debugroom.wedding.domain.repository.jpa.portal.RequestStatusRepository;
 import org.debugroom.wedding.domain.service.common.DateUtil;
@@ -27,7 +32,7 @@ public class PortalServiceImpl implements PortalService{
 	UserSharedService userSharedService;
 	
 	@Inject
-	InformationRepository infomationRepository;
+	InformationRepository informationRepository;
 	
 	@Inject
 	RequestRepository requestRepository;
@@ -35,14 +40,34 @@ public class PortalServiceImpl implements PortalService{
 	@Inject
 	RequestStatusRepository requestStatusRepository;
 	
+	@Inject
+	NotificationRepository notificationRepository;
+	
 	@Override
 	public PortalInfoOutput getPortalInfo(User user)  {
 		PortalInfoOutput output = PortalInfoOutput.builder().build();
 		try {
 			output.setUser(userSharedService.getUser(user.getUserId()));
-			output.setInformationList(infomationRepository
+			List<Information> informationList = informationRepository
 					.findUserByUserIdAndReleaseDateLessThan(
-						user.getUserId(), Calendar.getInstance().getTime()));
+							user.getUserId(), DateUtil.getCurrentDate());
+			for(Information information : informationList){
+				for(Notification notification : information.getNotifications()){
+					if(notification.getIsAccessed()){
+						output.setUnWatched(true);
+					}
+				}
+			}
+			output.setInformationList(informationList);
+			List<Request> requestList = new ArrayList<Request>();
+			for(RequestStatus requestStatus : 
+				requestStatusRepository.findByIdUserId(user.getUserId())){
+				requestList.add(requestStatus.getRequest());
+				if(!requestStatus.getIsAnswered()){
+					output.setNotAnswered(true);
+				}
+			}
+			output.setRequestList(requestList);
 		} catch (BusinessException e) {
 			new BusinessException("portalService.error.0001");
 		}
@@ -51,7 +76,7 @@ public class PortalServiceImpl implements PortalService{
 
 	@Override
 	public Information getInformation(String infoId) {
-		return infomationRepository.findOne(infoId);
+		return informationRepository.findOne(infoId);
 	}
 
 	@Override
@@ -75,6 +100,18 @@ public class PortalServiceImpl implements PortalService{
 		requestStatus.setIsApproved(isApproved);
 		requestStatus.setLastUpdatedDate(DateUtil.getCurrentDate());
 		return isApproved;
+	}
+
+	@Override
+	public boolean updateNotification(String infoId, String userId, boolean isWatched) {
+		Notification notification = notificationRepository.findOne(
+				NotificationPK.builder()
+				.infoId(infoId)
+				.userId(userId)
+				.build());
+		notification.setIsAccessed(isWatched);
+		notification.setLastUpdatedDate(DateUtil.getCurrentDate());
+		return true;
 	}
 
 }

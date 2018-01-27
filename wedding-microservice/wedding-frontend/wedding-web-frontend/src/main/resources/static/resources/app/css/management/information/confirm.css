@@ -10,7 +10,22 @@
 }
 
 .informationFormPanel td:first-child{
+    width : 200px;
     text-align : right;
+}
+
+.users-table td:first-child{
+    width : 30px;
+	text-align: center;
+}
+
+.users-table td:nth-child(2){
+    width : 150px;
+	text-align: center;
+}
+
+.users-table td:nth-child(3){
+    width : 500px;
 }
 
 .informationFormPanel button{

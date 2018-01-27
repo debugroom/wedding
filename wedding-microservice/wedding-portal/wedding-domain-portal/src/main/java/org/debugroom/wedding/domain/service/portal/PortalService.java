@@ -20,4 +20,6 @@ public interface PortalService {
 	
 	public boolean updateRequestStatus(String userId, String requestId, boolean isApproved);
 
+	public boolean updateNotification(String infoId, String userId, boolean isWatched);
+	
 }

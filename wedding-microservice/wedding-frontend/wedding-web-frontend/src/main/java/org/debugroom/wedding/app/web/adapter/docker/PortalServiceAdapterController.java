@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.wedding.app.model.portal.AnswerRequest;
 import org.debugroom.wedding.app.model.portal.AnswerRequestResult;
+import org.debugroom.wedding.app.model.portal.ConfirmInformation;
 import org.debugroom.wedding.app.model.portal.Information;
 import org.debugroom.wedding.app.model.portal.PortalResource;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
@@ -22,7 +23,7 @@ import org.debugroom.wedding.app.web.helper.InformationMessageBodyHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
 import org.debugroom.wedding.app.model.Menu;
-import org.debugroom.wedding.domain.entity.User;
+import org.debugroom.wedding.app.model.User;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -133,9 +134,10 @@ public class PortalServiceAdapterController {
 	}
 
 	@RequestMapping(value="/information/{infoId:[0-9]+}", method=RequestMethod.GET)
-	public String information( 
+	public String information(@AuthenticationPrincipal CustomUserDetails customUserDetails, 
 			@Validated Information information, Model model) 
 			throws URISyntaxException{
+
 		String serviceName = "information";
 		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
 		Information resultInformation = restTemplate.getForObject(
@@ -145,6 +147,22 @@ public class PortalServiceAdapterController {
 						.append("/information/{infoId}")
 						.toString(), provider).expand(information.getInfoId()).toUri(),
 				Information.class);
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("infoId", information.getInfoId());
+		paramMap.put("userId", customUserDetails.getUser().getUserId());
+		restTemplate.exchange(RequestBuilder.buildUriComponents(serviceName, 
+				new StringBuilder()
+				.append(APP_NAME)
+				.append("/notification/{infoId}/{userId}")
+				.toString(), provider)
+				.expand(paramMap).toUri(), HttpMethod.PUT,
+				new HttpEntity<ConfirmInformation>(ConfirmInformation.builder()
+						.infoId(information.getInfoId())
+						.userId(customUserDetails.getUser().getUserId())
+						.isWatched(true)
+						.build()), Boolean.class);
+
 		Map<String, String> uriVariables = new HashMap<String, String>();
 		uriVariables.put("infoId", information.getInfoId());
 		resultInformation.setInfoRootPath(

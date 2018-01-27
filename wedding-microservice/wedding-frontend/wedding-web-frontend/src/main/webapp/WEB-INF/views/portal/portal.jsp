@@ -27,8 +27,15 @@
 <script type="text/javascript" 
     src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
 </head>
+<jsp:useBean id="now" class="java.util.Date" />
+<fmt:formatDate var="hour" value="${now}" pattern="HH" />
+<c:if test="${6 <= hour && hour < 18}">
 <body class="back-img">
-  <c:import url="/WEB-INF/views/common/header.jsp" />
+</c:if>
+<c:if test="${hour < 6 || 18 <= hour}">
+<body class="back-img-night">
+</c:if>
+  <c:import url="/WEB-INF/views/common/switchable-header.jsp" />
   <article>
     <div id="flex-container">
       <div class="flex-item-1">
@@ -54,7 +61,56 @@
               </c:choose>
             </div>
             <h2>${portalResource.user.lastName} ${portalResource.user.firstName} さん</h2>
-            <p class="profile">前回ログイン日時：<fmt:formatDate value="${portalResource.user.lastLoginDate}" pattern="yyyy/MM/dd HH:mm:ss" /> </p>
+            <p>
+            <p>
+            前回ログイン日時：<fmt:formatDate value="${portalResource.user.lastLoginDate}" pattern="yyyy/MM/dd HH:mm:ss" />
+            </p>
+            <c:if test="${fn:length(portalResource.requestList) != 0}">
+              <c:if test="${portalResource.notAnswered}">
+                お知らせの中で未回答の項目があります。
+              </c:if>
+            <div id="request">
+              <table>
+                <thead>
+                  <tr>
+                    <th>依頼事項</th>
+                    <th>状況</th>
+                    <th>回答</th>
+                  </tr>
+                </thead>
+                <tbody>
+              <c:forEach var="request" items="${portalResource.requestList}" varStatus="status">
+                  <tr>
+                    <td><c:out value="${request.title}" /></td>
+                  <c:forEach var="requestStatus" items="${request.requestStatuses}" varStatus="status1">
+                    <c:if test="${requestStatus.id.userId == portalResource.user.userId && !requestStatus.isAnswered}">
+                    <td>
+                      未回答
+                    </td>
+                      </c:if>
+                      <c:if test="${requestStatus.id.userId == portalResource.user.userId && requestStatus.isAnswered}">
+                    <td>
+                      回答済み
+                    </td>
+                    </c:if>
+                    <c:if test="${requestStatus.id.userId == portalResource.user.userId && !requestStatus.isApproved}">
+                    <td>
+                    ×
+                    </td>
+                    </c:if>
+                    <c:if test="${requestStatus.id.userId == portalResource.user.userId && requestStatus.isApproved}">
+                    <td>
+                    ○
+                    </td>
+                    </c:if>
+                  </c:forEach>
+                  </tr>
+              </c:forEach>
+                </tbody>
+              </table>
+            </div>
+            </c:if>
+            </p>
             <h3>お知らせ</h3>
             <table>
               <thead>

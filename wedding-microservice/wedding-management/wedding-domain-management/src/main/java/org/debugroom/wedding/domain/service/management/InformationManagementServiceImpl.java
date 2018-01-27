@@ -179,7 +179,7 @@ public class InformationManagementServiceImpl implements InformationManagementSe
 		}
 		
 		if(isChangedInformation){
-			notificationRepository.updateIsAccessedNyInfoId(false, information.getInfoId());
+			notificationRepository.updateIsAccessedByInfoId(false, information.getInfoId());
 		}
 		
 		updateResult.setUpdateParamList(updateParamList);

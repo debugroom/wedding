@@ -64,6 +64,7 @@ public class ManagementRestController {
 	@RequestMapping(method=RequestMethod.GET, value="/users")
 	public Page<User> getUsers(@PageableDefault(
 			page=0, size=10, direction=Direction.ASC, sort={"userId"}) Pageable pageable){
+		User user = mapper.map(pageable, User.class);
 		return userManagementService.getUsersUsingPage(pageable);
 	}
 
@@ -230,7 +231,7 @@ public class ManagementRestController {
 	public InformationDraft createInformationDraft(@RequestBody 
 			org.debugroom.wedding.app.model.management.information.Information information) 
 					throws MappingException, BusinessException{
-//		return informationManagementService.createInformationDraft(
+//		return 	informationManagementService.createInformationDraft(
 //				mapper.map(information, InformationDraft.class));
 		List<User> users = new ArrayList<User>();
 		for(org.debugroom.wedding.app.model.management.information.User user : information.getCheckedUsers()){

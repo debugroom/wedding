@@ -61,3 +61,16 @@
     width : 300px;
     height : 60px;
 }
+
+.information-panel {
+    width : 650px;
+    margin :  5px auto 5px;
+    padding : 25px;
+    display: block;
+    background : #ffffff; 
+    border-radius         :2px 2px 2px 2px;
+    -moz-border-radius    :2px 2px 2px 2px;
+    -webkit-border-radius :2px 2px 2px 2px;
+    -o-border-radius      :2px 2px 2px 2px;
+    -ms-border-radius     :2px 2px 2px 2px;
+}

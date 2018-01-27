@@ -68,7 +68,7 @@ import org.debugroom.wedding.app.web.helper.GalleryContentsUploadHelper;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
-import org.debugroom.wedding.domain.entity.User;
+import org.debugroom.wedding.app.model.User;
 
 @Controller
 public class GalleryServiceAdapterController {
