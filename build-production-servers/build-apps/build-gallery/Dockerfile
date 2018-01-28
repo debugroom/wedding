@@ -35,6 +35,9 @@ RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-web-common/po
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-batch-common/pom.xml
 RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-gallery/pom.xml
 
+RUN cp /etc/localtime /etc/localtime.org
+RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
 EXPOSE 8080
 
 CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding-microservice/wedding-gallery/wedding-web-gallery/target/wedding-web-gallery-1.0-SNAPSHOT.jar
