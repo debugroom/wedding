@@ -1,0 +1,35 @@
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:postgresql://${dbserver.port.5432.tcp.addr}:${dbserver.port.5432.tcp.port}/wedding
+    username: ${dbserver.app.username}
+    password: ${dbserver.app.password}
+    driverClassName: org.postgresql.Driver
+logging:
+  file: logs/app.log
+  level:
+    org.springframework.web: INFO
+protocol: https
+server:
+    port: 8080
+    contextPath: /wedding
+bucket:
+  name: data.debugroom.org
+profile:
+  root:
+    directory: wedding
+info:
+  root:
+    directory: wedding/information
+gallery:
+  root:
+    directory: wedding/gallery
+  distribution:
+    server: http://data.debugroom.org.s3.amazonaws.com
+cloud:
+  aws:
+    credentials:
+      accessKey: ${aws.access.key.id}
+      secretKey: ${aws.secret.access.key}
+    region:
+      static: ${aws.default.resion}

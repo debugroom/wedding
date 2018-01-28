@@ -1,0 +1,17 @@
+[Unit]
+Description=Apache Tomcat 8
+After=network.target
+
+[Service]
+User=tomcat
+Group=tomcat
+Type=oneshot
+PIDFile=/var/local/apache-tomcat/tomcat.pid
+RemainAfterExit=yes
+
+ExecStart=/var/local/apache-tomcat/bin/startup.sh
+ExecStop=/var/local/apache-tomcat/bin/shutdown.sh
+ExecReStart=/var/local/apache-tomcat/bin/shutdown.sh;/var/local/apache-tomcat/bin/startup.sh
+
+[Install]
+WantedBy=multi-user.target

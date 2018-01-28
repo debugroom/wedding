@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    active: dev,jpa
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 10000000000
+      max-request-size: 10000000000
+profile:
+  root:
+    directory: /usr/local/app/profile
+  directory: image
+  image:
+    file:
+      name: image
+info:
+  root:
+    directory: /usr/local/app/info
+gallery:
+  root:
+    directory: /usr/local/app/gallery
+  image:
+    original:
+      directory: image/original
+      file:
+        name: image
+    thumbnail:
+      directory: image/thumbnail
+      file:
+        name: image-thumbnail
+      width:  100
+      height: 75
+  movie:
+    original:
+      directory: movie/original
+      file:
+        name: movie
+    thumbnail:
+      directory: movie/thumbnail
+      file:
+        name: movie-thumbnail
+      width:  100
+      height: 75
+      frame:
+        start: 100
+protocol: http
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: false
+      profileName: 
+    region:
+      auto: false

@@ -1,0 +1,10 @@
+.panel table {
+     width : 700px;
+}
+.panel th td {
+     width : auto;
+}
+
+.resultPanel th{
+	background: #ffffff;
+}

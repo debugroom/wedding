@@ -1,0 +1,355 @@
+@charset "UTF-8";
+
+body{
+	margin : 0;
+	font-family : "Hiragino Kaku Gothic ProN","メイリオ", sans-serif;
+}
+
+table{
+	border : solid 1px #aaaaaa;
+	border-collapse: collapse;
+	margin : 10px auto 20px;
+}
+
+th{
+	border  : solid 1px #aaaaaa;
+	padding : 0px, 30px, 0px, 8px;
+    background: -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+}
+
+tbody > tr:nth-child(odd) > td{
+	background-color : #ffffff;
+	/*
+    background: -webkit-linear-gradient(top, #ffffff 0%, #dddddd 50%, #ffffff 100%); 
+    background:    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+	*/
+}
+
+#flex-container {
+	display : -webkit-flex;
+	display : -moz-flex;
+	display : flex;
+	justify-content: center;
+}
+
+#flex-container .flex-item-1{
+	           width : 250px;
+}
+
+#flex-container .flex-item-2{
+	           width : auto;
+	    -webkit-flex : 1 0 518px;
+	       -moz-flex : 1 0 518px;
+	            flex : 1 0 518px;
+}
+
+@media screen and (min-width:480px) { 
+}
+
+.panel {
+	             width : auto;
+	            margin : 0 50px 50px 50px;
+	           padding : 0 20px 0;
+	            border : solid 1px #aaaaaa;
+	     border-radius : 10px;
+	-webkit-box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
+	       -box-shadow : 5px 5px 10px 0 rgba(0,0,0,0.3);
+            background : -webkit-linear-gradient(top, #ffffff 0%, #dddddd 50%, #ffffff 100%); 
+            background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+            background :         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+}
+
+.headerPanel{
+	text-align: left;
+}
+
+.headerPanel img{
+	width: 30%;
+	margin : 20px;
+}
+
+.warningMessage {
+	color : #ff0000;
+}
+
+.errorMessage {
+	color : #ff0000;
+}
+
+.successMessage {
+	color : #118102;
+}
+
+.menu {
+    width           : 250px;
+    padding         : 0;
+    margin          : 0;
+    list-style-type : none;
+}
+
+.menu li{
+    width      : 200px;
+    padding    : 0;
+    margin     : 0;
+    text-align : center;
+    list-style : none;
+}
+
+.menu li a{
+    color : #000000;
+    font-size : 16px;
+    padding : 10px 0px ;
+    text-decoration : none;
+    display : block;
+    /*全体のグラデーション*/
+    background: #2b606e;/*IE9の背景用*/
+    background: -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    border-left: 1px solid #1f5260;
+    box-shadow:  1px 0px 0px rgba(225,225,225,0.4) inset,
+                -1px 0px 0px rgba(225,225,225,0.2) inset,
+                 0px 1px 1px rgba(0,0,0,0.1) inset,
+                 0px -1px 1px rgba(0,0,0,0.3) inset,
+                 0px 1px 3px #666;
+}
+
+.menu li.first a{
+    border-left : 0px;
+    border-radius         :8px 0px 0px 8px;
+    -moz-border-radius    :8px 0px 0px 8px;
+    -webkit-border-radius :8px 0px 0px 8px;
+    -o-border-radius      :8px 0px 0px 8px;
+    -ms-border-radius     :8px 0px 0px 8px;
+    border-left : 0;
+}
+
+/*最後の角丸*/
+
+.menu li.last a {
+    border-radius         :0px 8px 8px 0;
+    -moz-border-radius    :0px 8px 8px 0;
+    -webkit-border-radius :0px 8px 8px 0;
+    -o-border-radius      :0px 8px 8px 0;
+    -ms-border-radius     :0px 8px 8px 0;
+}
+
+
+.menu li a:hover {
+	color : #ffffff;
+    background: -webkit-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -moz-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -o-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -ms-linear-gradient(top, #000000 1%, #888888 100%);
+    background: linear-gradient(top, #000000 1%, #888888 100%);
+}
+
+
+.menu li.active a {
+    background:#6aa3b8;
+    background: -webkit-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -moz-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -o-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -ms-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+}
+
+.lined-menu{
+    text-align: center;
+}
+
+.lined-menu ul{
+       margin : 0px 50px 0px;
+       padding : 0px;
+}
+
+.lined-menu li{
+    width      : 120px;
+    margin     : 0;
+    padding    : 0;
+    display    : inline-block;
+    text-align : center;
+    list-style : none;
+}
+
+.lined-menu li a {
+    color : #000000;
+    font-size : 9px;
+    padding : 10px 0px ;
+    width      : 120px;
+    display : inline-block;
+    text-decoration : none;
+    /*全体のグラデーション*/
+    background: #2b606e;/*IE9の背景用*/
+    background: -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    border-left: 1px solid #1f5260;
+    box-shadow:  1px 0px 0px rgba(225,225,225,0.4) inset,
+                -1px 0px 0px rgba(225,225,225,0.2) inset,
+                 0px 1px 1px rgba(0,0,0,0.1) inset,
+                 0px -1px 1px rgba(0,0,0,0.3) inset,
+                 0px 1px 3px #666;
+}
+
+.lined-menu li.first a{
+    padding : 0 0 0 100px;
+    border-left : 0px;
+    border-radius         :8px 0px 0px 8px;
+    -moz-border-radius    :8px 0px 0px 8px;
+    -webkit-border-radius :8px 0px 0px 8px;
+    -o-border-radius      :8px 0px 0px 8px;
+    -ms-border-radius     :8px 0px 0px 8px;
+    border-left : 0;
+}
+
+/*最後の角丸*/
+
+.lined-menu li.last a {
+    border-radius         :0px 8px 8px 0;
+    -moz-border-radius    :0px 8px 8px 0;
+    -webkit-border-radius :0px 8px 8px 0;
+    -o-border-radius      :0px 8px 8px 0;
+    -ms-border-radius     :0px 8px 8px 0;
+}
+
+.lined-menu li a:hover {
+    color : #ffffff;
+    background: -webkit-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -moz-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -o-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -ms-linear-gradient(top, #000000 1%, #888888 100%);
+    background: linear-gradient(top, #000000 1%, #888888 100%);
+}
+
+
+.lined-menu li.active a {
+    background:#6aa3b8;
+    background: -webkit-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -moz-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -o-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -ms-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+}
+
+
+.page ul{
+    margin : 30px 0px 50px 140px;
+}
+
+.page li{
+    width      : 40px;
+    margin : 0;
+    padding     : 0;
+    display : inline-block;
+    text-align : center;
+    list-style : none;
+}
+
+.page li a {
+    color : #000000;
+    font-size : 16px;
+    padding : 10px 0px ;
+    width      : 40px;
+    display : inline-block;
+    text-decoration : none;
+    /*全体のグラデーション*/
+    background: #2b606e;/*IE9の背景用*/
+    background: -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    background:         linear-gradient(top, #ffffff 0%, #bbbbbb 50%, #ffffff 100%); 
+    border-left: 1px solid #1f5260;
+    box-shadow:  1px 0px 0px rgba(225,225,225,0.4) inset,
+                -1px 0px 0px rgba(225,225,225,0.2) inset,
+                 0px 1px 1px rgba(0,0,0,0.1) inset,
+                 0px -1px 1px rgba(0,0,0,0.3) inset,
+                 0px 1px 3px #666;
+}
+
+.page li.first a{
+    padding : 0 0 0 100px;
+    border-left : 0px;
+    border-radius         :8px 0px 0px 8px;
+    -moz-border-radius    :8px 0px 0px 8px;
+    -webkit-border-radius :8px 0px 0px 8px;
+    -o-border-radius      :8px 0px 0px 8px;
+    -ms-border-radius     :8px 0px 0px 8px;
+    border-left : 0;
+}
+
+/*最後の角丸*/
+
+.page li.last a {
+    border-radius         :0px 8px 8px 0;
+    -moz-border-radius    :0px 8px 8px 0;
+    -webkit-border-radius :0px 8px 8px 0;
+    -o-border-radius      :0px 8px 8px 0;
+    -ms-border-radius     :0px 8px 8px 0;
+}
+
+
+.page li a:hover {
+    color : #ffffff;
+    background: -webkit-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -moz-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -o-linear-gradient(top, #000000 1%, #888888 100%);
+    background: -ms-linear-gradient(top, #000000 1%, #888888 100%);
+    background: linear-gradient(top, #000000 1%, #888888 100%);
+}
+
+
+.page li.active a {
+    background:#6aa3b8;
+    background: -webkit-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -moz-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -o-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: -ms-linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+    background: linear-gradient(top, #2c606f 1%, #6aa3b8 100%);
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 48px; 
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+#menu_button {
+    display:none;
+}
+
+.white{
+	color: white;
+}

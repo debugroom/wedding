@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.debugroom</groupId>
+    <artifactId>wedding</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>wedding-microservice</artifactId>
+  <packaging>pom</packaging>
+  <name>wedding-microservice</name>
+  <modules>
+    <module>wedding-boot-parent</module>
+    <module>wedding-infra-common</module>
+    <module>wedding-domain-common</module>
+    <module>wedding-web-common</module>
+    <module>wedding-batch-common</module>
+    <module>wedding-frontend</module>
+    <module>wedding-gallery</module>
+    <module>wedding-management</module>
+    <module>wedding-profile</module>
+    <module>wedding-portal</module>
+    <module>wedding-message</module>
+    <module>wedding-infra-cassandra</module>
+    <module>wedding-operation</module>
+  </modules>
+</project>

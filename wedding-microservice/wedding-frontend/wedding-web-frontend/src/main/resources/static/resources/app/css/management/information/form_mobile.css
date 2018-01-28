@@ -1,0 +1,126 @@
+.panel {
+	font-size: 10px;
+	margin: 0 20px 50px 10px;
+}
+
+.panel p {
+    margin :  20px auto 20px;
+}
+
+.informationFormPanel table tr td{
+    border : none;
+    margin : 0 auto 0;
+    padding : 5px;
+}
+
+.informationFormPanel table tr th{
+    padding : 5px;
+}
+
+.informationFormPanel td:first-child{
+    width : 120px;
+    text-align : right;
+}
+
+.informationFormPanel td:nth-child(2){
+    width : auto;
+    text-align : left;
+}
+
+.userListPanel td:first-child{
+    width : 30px;
+    text-align : center;
+}
+
+.userListPanel td:nth-child(2){
+    width : auto;
+    text-align : center;
+}
+
+.userListPanel td:nth-child(3){
+    width : auto;
+    text-align : left;
+}
+
+.informationFormPanel button{
+    text-decoration:none;
+    width : 100px;
+    height : 40px;
+    font-size : 0.8em;
+    margin :  5px 10px 5px;
+    padding : 5px 25px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+.userFormPanel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    
+}
+
+.informationFormPanel .main-button {
+    display: block;
+    margin : 20px auto 20px;
+    font-size : 1.2em;
+    width : 150px;
+    height : 50px;
+}
+
+.informationFormPanel .micro{
+    font-size : 0.9em;
+    height: 25px;
+    width: 20px;
+    margin: 5px;
+}
+
+.informationFormPanel .short{
+    font-size : 0.9em;
+    height: 25px;
+    width: 50px;
+    margin: 5px;
+}
+
+.informationFormPanel .middle{
+    font-size : 0.9em;
+    height: 25px;
+    width: 100px;
+    margin: 5px;
+}
+
+.informationFormPanel .long{
+    font-size : 0.9em;
+    height: 25px;
+    width: 150px;
+    margin: 5px;
+}
+
+.informationFormPanel .middle-button {
+    font-size : 0.7em;
+}
+
+.editMessagePanel {
+    margin:  auto;
+    text-align: center;
+    display: table;
+}
+
+.editMessagePanel textarea {
+	width: 100%;
+    display: block;
+    resize:none;
+    font-size: 0.9em;
+    margin: 20px auto 20px;
+}

@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev,jpa
+gallery:
+  download:
+    work:
+      root:
+        directory: /tmp
+      directory: download
+      photo:
+        filename: download-photo-list.csv
+      movie:
+        filename: download-movie-list.csv
+    filename: download.zip
+  root:
+    directory: /tmp
+      

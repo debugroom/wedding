@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping>
+        <class-a>org.debugroom.wedding.app.model.management.request.NewRequestForm</class-a>
+        <class-b>org.debugroom.wedding.app.model.management.request.RequestDraft</class-b>
+        <field>
+            <a>requestId</a>
+            <b>request.requestId</b>
+        </field>
+        <field>
+            <a>title</a>
+            <b>request.title</b>
+        </field>
+        <field>
+            <a>registratedDate</a>
+            <b>request.registratedDate</b>
+        </field>
+        <field>
+            <a>requestContents</a>
+            <b>request.requestContents</b>
+        </field>
+        <field>
+            <a>checkedUsers</a>
+            <b>acceptors</b>
+        </field>
+    </mapping>
+</mappings>

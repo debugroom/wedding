@@ -1,0 +1,25 @@
+server:
+  port: 8081
+  contextPath: 
+  tomcat:
+    additional-tld-skip-patterns : "javacpp.jar, *javacv*.jar, ffmpeg-*.jar"
+profile:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps
+info:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps
+gallery:
+  root:
+    directory: /Users/kawabatakouhei/Documents/work/apps/gallery
+  distribution:
+    server: http://data.debugroom.org.s3.amazonaws.com
+bucket:
+  name: data.debugroom.org
+cloud:
+  aws:
+    credentials:
+      accessKey: dummy 
+      secretKey: dummy 
+    region:
+      static: ap-northeast-1

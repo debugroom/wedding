@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:context="http://www.springframework.org/schema/context"
+      xmlns:batch="http://www.springframework.org/schema/batch"
+      xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+          http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/jobXML_1_0.xsd">
+
+    <context:property-placeholder
+        location="classpath*:/META-INF/spring/*.properties, classpath*:/META-INF/*.properties" />
+
+<!--  
+    <context:component-scan base-package="org.debugroom.wedding.app.batch.gallery" />
+-->
+
+    <import resource="classpath:/META-INF/spring/wedding-domain.xml"/>
+
+    <job id="media-download" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+        <step id="step1">
+            <batchlet ref="org.debugroom.wedding.app.batch.gallery.job.CreateMediaDownloadZipBatchlet"></batchlet>
+        </step>
+    </job>
+    
+    <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+        <property name="mappingFiles" value=
+        "classpath*:/META-INF/dozer/**/*-mapping.xml" />
+    </bean>
+    
+<!--  
+    <job id="test" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+      <step id="step1">
+          <batchlet ref="org.debugroom.wedding.app.batch.gallery.job.CreateMediaDownloadZipBatchlet" />
+      </step>
+    </job>
+-->
+    
+
+
+</beans>

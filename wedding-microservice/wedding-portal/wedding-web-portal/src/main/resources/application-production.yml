@@ -1,0 +1,11 @@
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:postgresql://${dbserver.port.5432.tcp.addr}:${dbserver.port.5432.tcp.port}/wedding
+    username: ${dbserver.app.username}
+    password: ${dbserver.app.password}
+    driverClassName: org.postgresql.Driver
+logging:
+  file: logs/app.log
+  level:
+    org.springframework.web: INFO

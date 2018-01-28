@@ -1,0 +1,286 @@
+.panel {
+	margin : 50px;
+}
+
+.panel img{
+	 width : 100px;
+	margin : 30px 5px 5px 30px;
+}
+
+.left-position{
+	display : inline-block;
+	width : 25%;
+	float : left;
+}
+
+.right-position{
+	display : inline-block;
+	width : 75%;
+	float : right;
+}
+
+.panel:after{
+    content: "";
+    clear: both;
+    display: block;
+}
+
+#input-folder-name {
+	margin : 50px 30px 30px 0;
+	width : 200px;
+}
+
+#folderFormPanel img{
+	float : left;
+}
+
+#folderFormPanel table{
+	margin : 50px auto 50px;
+	width : 75%;
+}
+	
+#folderFormPanel td:nth-child(1){
+	width : 50px;
+	text-align: center;
+}
+
+#folderFormPanel td:nth-child(2){
+	width : 75px;
+	text-align: center;
+}
+
+#folderFormPanel td:nth-child(3){
+	padding : 5px;
+}
+
+#folderFormPanel button{
+    font-size : 0.8em;
+    margin :  5px 10px 5px;
+    padding : 5px 25px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+#folderFormPanel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    
+}
+
+#get-users-button{
+    width : 200px;
+    height : 40px;
+    font-size : 0.8em;
+    margin :  5px 10px 5px;
+    padding : 5px 25px 5px;
+}
+
+#folderFormPanel .alternative-button{
+    content: "";
+    clear: both;
+    display: block;
+    text-align :center;
+    margin : 20px auto 40px; 
+}
+
+#folderFormPanel .alternative-first-button {
+    font-size : 1.2em;
+    width : 250px;
+    height : 60px;
+}
+
+#folderFormPanel .alternative-last-button {
+    font-size : 1.2em;
+    width : 250px;
+    height : 60px;
+}
+
+.panel .delete-folder-icon {
+	width : 50px;
+	height : 40px;
+	margin : 10px 20px 10px 0px;
+}
+
+#modal-panel{
+    width:50%;
+    margin:1.5em auto 0;
+    padding:10px 20px;
+    border:2px solid #aaa;
+    background:#fff;
+    z-index:2;
+    position:fixed;
+}
+#modal-panel .alternative-button{
+    content: "";
+    clear: both;
+    display: block;
+    text-align :center;
+    margin : 20px auto 40px; 
+}
+
+#modal-panel .alternative-first-button {
+    font-size : 1.0em;
+    width : 150px;
+    height : 60px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+#modal-panel .alternative-last-button {
+    font-size : 1.0em;
+    width : 150px;
+    height : 60px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+#modal-panel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    
+}
+
+.panel .delete-folder-icon {
+    width : 50px;
+    height : 40px;
+    margin : 10px 20px 10px 5px;
+}
+
+#modal-overlay{
+    z-index:1;
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:120%;
+    background-color:rgba(0,0,0,0.75);
+}
+.user-icon {
+	width : 50px;
+	height : 50px;
+}
+
+#users-panel table{
+	width : 70%;
+	margin : 20px auto 20px;
+}
+
+.selectedContents{
+	border : solid 3px #ff0000;
+}
+
+#contentsPanel{
+	margin : 20px auto 20px;
+	text-align : center;
+}
+
+#contentsPanel img{
+    width : 80%;
+	margin : 20px auto 20px;
+}
+
+#detailPanel .alternative-button{
+    content: "";
+    clear: both;
+    display: block;
+    text-align :center;
+    margin : 20px auto 40px; 
+}
+
+#detailPanel .alternative-first-button {
+    font-size : 1.0em;
+    width : 200px;
+    height : 60px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+#detailPanel .alternative-last-button {
+    font-size : 1.0em;
+    width : 200px;
+    height : 60px;
+    margin :  5px 10px 5px;
+    padding : 5px 10px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+#detailPanel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+}
+
+.activate {
+}
+
+#file-upload-input{
+	display : none;
+}
+
+#file-upload-button{
+	width : 75px;
+}
+
+.progress-bar{
+	height : 18px;
+	background : green;
+}

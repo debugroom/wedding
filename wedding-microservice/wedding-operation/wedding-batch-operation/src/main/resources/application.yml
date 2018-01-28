@@ -1,0 +1,54 @@
+spring:
+  profiles:
+    active: dev,jpa,cassandra,message
+operation:
+  backup:
+    directory: 
+      postgres: backup/postgres
+      cassandra: backup/cassandra
+    data:
+      postgres:
+        address: address.csv
+        affiliation: affilication.csv
+        credential: credential.csv
+        email: email.csv
+        function: fnction.csv
+        folder: folder.csv
+        group: grp.csv
+        groupFolder: group_folder.csv
+        groupNotification: group_notification.csv
+        groupVisibleMovie: group_visible_movie.csv
+        groupVisiblePhoto: group_visible_photo.csv
+        information: information.csv
+        menu: menu.csv
+        movie: movie.csv
+        movieRelatedFolder: movie_related_folder.csv
+        movieRelatedUser: movie_related_user.csv
+        notification: notification.csv
+        photo: photo.csv
+        photoRelatedFolder: photo_related_folder.csv
+        photoRelatedUser: photo_related_user.csv
+        request: request.csv
+        requestStatus: request_status.csv
+        userRelatedFolder: user_related_folder.csv
+        user: usr.csv
+      cassandra:
+        group: group.csv
+        groupRelatedMessageBoard: group_related_message_board.csv
+        groupRelatedUser: group_related_user.csv
+        message: message.csv
+        messageBoard: message_board.csv
+        messageBoardRelatedGroup: message_board_related_group.csv
+        user: users.csv
+        userRelatedGroup: user_related_group.csv
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: false
+      profileName: 
+    region:
+      auto: false
+        
+  

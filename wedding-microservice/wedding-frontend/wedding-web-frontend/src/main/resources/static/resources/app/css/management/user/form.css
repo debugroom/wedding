@@ -1,0 +1,87 @@
+.panel p {
+    margin :  20px auto 20px;
+}
+
+.userFormPanel table tr td{
+    border : none;
+    margin : 0 auto 0;
+    padding : 5px 20px 5px;
+}
+
+.userFormPanel td:first-child{
+    width : 150px;
+    text-align : right;
+}
+
+.userFormPanel td:nth-child(2){
+    width : auto;
+    text-align : left;
+}
+
+.userFormPanel button{
+    width : 100px;
+    height : 40px;
+    font-size : 0.8em;
+    margin :  5px 10px 5px;
+    padding : 5px 25px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+.userFormPanel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    
+}
+
+.userFormPanel .main-button {
+    display: block;
+    margin : 20px auto 20px;
+    font-size : 1.2em;
+    width : 200px;
+    height : 60px;
+}
+
+.userFormPanel .micro{
+    font-size : 1.1em;
+    height: 25px;
+    width: 30px;
+    margin: 5px;
+}
+
+.userFormPanel .short{
+    font-size : 1.1em;
+    height: 25px;
+    width: 100px;
+    margin: 5px;
+}
+
+.userFormPanel .middle{
+    font-size : 1.1em;
+    height: 25px;
+    width: 200px;
+    margin: 5px;
+}
+
+.userFormPanel .long{
+    font-size : 1.1em;
+    height: 25px;
+    width: 400px;
+    margin: 5px;
+}
+
+.userFormPanel .middle-button {
+    font-size : 0.7em;
+}

@@ -1,0 +1,75 @@
+.panel p {
+    margin :  20px auto 20px;
+}
+
+.resultPanel table{
+    width : 700px;
+}
+
+.resultPanel td{
+    text-align : center;
+    width : auto;
+    
+}
+
+.resultPanel img{
+    width : 300px;
+}
+
+.resultPanel table tr td{
+    border : none;
+    margin : 0 auto 0;
+    padding : 10px 20px 10px;
+}
+
+.panel th:nth-child(1){
+    width : 150px;
+}
+
+.panel th:nth-child(2){
+    width : 500px;
+}
+
+.panel .alternative-button{
+    display: block;
+    text-align :center;
+    margin : 20px auto 40px; 
+}
+
+.panel .alternative-first-button {
+    font-size : 1.2em;
+    width : 250px;
+    height : 60px;
+}
+
+.panel .alternative-last-button {
+    font-size : 1.2em;
+    width : 250px;
+    height : 60px;
+}
+
+.panel button{
+    font-size : 0.8em;
+    margin :  5px 10px 5px;
+    padding : 5px 25px 5px;
+    background : -webkit-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #ffffff 0%, #bbbbbb 100%); 
+    border-radius         :8px 8px 8px 8px;
+    -moz-border-radius    :8px 8px 8px 8px;
+    -webkit-border-radius :8px 8px 8px 8px;
+    -o-border-radius      :8px 8px 8px 8px;
+    -ms-border-radius     :8px 8px 8px 8px;
+}
+
+.panel button:hover {
+    color : #ffffff;
+    background : -webkit-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :    -moz-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :      -o-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :     -ms-linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    background :         linear-gradient(top, #000000 0%, #bbbbbb 100%); 
+    
+}
