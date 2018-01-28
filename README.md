@@ -365,7 +365,7 @@ git version 2.9.5
 ##### 2-1. PostgreSQL、Cassandraへ接続するバックエンドサービスアプリケーションの構築
 
 1. GitクローンしたDockerfileを使用して、バックエンドのサービスアプリケーション用のコンテナイメージを作成する。なお、アプリケーションからPostgreSQLに接続するために、構築したDBサーバのIPアドレスとポートを環境変数としてコンテナに設定する(同一のホストマシンではLINKを使用すればよいが、アプリケーションを異なるホストマシン上に配置するため、直接環境変数でIPとポートを設定する。なお、Docker1.9以降では異なるホスト間でもIPを共有する方法がある模様だが、ここでは実施していない)
-2. 作成したコンテナイメージを実行する。ポート8081がコンテナ内で実行されているAPサーバへ8080で繋がるようにオプション指定する。
+2. 作成したコンテナイメージを実行する。ポート8081がコンテナ内で実行されているAPサーバへ8080で繋がるようにオプション指定する。また、他のコンテナで実行されているバックエンドサービスを参照する場合など、LINKオプションを使って、対象とするコンテナの名称と環境変数を紐づけて実行する。
 3. サービスの数だけ、1、２を繰り返す。なお、フォワーディングするポートだけ変更して実行すること。
 
 ```bash:
@@ -381,7 +381,7 @@ REPOSITORY                    TAG                 IMAGE ID            CREATED   
 debugroom/wedding             portal              ef2c28cf7acb        6 seconds ago       1.516 GB
 
 [2の手順]
-[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker run -itd --name apserver1 -p 8081:8080 debugroom/wedding:portal
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker run -itd --name apserver1 --link apserver7:operation -p 8081:8080 debugroom/wedding:portal
 
 //omit
 
@@ -446,6 +446,10 @@ ENV DBSERVER_PORT_5432_TCP_PORT ${DBSERVER_PORT_5432_TCP_PORT:-localhost}
 ENV DBSERVER_PORT_9042_TCP_ADDR ${DBSERVER_PORT_9042_TCP_ADDR:-localhost}
 ENV DBSERVER_PORT_9042_TCP_PORT ${DBSERVER_PORT_9042_TCP_PORT:-localhost}
 
+# TimezoneをJSTに変更
+RUN cp /etc/localtime /etc/localtime.org
+RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
 # ポートを公開。
 EXPOSE 8080
 
@@ -484,7 +488,7 @@ a6e70307f7c8        debugroom/wedding:message               "/bin/sh -c 'java -j
 ba1632161f71        debugroom/wedding:profile               "/bin/sh -c 'java -ja"   30 hours ago        Up 30 hours         0.0.0.0:8082->8080/tcp                                                     apserver2
 e5c37433ae42        debugroom/wedding:portal                "/bin/sh -c 'java -ja"   31 hours ago        Up 31 hours         0.0.0.0:8081->8080/tcp                                                     apserver1
 
-[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker run -itd --name apserver6 -p 80:8080 --link apserver1:portal --link apserver2:profile --link apserver3:management --link apserver4:gallery --link apserver5:message debugroom/wedding:frontend
+[centos@ip-XXXX-XXX-XXX-XXX ~]$ docker run -itd --name apserver6 -p 80:8080 --link apserver1:portal --link apserver2:profile --link apserver3:management --link apserver4:gallery --link apserver5:message --link apserver7:operation debugroom/wedding:frontend
 [centos@ip-XXXX-XXX-XXX-XXX ~]$ docker exec -ti apserver6 /bin/bash
 [root@755de24a6e22 /]# export CLOUD_AWS_CREDENTIALS_ACCESSKEY=XXXX
 [root@755de24a6e22 /]# export CLOUD_AWS_CREDENTIALS_SECRETKEY=XXXX
@@ -571,6 +575,10 @@ ADD human-icon.png /usr/local/app/profile/image/
 RUN chown -R tomcat:tomcat /usr/local/app
 
 EXPOSE 8080
+
+＃ ServerのTimezoneをJSTに変更
+RUN cp /etc/localtime /etc/localtime.org
+RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 # アプリケーションをデプロイ
 RUN cp /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/target/wedding.war /var/local/apache-tomcat/webapps/
@@ -721,6 +729,10 @@ RUN echo "CLOUD_AWS_REGION_STATIC="$CLOUD_AWS_REGION_STATIC >> ~/.bashrc
 
 # 実行するJavaコマンドのコマンドパスを.bashrcへ追加しておく。
 RUN echo "PATH="$PATH >> ~/.bashrc
+
+＃ サーバのTimezoneをJSTに変更。
+RUN cp /etc/localtime /etc/localtime.org
+RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 ＃ Cronがコンテナ起動時に実行されるようCMDコマンドでcronデーモンを起動。
 CMD crond -n
