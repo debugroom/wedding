@@ -46,4 +46,7 @@ RUN mvn install -f /var/local/wedding/wedding-microservice/wedding-operation/pom
 
 EXPOSE 8080
 
+RUN cp /etc/localtime /etc/localtime.org
+RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
 CMD java -jar -Dspring.profiles.active=production,jpa,cassandra,cluster,operation-cluster /var/local/wedding/wedding-microservice/wedding-operation/wedding-web-operation/target/wedding-web-operation-1.0-SNAPSHOT.jar

@@ -60,4 +60,7 @@ RUN echo "CLOUD_AWS_CREDENTIALS_SECRETKEY="$CLOUD_AWS_CREDENTIALS_SECRETKEY >> ~
 RUN echo "CLOUD_AWS_REGION_STATIC="$CLOUD_AWS_REGION_STATIC >> ~/.bashrc
 RUN echo "PATH="$PATH >> ~/.bashrc
 
+RUN cp /etc/localtime /etc/localtime.org
+RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
 CMD crond -n

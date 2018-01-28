@@ -34,6 +34,9 @@ RUN mvn install -Dmaven.test.skip=true -f /var/local/wedding/wedding-microservic
 RUN mvn install -Dmaven.test.skip=true -f /var/local/wedding/wedding-microservice/wedding-web-common/pom.xml
 RUN mvn install -Dmaven.test.skip=true -f /var/local/wedding/wedding-microservice/wedding-message/pom.xml
 
+RUN cp /etc/localtime /etc/localtime.org
+RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
 EXPOSE 8080
 
 CMD java -jar -Dspring.profiles.active=cluster,cassandra,production /var/local/wedding/wedding-microservice/wedding-message/wedding-web-message/target/wedding-web-message-1.0-SNAPSHOT.jar
