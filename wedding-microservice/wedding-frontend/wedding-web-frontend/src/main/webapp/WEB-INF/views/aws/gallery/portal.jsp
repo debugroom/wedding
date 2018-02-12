@@ -42,6 +42,7 @@
   <div id="flex-container">
     <div class="flex-item-2">
       <article>
+<!--  
         <div class="gallery-panel">
           <c:if test="${!empty galleryPortalResource.randomPhotographs}">
           <div class="slider-pro" id="my-slider">
@@ -88,7 +89,6 @@
             </figure>
           </div>
           </c:if>
-<!--  
           <video id="my-video" class="video-js" controls preload="auto" width="640" height="264" 
             poster="${pageContext.request.contextPath}/gallery/movie-thumbnail/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].thumbnailFilePath, '.')}" 
             data-setup='{ "controlBar": { "muteToggle": false } }'>
@@ -106,11 +106,10 @@
             </p>
           </video>
           <video src="/gallery/movie/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}"></video>
--->
         </div>
-<!--  
+-->
         <div class="contents-panel">
-          <h3>Gallery Contents</h3>
+          <h3>Photo & Movie sharing</h3>
           <div class="left-position">
             <c:forEach items="${galleryPortalResource.folders}" var="folder" varStatus="status">
               <div id="folder-<c:out value='${folder.folderId}' />">
@@ -131,25 +130,24 @@
                         data-url="${pageContext.request.contextPath}/gallery/folders/<c:out value='${folder.folderId}' />"
                         src="${pageContext.request.contextPath}/static/resources/app/img/delete.png" />
                  </c:if>
-                 <br/>
-                 <c:out value="${folder.folderName}" />
-                 <br/>
+                 <p><c:out value="${folder.folderName}" /></p>
               </div>
             </c:forEach>
             <img id="new-folder" 
               data-image-folder-icon-url="${pageContext.request.contextPath}/static/resources/app/img/Pictures.png" 
               data-get-users-url="${pageContext.request.contextPath}/gallery/folder/no-viewers/999999999999" 
               data-create-folder-url="${pageContext.request.contextPath}/gallery/folder/new" 
-             src="${pageContext.request.contextPath}/static/resources/app/img/custom-folder.png"/><br>
+             src="${pageContext.request.contextPath}/static/resources/app/img/custom-folder.png"/>
+             <p>
              新しいフォルダを作成
-             <br/>
+             </p>
           </div>
           <br/>
         </div>
--->
       </article>
     </div>
   </div>
 </body>
+<script type="text/javascript" src="${pageContext.request.contextPath}/static/resources/app/js/gallery/aws/portal.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/resources/app/js/gallery/portal.js"></script>
 <script src="http://vjs.zencdn.net/6.2.4/video.js"></script>

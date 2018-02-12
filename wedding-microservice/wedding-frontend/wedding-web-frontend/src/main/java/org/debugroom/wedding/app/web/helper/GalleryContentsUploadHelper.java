@@ -1,6 +1,7 @@
 package org.debugroom.wedding.app.web.helper;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 import org.debugroom.wedding.app.AppConsts;
 import org.debugroom.wedding.app.model.gallery.Media;
 
+@Profile({"local"})
 @Component
 public class GalleryContentsUploadHelper implements FileUploadHelper{
 

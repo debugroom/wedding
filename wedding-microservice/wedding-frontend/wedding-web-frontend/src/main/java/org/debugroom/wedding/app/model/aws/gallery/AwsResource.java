@@ -1,4 +1,4 @@
-package org.debugroom.wedding.app.web.adapter.docker.aws;
+package org.debugroom.wedding.app.model.aws.gallery;
 
 import java.io.Serializable;
 

@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
 
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.framework.common.exception.SystemException;
 import org.debugroom.framework.spring.webmvc.fileupload.FileUploadHelper;
 
 @Component("profileImageUploadHelper")
@@ -91,12 +92,12 @@ public class ProfileImageUploadHelperImpl implements FileUploadHelper{
 					emptyContent, metadata);
 			amazonS3.putObject(putObjectRequest);
 		} catch (IOException e) {
-			e.printStackTrace();
+			new SystemException("common.error.0001", bucketName+imageDirectory, e);
 		} finally{
 			try {
 				emptyContent.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				new SystemException("common.error.0001", bucketName+imageDirectory, e);
 			}
 		}
 		StringBuilder stringBuilder = new StringBuilder().append(profileImageFileName);

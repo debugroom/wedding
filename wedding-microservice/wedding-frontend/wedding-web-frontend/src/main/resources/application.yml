@@ -8,17 +8,17 @@ spring:
       max-request-size: 10000000000
 profile:
   root:
-    directory: /usr/local/app/profile
+    directory: wedding/profile
   directory: image
   image:
     file:
       name: image
 info:
   root:
-    directory: /usr/local/app/info
+    directory: wedding/info
 gallery:
   root:
-    directory: /usr/local/app/gallery
+    directory: wedding/gallery
   image:
     original:
       directory: image/original
@@ -43,6 +43,17 @@ gallery:
       height: 75
       frame:
         start: 100
+  aws:
+    upload:
+      role:
+        name: wedding-gallery-upload-role
+        session:
+          name: wedding-gallery-upload-session
+      durationseconds: 864000
+      limitBytes: 10000000000
+      acl: private
+bucket:
+  name: data.debugroom.org
 protocol: http
 cloud:
   aws:

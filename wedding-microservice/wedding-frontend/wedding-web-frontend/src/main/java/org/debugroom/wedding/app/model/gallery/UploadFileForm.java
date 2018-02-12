@@ -24,6 +24,8 @@ import lombok.Builder;
 @Builder
 public class UploadFileForm implements Serializable{
 
+	private static final long serialVersionUID = 4551971068551225732L;
+
 	public UploadFileForm(){
 	}
 	

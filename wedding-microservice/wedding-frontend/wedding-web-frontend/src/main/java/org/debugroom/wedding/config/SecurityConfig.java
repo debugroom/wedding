@@ -7,6 +7,7 @@ import org.debugroom.wedding.app.web.security.LoginSuccessHandler;
 import org.debugroom.wedding.app.web.security.SessionExpiredDetectingLoginUrlAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -93,4 +94,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	public HttpSessionEventPublisher httpSessionEventPublisher() {
 	    return new HttpSessionEventPublisher();
 	}
+	
+	@Configuration
+    @Order(1)
+	public static class PermitXFrameOptionConfig extends SecurityConfig{
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			super.configure(http);
+			http.antMatcher("/gallery/upload/authorization").headers().frameOptions().disable();
+		}
+	}
+
 }

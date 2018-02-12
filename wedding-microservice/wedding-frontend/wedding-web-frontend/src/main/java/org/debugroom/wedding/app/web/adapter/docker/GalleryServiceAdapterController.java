@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -52,19 +51,15 @@ import org.debugroom.wedding.app.model.gallery.DeleteMediaResult;
 import org.debugroom.wedding.app.model.gallery.DownloadMediaForm;
 import org.debugroom.wedding.app.model.gallery.Folder;
 import org.debugroom.wedding.app.model.gallery.GalleryPortalResource;
-import org.debugroom.wedding.app.model.gallery.Media;
 import org.debugroom.wedding.app.model.gallery.Movie;
 import org.debugroom.wedding.app.model.gallery.MovieSearchResult;
 import org.debugroom.wedding.app.model.gallery.Photo;
 import org.debugroom.wedding.app.model.gallery.PhotoSearchResult;
 import org.debugroom.wedding.app.model.gallery.UpdateFolderForm;
 import org.debugroom.wedding.app.model.gallery.UpdateFolderResult;
-import org.debugroom.wedding.app.model.gallery.UploadFileForm;
-import org.debugroom.wedding.app.model.gallery.UploadFileResult;
 import org.debugroom.wedding.app.model.gallery.CreateFolderForm.CreateFolder;
 import org.debugroom.wedding.app.model.gallery.UpdateFolderForm.UpdateFolder;
 import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
-import org.debugroom.wedding.app.web.helper.GalleryContentsUploadHelper;
 import org.debugroom.wedding.app.web.helper.ImageDownloadHelper;
 import org.debugroom.wedding.app.web.security.CustomUserDetails;
 import org.debugroom.wedding.app.web.util.RequestBuilder;
@@ -87,9 +82,6 @@ public class GalleryServiceAdapterController {
 
 	@Inject
 	ImageDownloadHelper downloadHelper;
-	
-	@Inject
-	GalleryContentsUploadHelper galleryContentsUploadHelper;
 	
 	@InitBinder
 	public void initBinderForDate(WebDataBinder binder){
@@ -419,45 +411,6 @@ public class GalleryServiceAdapterController {
 				.append(fileName)
 				.toString();
 	}	
-
-	@RequestMapping(method=RequestMethod.POST, value="/gallery/upload")
-	public ResponseEntity<UploadFileResult> uploadFile(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails,
-			@Validated UploadFileForm uploadFileForm, BindingResult bindingResult){
-		
-		UploadFileResult uploadFileResult = new UploadFileResult();
-		if(bindingResult.hasErrors()){
-			List<String> messages = new ArrayList<String>();
-			uploadFileResult.setMessages(messages);
-			for(FieldError fieldError : bindingResult.getFieldErrors()){
-				messages.add(fieldError.getDefaultMessage());
-			}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uploadFileResult);
-		}
-		MultipartFile multipartFile = uploadFileForm.getUploadFile();
-		try {
-			//TODO get Userid from session.
-			Media media = galleryContentsUploadHelper.createMedia(
-					multipartFile, customUserDetails.getUser().getUserId(), 
-					uploadFileForm.getFolderId());
-
-			String serviceName = "gallery";
-			RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
-			uploadFileResult.setMedia(restTemplate.postForObject(
-					RequestBuilder.buildUriComponents(serviceName, 
-							new StringBuilder()
-							.append(APP_NAME)
-							.append("/media/new")
-							.toString(), provider).toUri(), media, Media.class));
-			uploadFileResult.setRequestContextPath(getFrontendServerUri().toString());
-		} catch (BusinessException e) {
-			List<String> messages = new ArrayList<String>();
-			uploadFileResult.setMessages(messages);
-			messages.add(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(uploadFileResult);
-		}
-		return ResponseEntity.status(HttpStatus.OK).body(uploadFileResult);
-	}
 	
 	@RequestMapping(method=RequestMethod.DELETE, value="/gallery/media",
 			consumes={MediaType.APPLICATION_JSON_VALUE})

@@ -37,6 +37,7 @@ public class WebApp extends SpringBootServletInitializer{
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames(
         	"i18n/common-application-messages",
+        	"i18n/common-system-messages",
         	"i18n/frontend-application-messages",
         	"i18n/frontend-system-messages"
         );

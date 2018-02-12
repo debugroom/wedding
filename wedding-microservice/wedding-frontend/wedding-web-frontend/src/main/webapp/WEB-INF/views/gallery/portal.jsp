@@ -153,5 +153,6 @@
     </div>
   </div>
 </body>
+<script type="text/javascript" src="${pageContext.request.contextPath}/static/resources/app/js/gallery/local/portal.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/resources/app/js/gallery/portal.js"></script>
 <script src="http://vjs.zencdn.net/6.2.4/video.js"></script>

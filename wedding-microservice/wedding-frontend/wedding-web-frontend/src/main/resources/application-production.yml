@@ -13,8 +13,6 @@ protocol: https
 server:
     port: 8080
     contextPath: /wedding
-bucket:
-  name: data.debugroom.org
 profile:
   root:
     directory: wedding

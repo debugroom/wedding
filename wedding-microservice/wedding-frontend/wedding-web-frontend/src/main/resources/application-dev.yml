@@ -9,8 +9,6 @@ spring:
     username: wedding_app
     password: wedding_app
     driverClassName: org.postgresql.Driver
-bucket:
-  name: data.debugroom.org
 profile:
   root:
     directory: wedding
