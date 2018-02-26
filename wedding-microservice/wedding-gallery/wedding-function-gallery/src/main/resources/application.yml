@@ -1,0 +1,25 @@
+spring:
+  cloud:
+    function:
+      scan:
+        packages: org.debugroom.wedding.app.function.gallery
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: false
+      profileName:
+    region:
+      auto: false
+gallery:
+  image:
+    thumbnail:
+      width: 100
+      height: 75
+  movie:
+    thumbnail:
+      width: 100
+      height: 75
+      frame:
+        start: 1000

@@ -14,5 +14,6 @@
     <module>wedding-web-gallery</module>
     <module>wedding-batch-gallery</module>
     <module>wedding-distribution-gallery</module>
+    <module>wedding-function-gallery</module>
   </modules>
 </project>
