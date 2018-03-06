@@ -8,7 +8,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.crypto.Mac;
@@ -16,6 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -42,9 +42,13 @@ import com.amazonaws.services.securitytoken.model.Credentials;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.debugroom.framework.common.exception.BusinessException;
 import org.debugroom.framework.common.exception.SystemException;
+import org.debugroom.framework.common.web.MediaType;
+import org.debugroom.wedding.app.AppConsts;
 import org.debugroom.wedding.app.model.aws.gallery.DirectUploadAuthorization;
 import org.debugroom.wedding.app.model.aws.gallery.PostPolicy;
+import org.debugroom.wedding.app.model.aws.gallery.Media;
 
 @Component
 public class GalleryContentsUploadHelper implements InitializingBean{
@@ -59,8 +63,12 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 	private String galleryRootDirectory;
 	@Value("${gallery.image.original.directory}")
 	private String galleryImageOriginalDirectory;
+	@Value("${gallery.image.thumbnail.directory}")
+	private String galleryImageThumbnailDirectory;
 	@Value("${gallery.movie.original.directory}")
 	private String galleryMovieOriginalDirectory;
+	@Value("${gallery.movie.thumbnail.directory}")
+	private String galleryMovieThumbnailDirectory;
 	@Value("${gallery.aws.upload.role.name}")
 	private String roleName;
 	@Value("${gallery.aws.upload.role.session.name}")
@@ -111,10 +119,16 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 				.append("/")
 				.append(galleryImageOriginalDirectory)
 				.toString();
+		String thumbnailDirectory = new StringBuilder()
+				.append(uploadRootDirectory)
+				.append("/")
+				.append(galleryImageThumbnailDirectory)
+				.toString();
 		if(!existsDirectory(new StringBuilder()
 				.append(s3UploadBucket).append(uploadRootDirectory).toString())){
 			createDirectory(uploadRootDirectory);
 			createDirectory(uploadDirectory);
+			createDirectory(thumbnailDirectory);
 		}
 		return uploadDirectory;
 	}
@@ -134,10 +148,16 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 				.append("/")
 				.append(galleryMovieOriginalDirectory)
 				.toString();
+		String thumbnailDirectory = new StringBuilder()
+				.append(uploadRootDirectory)
+				.append("/")
+				.append(galleryMovieThumbnailDirectory)
+				.toString();
 		if(!existsDirectory(new StringBuilder()
 				.append(s3UploadBucket).append(uploadRootDirectory).toString())){
 			createDirectory(uploadRootDirectory);
 			createDirectory(uploadDirectory);
+			createDirectory(thumbnailDirectory);
 		}
 		return uploadDirectory;
 	}
@@ -180,7 +200,8 @@ public class GalleryContentsUploadHelper implements InitializingBean{
      * @param fileName
      * @return
      */
-	public DirectUploadAuthorization createDirectUploadAuthorization(String directory){
+	public DirectUploadAuthorization createDirectUploadAuthorization(
+			String directory, String folderId, String userId){
 
 		String objectKey = new StringBuilder().append(directory).append("/").toString();
 		Credentials credentials = getTemporaryCredentials(objectKey);
@@ -207,14 +228,15 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 				.expiration(nowUTC.plusSeconds(durationSeconds).toString()) //アップロード有効期限
 				.conditions(new String[][]{
 					{"eq", "$bucket", bucketName},                         // バケット名が完全一致
-					{"starts-with", "$key", objectKey},             // オブジェクトキー名が前方一致
+					{"starts-with", "$key", objectKey},                    // オブジェクトキー名が前方一致
 					{"eq", "$acl", ACCESS_CONTROL_LEVEL},                  // ACLが完全一致
-//					{"eq", "$x-amz-meta-filename", fileName},       // ファイル名が完全一致
+					{"eq", "$x-amz-meta-folder-id", folderId},             // カスタムパラメータが完全一致
+					{"eq", "$x-amz-meta-user-id", userId},             // カスタムパラメータが完全一致
 					{"eq", "$x-amz-credential", credentialString},         // 認証情報が完全一致
 					{"eq", "$x-amz-security-token", securityToken},        // セキュリティトークンが完全一致
 					{"eq", "$x-amz-algorithm", algorithm},                 // アルゴリズムが完全一致
 					{"eq", "$x-amz-date", iso8601dateTime},                // 日付書式が完全一致
-					{"content-length-range", "0", fileSizeLimit},   // ファイル上限サイズを指定
+					{"content-length-range", "0", fileSizeLimit},          // ファイル上限サイズを指定
 				})
 				.build();
 		
@@ -246,7 +268,8 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 				.credential(credentialString) // 一時的認証情報やリージョンを含む文字列
 				.signature(signatureForPolicy)// POSTポリシーに対する署名
 				.policy(base64Policy)         // POSTポリシードキュメント(Base64エンコードが必要)
-//				.rawFileName(fileName)        // アップロードファイル名
+				.folderId(folderId)           // カスタムパラメータ
+				.userId(userId)
 				.fileSizeLimit(fileSizeLimit) // アップロードファイルサイズ上限
 				.build();
 	}
@@ -376,8 +399,7 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 	public void afterPropertiesSet() throws Exception {
 		System.setProperty("aws.accessKeyId", accessKey);
 		System.setProperty("aws.secretKey", secretKey);
-		GetRoleRequest getRoleRequest = new GetRoleRequest();
-		getRoleRequest.setRoleName(roleName);
+		GetRoleRequest getRoleRequest = new GetRoleRequest().withRoleName(roleName);
 		/*
 		roleArn = AmazonIdentityManagementClientBuilder.defaultClient()
 				.getRole(getRoleRequest).getRole().getArn();
@@ -388,7 +410,103 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 				.getRole(getRoleRequest).getRole().getArn();
 	}
 	
+	public Media createMedia(String fileName, String userId, String folderId) throws BusinessException{
+		Media.MediaBuilder mediaBuilder = Media.builder().userId(userId).folderId(folderId)
+				.originalFilename(fileName);
+		MediaType mediaType = MediaType.getMediaType(fileName);
+		if(mediaType == null){
+			throw new BusinessException("galleryContentsUploadHelper.error.0001", null, fileName);
+		}else{
+			switch(mediaType){
+			case JPEG:
+				mediaBuilder
+					.filePath(createPhotoFilePath(userId, fileName))
+					.thumbnailFilePath(createPhotoThumbnailPath(userId, fileName))
+					.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.PHOTOGRAPH);
+				break;
+			case PNG:
+				mediaBuilder
+					.filePath(createPhotoFilePath(userId, fileName))
+					.thumbnailFilePath(createPhotoThumbnailPath(userId, fileName))
+					.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.PHOTOGRAPH);
+				break;
+			case GIF:
+				mediaBuilder
+					.filePath(createPhotoFilePath(userId, fileName))
+					.thumbnailFilePath(createPhotoThumbnailPath(userId, fileName))
+					.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.PHOTOGRAPH);
+				break;
+			case TIFF:
+				throw new BusinessException("galleryContentsUploadHelper.error.0001", null, fileName);
+			case BMP:
+				mediaBuilder
+					.filePath(createPhotoFilePath(userId, fileName))
+					.thumbnailFilePath(createPhotoThumbnailPath(userId, fileName))
+					.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.PHOTOGRAPH);
+				break;
+			case MPEG_VIDEO:
+				mediaBuilder
+					.filePath(createMovieFilePath(userId, fileName))
+					.thumbnailFilePath(createMovieThumbnailPath(userId, fileName))
+					.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.MOVIE);
+				break;
+			case MP4_VIDEO:
+				mediaBuilder
+					.filePath(createMovieFilePath(userId, fileName))
+					.thumbnailFilePath(createMovieThumbnailPath(userId, fileName))
+					.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.MOVIE);
+				break;
+			case QUICKTIME_VIDEO:
+				mediaBuilder
+					.filePath(createMovieFilePath(userId, fileName))
+					.thumbnailFilePath(createMovieThumbnailPath(userId, fileName))
+					.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.MOVIE);
+				break;
+			case WMV:
+				mediaBuilder
+					.filePath(createMovieFilePath(userId, fileName))
+					.thumbnailFilePath(createMovieThumbnailPath(userId, fileName))
+					.mediaType(org.debugroom.wedding.app.model.gallery.MediaType.MOVIE);
+				break;
+			default:			
+				throw new BusinessException("galleryContentsUploadHelper.error.0001", null, fileName);
+			}
+		}
+		return mediaBuilder.build();
+	}
+
+	private String createPhotoFilePath(String userId, String fileName){
+		return new StringBuilder()
+				.append(userId).append("/")
+				.append(galleryImageOriginalDirectory).append("/")
+				.append(fileName)
+				.toString();
+	}
 	
+	private String createMovieFilePath(String userId, String fileName){
+		return new StringBuilder()
+				.append(userId).append("/")
+				.append(galleryMovieOriginalDirectory).append("/")
+				.append(fileName)
+				.toString();
+	}
 	
+	private String createPhotoThumbnailPath(String userId, String fileName){
+		return new StringBuilder()
+				.append(userId).append("/")
+				.append(galleryImageThumbnailDirectory).append("/")
+				.append(StringUtils.substringBeforeLast(fileName, "."))
+				.append(".jpg")
+				.toString();
+	}
+	
+	private String createMovieThumbnailPath(String userId, String fileName){
+		return new StringBuilder()
+				.append(userId).append("/")
+				.append(galleryMovieThumbnailDirectory).append("/")
+				.append(StringUtils.substringBeforeLast(fileName, "."))
+				.append(".jpg")
+				.toString();
+	}
 
 }

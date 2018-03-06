@@ -234,6 +234,15 @@ public class RequestBuilder {
 		return restTemplate;
 	}
 
+	public static RestTemplate getMDCLoggableRestTemplate(String userId, String xTrack){
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+		interceptors.add(new HeaderRequestInterceptor(MDC_KEY_NAME, xTrack));
+		interceptors.add(new HeaderRequestInterceptor(HEADER_USER_ID_KEY_NAME, userId));
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.setInterceptors(interceptors);
+		return restTemplate;
+	}
+
 	public static HttpHeaders getMDCLoggableHttpHeaders(){
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(MDC_KEY_NAME, MDC.get(MDC_KEY_NAME));

@@ -386,4 +386,14 @@ public class GalleryServiceImpl implements GalleryService{
 		return movieRepository.findOne(movieId);
 	}
 
+	@Override
+	public List<Photo> getPhotographs() {
+		return photoRepository.findAll();
+	}
+
+	@Override
+	public List<Movie> getMovies() {
+		return movieRepository.findAll();
+	}
+	
 }

@@ -54,5 +54,9 @@ public interface GalleryService {
 	
 	public Movie getMovie(String movieId);
 	
+	public List<Photo> getPhotographs();
+
+	public List<Movie> getMovies();
+
 }
 

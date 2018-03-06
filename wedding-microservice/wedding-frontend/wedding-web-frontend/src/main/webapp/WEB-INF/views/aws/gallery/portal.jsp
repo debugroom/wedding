@@ -31,6 +31,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/resources/app/js/vendor/jquery/jquery.ui.widget.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/resources/app/js/vendor/jquery/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/resources/app/js/vendor/jquery/jquery.fileupload.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/sockjs-client/sockjs.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/stomp-websocket/stomp.js"></script>
 <script type="text/javascript" 
     src="${pageContext.request.contextPath}/static/resources/app/js/common/menu.js"></script>
 </head>
@@ -109,7 +111,7 @@
         </div>
 -->
         <div class="contents-panel">
-          <h3>Photo & Movie sharing</h3>
+          <h3>Photo & Movie Sharing</h3>
           <div class="left-position">
             <c:forEach items="${galleryPortalResource.folders}" var="folder" varStatus="status">
               <div id="folder-<c:out value='${folder.folderId}' />">
@@ -117,6 +119,7 @@
                     src="${pageContext.request.contextPath}/static/resources/app/img/Pictures.png" 
                     data-folder-id="<c:out value='${folder.folderId}' />" 
                     data-folder-name="<c:out value='${folder.folderName}' />" 
+                    data-request-context-path="${pageContext.request.contextPath}"
                     data-humnan-icon-url="${pageContext.request.contextPath}/static/resources/app/img/humna-icon.png" 
                     data-folder-related-users-url="${pageContext.request.contextPath}/gallery/folder/viewers/<c:out value='${folder.folderId}' />" 
                     data-folder-related-no-users-url="${pageContext.request.contextPath}/gallery/folder/no-viewers/<c:out value='${folder.folderId}' />" 

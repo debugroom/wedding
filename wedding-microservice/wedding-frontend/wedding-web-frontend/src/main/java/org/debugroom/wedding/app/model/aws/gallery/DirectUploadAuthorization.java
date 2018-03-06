@@ -25,7 +25,8 @@ public class DirectUploadAuthorization implements Serializable{
 	private String algorithm;
 	private String credential;
 	private String signature;
-	private String rawFileName;
+	private String folderId;
+	private String userId;
 	private String fileSizeLimit;
 	
 }

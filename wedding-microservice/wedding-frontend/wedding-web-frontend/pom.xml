@@ -14,6 +14,7 @@
     <org.bytedeco_javacv_version>1.3</org.bytedeco_javacv_version>
     <org.bytedeco.javacpp-presets_opencv_version>3.2.0-1.3</org.bytedeco.javacpp-presets_opencv_version>
     <org.springframework.cloud_spring-cloud-starter-aws_version>1.2.2.RELEASE</org.springframework.cloud_spring-cloud-starter-aws_version>
+    <org.springframework.cloud_spring-cloud-starter-aws-messaging_version>1.2.2.RELEASE</org.springframework.cloud_spring-cloud-starter-aws-messaging_version>
     <org.springframework.cloud_spring-cloud-context_version>1.2.2.RELEASE</org.springframework.cloud_spring-cloud-context_version>
     <com.amazonaws_aws-java-sdk-sts_version>1.11.125</com.amazonaws_aws-java-sdk-sts_version>
     <com.amazonaws_aws-java-sdk-iam_version>1.11.125</com.amazonaws_aws-java-sdk-iam_version>
@@ -42,6 +43,11 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-aws</artifactId>
       <version>${org.springframework.cloud_spring-cloud-starter-aws_version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-aws-messaging</artifactId>
+      <version>${org.springframework.cloud_spring-cloud-starter-aws-messaging_version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.cloud</groupId>

@@ -7,6 +7,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import javax.imageio.ImageIO;
@@ -17,13 +19,17 @@ import org.bytedeco.javacv.FFmpegFrameFilter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.app.model.gallery.CreateThumbnailNotification;
 import org.debugroom.wedding.app.model.gallery.MediaType;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.event.S3EventNotification;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -40,7 +46,13 @@ public class CreateThumbnailFunction implements
 	private int galleryMovieThumbnailFrameStart;
 
 	@Inject
+	ObjectMapper mapper;
+	
+	@Inject
 	AmazonS3 amazonS3;
+	
+	@Inject
+	QueueMessagingTemplate queueMessagingTemplate;
 	
 	@Override
 	public Flux<String> apply(Flux<S3EventNotification> event) {
@@ -95,7 +107,15 @@ public class CreateThumbnailFunction implements
 					
 					String newKey = createNewThumbnailObjectKey(s3Object.getKey());
 					amazonS3.putObject(s3Object.getBucketName(), newKey, inputStream, objectMetadata);
-					
+					CreateThumbnailNotification createThumbnailNotification = 
+							CreateThumbnailNotification.builder()
+							.folderId(s3Object.getObjectMetadata().getUserMetaDataOf("folder-id"))
+							.userId(s3Object.getObjectMetadata().getUserMetaDataOf("user-id"))
+							.originalObjectKey(keyName)
+							.thumbnailObjectKey(newKey)
+							.build();
+		            queueMessagingTemplate.convertAndSend("CreateThumbnailNotify", 
+		            		mapper.writeValueAsString(createThumbnailNotification));
 				log.info(new StringBuilder()
 						.append(" Thumbnail")
 						.append(newKey)

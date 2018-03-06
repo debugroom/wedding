@@ -26,6 +26,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
@@ -45,105 +46,11 @@ import org.debugroom.wedding.domain.entity.gallery.Photo;
 @EnableBatchProcessing
 public class BatchAppConfig extends DefaultBatchConfigurer{
 
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
-
-    @Autowired
-    private StepBuilderFactory stepBuilderFactory;
-
     @Bean
-    public Job job(@Qualifier("step1") Step step1, @Qualifier("step2") Step step2) {
-        return jobBuilderFactory
-        		.get("job")
-        		.listener(jobExecutionListener())
-        		.start(step1)
-        		.next(partitionStep())
-        		.build();
-    }
-
-    @Bean
-    protected Step step1(Tasklet tasklet) {
-        return stepBuilderFactory.get("step1")
-            .tasklet(downloadMediaPreProcessTasklet())
-            .build();
-    }   
-    
-    @Bean
-    protected Step partitionStep(){
-    	return stepBuilderFactory.get("partitionStep")
-    			.partitioner(step2())
-    			.partitioner("step2", partitioner(null))
-    			.taskExecutor(taskExecutor())
-    			.build();
-    }
-
-    @Bean
-    protected Step step2() {
-        return stepBuilderFactory.get("step2")
-        	.<Photo, Photo>chunk(100)
-        	.reader(photoItemReader(null))
-        	.processor(copyPhotoProcessor())
-        	.writer(createZipWriter())
-            .build();
-    }
-
-    @Bean
-    @StepScope
-    @Value("#{jobExecutionContext['downloadPhotoListFilename']}")
-    public FlatFileItemReader<Photo> photoItemReader(String downloadPhotoListFilename){
-    	FlatFileItemReader<Photo> flatFileItemReader = new FlatFileItemReader<Photo>();
-    	flatFileItemReader.setResource(
-    			new DefaultResourceLoader().getResource(downloadPhotoListFilename));
-
-    	DefaultLineMapper<Photo> defaultLineMapper = new DefaultLineMapper<Photo>();
-    	DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer();
-    	delimitedLineTokenizer.setNames(new String[]{"photoId"});
-    	defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
-    	
-    	BeanWrapperFieldSetMapper<Photo> beanWrapperFieldSetMapper =
-    			new BeanWrapperFieldSetMapper<Photo>();
-    	beanWrapperFieldSetMapper.setTargetType(Photo.class);
-    	defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
-
-    	flatFileItemReader.setLineMapper(defaultLineMapper);
-    	
-    	return flatFileItemReader;
-    }
-   
-    @Bean
-    @StepScope
-    protected ItemProcessor<Photo, Photo> copyPhotoProcessor(){
-    	return new CopyPhotoProcessor();
-    }
-
-    @Bean
-    @StepScope
-    protected ItemWriter<Photo> createZipWriter(){
-    	return new CreateZipWriter();
-    }
-
-    @Bean
-    protected JobExecutionListener jobExecutionListener(){
-    	return new LoggerListener();
-    }
-
-    @Bean
-    protected Tasklet downloadMediaPreProcessTasklet(){
-    	return new DownloadMediaPreProcessTasklet();
-    }
-
-    @Bean
-    public TaskExecutor taskExecutor(){
+    public TaskExecutor asyncTaskExecutor(){
     	SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
     	simpleAsyncTaskExecutor.setConcurrencyLimit(10);
     	return simpleAsyncTaskExecutor;
-    }
-
-    @Bean
-    @StepScope
-    @Value("#{jobExecutionContext['downloadPhotoListFilename']}")
-    public Partitioner partitioner(String downloadPhotoListFilename){
-    	return new PhotoPartitioner(downloadPhotoListFilename);
     }
 
 	@Bean

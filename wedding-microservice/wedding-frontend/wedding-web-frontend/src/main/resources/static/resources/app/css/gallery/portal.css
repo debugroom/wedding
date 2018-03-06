@@ -26,19 +26,19 @@
 }
 
 .contents-panel img{
-     width : 100px;
-    margin : 10px 5px 5px 10px;
+     width : 120px;
+    margin : 20px 5px 5px 10px;
 }
 
 .contents-panel .delete-folder-icon {
     width : 50px;
     height : 40px;
-    margin : 10px 20px 10px 0px;
+    margin : 10px 5px 5px 0px;
 }
 
 .left-position{
     display : inline-block;
-    width : 200px;
+    width : 220px;
     float : left;
 }
 
@@ -338,7 +338,7 @@
     margin: 30px 10px 10px;
 }
 
-.file-upload-button-image{
+#file-upload-button-image{
     width : 110px;
     margin: 20px;
 }

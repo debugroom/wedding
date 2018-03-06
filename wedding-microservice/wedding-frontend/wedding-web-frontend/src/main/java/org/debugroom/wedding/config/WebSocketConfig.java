@@ -17,14 +17,19 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer{
 	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("messages/broadcast", "messages/{messageBoardId}").withSockJS();
+		registry.addEndpoint("messages/broadcast", 
+				"messages/{messageBoardId}",
+				 "notifications/{folderId}")
+		.withSockJS();
 	}
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.setApplicationDestinationPrefixes(
-				new StringBuilder().append(contextPath).append("/chat").toString());
-		registry.enableSimpleBroker("/topic", "/queue");
+				new StringBuilder().append(contextPath).append("/chat").toString(),
+				new StringBuilder().append(contextPath).append("/gallery").toString()
+				);
+		registry.enableSimpleBroker("/topic", "/queue", "/notification");
 	}
 
 }

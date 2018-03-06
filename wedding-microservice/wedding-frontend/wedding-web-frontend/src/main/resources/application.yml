@@ -52,8 +52,16 @@ gallery:
       durationseconds: 864000
       limitBytes: 10000000000
       acl: private
+    download:
+      role:
+        name: wedding-gallery-download-role
+        session:
+          name: wedding-gallery-download-session
+      durationseconds: 600
 bucket:
   name: data.debugroom.org
+queue:
+  endpoint: https://sqs.ap-northeast-1.amazonaws.com/
 protocol: http
 cloud:
   aws:

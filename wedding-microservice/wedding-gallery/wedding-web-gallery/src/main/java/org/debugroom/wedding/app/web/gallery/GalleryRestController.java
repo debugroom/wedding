@@ -118,4 +118,15 @@ public class GalleryRestController {
 		return galleryService.deleteMovie(movieId);
 	}
 
+	@RequestMapping(method=RequestMethod.GET, value="/movies")
+	public List<Movie> getMovies(){
+		return galleryService.getMovies();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/photographs")
+	public List<Photo> getPhotographs(){
+		return galleryService.getPhotographs();
+	}
+
 }
+

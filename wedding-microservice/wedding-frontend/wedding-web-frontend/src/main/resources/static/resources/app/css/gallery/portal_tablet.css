@@ -26,8 +26,8 @@
 }
 
 .contents-panel img{
-     width : 54%;
-    margin : 10px 5px 5px 10px;
+     width : 100px;
+    margin : 20px 5px 5px 10px;
 }
 
 .contents-panel .delete-folder-icon {
@@ -37,7 +37,7 @@
 
 .left-position{
     display : inline-block;
-    width : 20%;
+    width : 25%;
     float : left;
 }
 
@@ -48,7 +48,7 @@
 
 .right-position{
     display : inline-block;
-    width : 80%;
+    width : 75%;
     float : right;
 }
 
@@ -339,7 +339,7 @@
     margin: 30px 10px 10px;
 }
 
-.file-upload-button-image{
+#file-upload-button-image{
     width : 110px;
     margin: 20px;
 }

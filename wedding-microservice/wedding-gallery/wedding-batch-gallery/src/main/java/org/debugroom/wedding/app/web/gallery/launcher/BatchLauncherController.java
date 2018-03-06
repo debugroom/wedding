@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -34,7 +35,8 @@ public class BatchLauncherController {
 	BatchArgsCreateHelper batchArgsCreateHelper;
 	
 	@Inject
-	Job job;
+	@Named("createZipJob")
+	Job createZipJob;
 	
 	@RequestMapping(value="/gallery/archive", method=RequestMethod.POST)
 	public String createArchiveBatch(@RequestBody DownloadMedia downloadMedia) 
@@ -50,7 +52,7 @@ public class BatchLauncherController {
 		}
 		map.put("time", new JobParameter(DateUtil.getCurrentDate()));
 		JobParameters jobParameters = new JobParameters(map);
-		JobExecution jobExecution = jobLauncher.run(job, jobParameters);
+		JobExecution jobExecution = jobLauncher.run(createZipJob, jobParameters);
 		ExecutionContext jobExecutionContext = jobExecution.getExecutionContext();
 		return jobExecutionContext.getString("accessKey");
 	}
