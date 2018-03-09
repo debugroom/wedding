@@ -33,7 +33,7 @@ function getFolderDetail(){
 	if(thumbnailPanel != null){
 		thumbnailPanel.remove();
 	}
- 	$("#delailPanel").append($('<div id="messagePanel"><span class="warning"></div>'));
+ 	$("#delailPanel").append($('<div id="messagePanel"><span class="warningMessage"></div>'));
  	$("#detailPanel").append($('<br/><span id="isMultiSelectableMessage">複数選択する場合はこちらをチェック</span><input type="checkbox" id="isMultiSelectableContents" /><br/>'));
  	$("#detailPanel").append($('<div id="thumbnailPanel"></div>'));
  	
@@ -49,51 +49,70 @@ function getFolderDetail(){
  	$("#thumbnailPanel").append($('<span id="movieDownloadMessageDisplayPanel" class="warningMessage"><br/>動画データをロードしています...</span>'));
 
  	$.get($(this).data("folderRelatedPhotographsUrl"), function(data){
- 		$("#photoDownloadMessageDisplayPanel").remove();
 		$.each(data.photographs, 
 			function(i, val){
-				$("#thumbnailPanel")
-					.prepend($('<img id="thumbnail-image-'
-							+ val.photoId
+				$.get(data.requestContextPath + "/gallery/photo/" + val.photoId + "/thumbnail", function(photo){
+					$("#thumbnailPanel")
+						.prepend($('<img id="thumbnail-image-'
+							+ photo.photoId
 							+ '" class="thumbnail-image" src="' 
-							+ val.thumbnailPresignedUrl
+							+ photo.thumbnailPresignedUrl
 							+ '" data-photo-id="' 
-							+ val.photoId
+							+ photo.photoId
 							+ '" data-photographs-url="' 
 							+ data.requestContextPath
 							+ '/gallery/photo/'
-							+ val.photoId
+							+ photo.photoId
 							+ '">'));	
+					$("#thumbnail-image-" + photo.photoId).on("click", selectContents);
+					if(i == data.photographs.length - 1){
+						$("#photoDownloadMessageDisplayPanel").remove();
+					}
+				});
 			}
 		);
-		$("[id^=thumbnail-image-]").on("click", selectContents);
+		if(data.photographs.length == 0){
+			$("#photoDownloadMessageDisplayPanel").remove();
+		}
 	});
 
  	$.get($(this).data("folderRelatedMoviesUrl"), function(data){
- 		$("#movieDownloadMessageDisplayPanel").remove();
  		$.each(data.movies,
  			function(i, val){
- 				$("#thumbnailPanel")
- 					.prepend($('<img id="thumbnail-movie-'
- 							+ val.movieId
+				$.get(data.requestContextPath + "/gallery/movie/" + val.movieId + "/thumbnail", function(movie){
+					$("#thumbnailPanel")
+ 						.prepend($('<img id="thumbnail-movie-'
+ 							+ movie.movieId
  							+ '" class="thumbnail-image" src="'
- 							+ val.thumbnailPresignedUrl
+ 							+ movie.thumbnailPresignedUrl
  							+ '" data-movie-id="'
- 							+ val.movieId
+ 							+ movie.movieId
  							+ '" data-movies-url="'
  							+ data.requestContextPath
  							+ '/gallery/movie/'
- 							+ val.movieId
+ 							+ movie.movieId
  							+ '">'));
+					$("#thumbnail-movie-" + movie.movieId).on("click", selectContents);
+					if(i == data.movies.length - 1){
+						$("#movieDownloadMessageDisplayPanel").remove();
+					}
+				});
  			}
  		);
-
-		$("[id^=thumbnail-movie-]").on("click", selectContents);
-
+ 		if(data.movies.length == 0){
+			$("#movieDownloadMessageDisplayPanel").remove();
+ 		}
+		const isIOS = /[ \(]iP/.test(navigator.userAgent);
+		if(isIOS){
+			$("#detailPanel").append($('<br/><span class="warningMessage">iOSではセキュリティ仕様により、ブラウザからの動画の保存、写真のマルチダウンロード保存ができません。データを保存する場合は、パソコンからご利用ください。</span><br/>'));
+		}
+		if(navigator.userAgent.indexOf('msie') != -1) {
+			$("#detailPanel").append($('<br/><span class="warningMessage">Internet Explorerでは、写真・動画のマルチダウンロード保存をサポートしていません。データを複数同時にダウンロードする場合は、Chrome、Firefox、Edgeをご利用ください。</span><br/>'));
+		}
 		$("#detailPanel").append($('<div class="alternative-button">' 
 				+ '<button id="download-button" class="alternative-first-button" value="' 
 				+ data.requestContextPath
-				+ "/gallery/"
+				+ "/gallery/download/"
 				+ '" disabled="true">ダウンロードする</button>'
 	 			+ '<button id="delete-button" class="alternative-last-button" value="'
 				+ data.requestContextPath
@@ -103,11 +122,12 @@ function getFolderDetail(){
 		$("#delete-button").on("click", deleteContents);
     });
 
+
 	$("#thumbnailPanel").append($('<div id="file-upload-button-image"><img id="file-upload-button" src="' 
 				+ '/static/resources/app/img/upload.png'
 				+ '" />コンテンツをアップロード</div>'));
 	$("#file-upload-button").on("click",function(){
-			$('#file-upload-input').trigger("click");
+		$('#file-upload-input').trigger("click");
     });
 	$("#thumbnailPanel").append($('<form id="file-upload-form" action="" method="post" enctype="multipart/form-data"><input type="file" id="file-upload-input" name="uploadFiles" multiple ' 
 				+ ' data-folder-id="' 
@@ -362,20 +382,25 @@ function showContentsPanel(type, contentsUrl, id){
 	if(contentsPanel){
 		contentsPanel.remove();
 	}
+	if(type == "photo"){
+		$("#thumbnail-image-" + id).before($('<div id="contentsPanel"><span id="progress-message" class="warningMessage">コンテンツをロードしています...</span></div>'));
+	} else if(type == "movie"){
+		$("#thumbnail-movie-" + id).before($('<div id="contentsPanel"><span id="progress-message" class="warningMessage">コンテンツをロードしています...</span></div>'));
+	}
 	
 	$.get(contentsUrl, function(data){
 		if(type == "photo"){
-			$("#thumbnail-image-" + id).before($('<div id="contentsPanel">'
-			+ '<img class="" src="'
+			$("#contentsPanel").append($('<img class="" src="'
 			+ data.presignedUrl
-			+ '" />'
-			+ '</div>'));
+			+ '" />'));
 		} else if(type == "movie"){
-			$("#thumbnail-movie-" + id).before($('<div id="contentsPanel">'
-			+ '<video controls ><source src="'
+			$("#contentsPanel").append($('<video controls ><source src="'
 			+ data.presignedUrl
-			+ '"/></video>'
-			+ '</div>'));
+			+ '"/></video>'));
+		}
+		var progressMessage = $("#progress-message");
+		if(progressMessage){
+			progressMessage.remove();
 		}
 	});
 
@@ -386,24 +411,29 @@ function downloadContents(){
 	if(selectedContents.length != 0){
 		var photoCount = 0;
 		var movieCount = 0;
+		const isIOS = /[ \(]iP/.test(navigator.userAgent)
 		for(var i = 0; i < selectedContents.length ; i++){
 			var photoId = $(selectedContents[i]).data("photoId");
 			var movieId = $(selectedContents[i]).data("movieId");
 			if(photoId != null){
 				$.get($(this).val() + "photo/" + photoId, function(data){
-					var link = document.createElement("a");
-					var fileSplit = data.filePath.split(/[\s/]+/)
-				    link.download = fileSplit[fileSplit.length-1];
-				    link.href = data.presignedUrl;
-				    link.click();
+					if(!isIOS){
+						var link = document.createElement("a");
+						var fileSplit = data.filePath.split(/[\s/]+/)
+						link.download = fileSplit[fileSplit.length-1];
+						link.href = data.presignedUrl;
+						link.click();
+					}else{
+						window.location.href = data.presignedUrl;
+					}
 				});
 			}else if(movieId != null){
 				$.get($(this).val() + "movie/" + movieId, function(data){
 					var link = document.createElement("a");
 					var fileSplit = data.filePath.split(/[\s/]+/)
-				    link.download = fileSplit[fileSplit.length-1];
-				    link.href = data.presignedUrl;
-				    link.click();
+					link.download = fileSplit[fileSplit.length-1];
+					link.href = data.presignedUrl;
+					link.click();
 				});
 			}
 		}

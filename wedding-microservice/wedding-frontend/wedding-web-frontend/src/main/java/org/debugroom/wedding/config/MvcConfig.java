@@ -106,7 +106,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry){
-		registry.addResourceHandler("/static/**", "/webjars/**")
+		registry.addResourceHandler("/static/**", "/webjars/**", "/favicon.ico")
 		        .addResourceLocations("classpath:/static/", 
 		        		"classpath:/META-INF/resources/webjars/")
 		        .resourceChain(false);

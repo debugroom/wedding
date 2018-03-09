@@ -174,7 +174,7 @@ public class GalleryServiceAdapterAwsController {
 						.toString(), provider)
 				.expand(folder.getFolderId()).toUri(), Photo[].class);
 		photoSearchResult.setPhotographs(Arrays.asList(photographs));
-		downloadHelper.setPhotoThumbnailPresignedUrls(photoSearchResult.getPhotographs());
+//		downloadHelper.setPhotoThumbnailPresignedUrls(photoSearchResult.getPhotographs());
 		photoSearchResult.setRequestContextPath(contextPath);
 		return ResponseEntity.status(HttpStatus.OK).body(photoSearchResult);
 
@@ -204,7 +204,7 @@ public class GalleryServiceAdapterAwsController {
 						.toString(), provider)
 				.expand(folder.getFolderId()).toUri(), Movie[].class);
 		movieSearchResult.setMovies(Arrays.asList(movies));
-		downloadHelper.setMovieThumbnailPresignedUrls(movieSearchResult.getMovies());
+//		downloadHelper.setMovieThumbnailPresignedUrls(movieSearchResult.getMovies());
 		movieSearchResult.setRequestContextPath(contextPath);
 		return ResponseEntity.status(HttpStatus.OK).body(movieSearchResult);
 		
@@ -228,6 +228,24 @@ public class GalleryServiceAdapterAwsController {
 		return ResponseEntity.status(HttpStatus.OK).body(target);
 	}
  
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/photo/{photoId:[0-9]+}/thumbnail")
+	public ResponseEntity<Photo> getPhotoThumbnail(@Validated Photo photo, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "gallery";
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
+		Photo target = restTemplate.getForObject( 
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/photo/{photoId}")
+						.toString(), provider)
+				.expand(photo.getPhotoId()).toUri(), Photo.class);
+		target.setThumbnailPresignedUrl(downloadHelper.getPresignedUrl(target.getThumbnailFilePath()).toString());
+		return ResponseEntity.status(HttpStatus.OK).body(target);
+	}
+
 	@RequestMapping(method=RequestMethod.GET, value="/gallery/movie/{movieId:[0-9]+}")
 	public ResponseEntity<Movie> getMovie(@Validated Movie movie, BindingResult bindingResult){
 		if(bindingResult.hasErrors()){
@@ -243,6 +261,60 @@ public class GalleryServiceAdapterAwsController {
 						.toString(), provider)
 				.expand(movie.getMovieId()).toUri(), Movie.class);
 		target.setPresignedUrl(downloadHelper.getPresignedUrl(target.getFilePath()).toString());
+		return ResponseEntity.status(HttpStatus.OK).body(target);
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/movie/{movieId:[0-9]+}/thumbnail")
+	public ResponseEntity<Movie> getMovieThumbnail(@Validated Movie movie, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "gallery";
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
+		Movie target = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/movie/{movieId}")
+						.toString(), provider)
+				.expand(movie.getMovieId()).toUri(), Movie.class);
+		target.setThumbnailPresignedUrl(downloadHelper.getPresignedUrl(target.getThumbnailFilePath()).toString());
+		return ResponseEntity.status(HttpStatus.OK).body(target);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/download/photo/{photoId:[0-9]+}")
+	public ResponseEntity<Photo> getDownloadPhoto(@Validated Photo photo, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "gallery";
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
+		Photo target = restTemplate.getForObject( 
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/photo/{photoId}")
+						.toString(), provider)
+				.expand(photo.getPhotoId()).toUri(), Photo.class);
+		target.setPresignedUrl(downloadHelper.getDownloadPresignedUrl(target.getFilePath()).toString());
+		return ResponseEntity.status(HttpStatus.OK).body(target);
+	}
+ 
+	@RequestMapping(method=RequestMethod.GET, value="/gallery/download/movie/{movieId:[0-9]+}")
+	public ResponseEntity<Movie> getDownloadMovie(@Validated Movie movie, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return ResponseEntity.badRequest().body(null);
+		}
+		String serviceName = "gallery";
+		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
+		Movie target = restTemplate.getForObject(
+				RequestBuilder.buildUriComponents(serviceName, 
+						new StringBuilder()
+						.append(APP_NAME)
+						.append("/movie/{movieId}")
+						.toString(), provider)
+				.expand(movie.getMovieId()).toUri(), Movie.class);
+		target.setPresignedUrl(downloadHelper.getDownloadPresignedUrl(target.getFilePath()).toString());
 		return ResponseEntity.status(HttpStatus.OK).body(target);
 	}
 

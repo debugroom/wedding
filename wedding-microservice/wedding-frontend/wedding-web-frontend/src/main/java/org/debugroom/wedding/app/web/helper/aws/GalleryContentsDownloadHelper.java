@@ -6,12 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.debugroom.wedding.app.model.aws.gallery.Movie;
 import org.debugroom.wedding.app.model.aws.gallery.Photo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
 import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
 import com.amazonaws.auth.policy.Policy;
@@ -23,6 +25,8 @@ import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientB
 import com.amazonaws.services.identitymanagement.model.GetRoleRequest;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
 
 @Component
 public class GalleryContentsDownloadHelper implements InitializingBean{
@@ -67,6 +71,38 @@ public class GalleryContentsDownloadHelper implements InitializingBean{
 				.append("/")
 				.append(filePath)
 				.toString();
+		AmazonS3 amazonS3 = getS3ClientWithDownloadPolicy(objectKey);
+		Date expiration = Date.from(ZonedDateTime.now().plusSeconds(durationseconds).toInstant());
+		return amazonS3.generatePresignedUrl(bucketName, objectKey, expiration);
+	}
+	
+	public URL getDownloadPresignedUrl(String filePath){
+		
+		String objectKey = new StringBuilder()
+				.append(galleryRootDirectory)
+				.append("/")
+				.append(filePath)
+				.toString();
+		AmazonS3 amazonS3 = getS3ClientWithDownloadPolicy(objectKey);
+		Date expiration = Date.from(ZonedDateTime.now().plusSeconds(durationseconds).toInstant());
+		
+		ResponseHeaderOverrides responseHeaders = new ResponseHeaderOverrides();
+        responseHeaders.withContentDisposition(new StringBuilder()
+        		.append("attachment;filename=")
+        		.append(StringUtils.substringAfterLast(filePath, "/"))
+        		.toString());
+        
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = 
+        		new GeneratePresignedUrlRequest(bucketName, objectKey, HttpMethod.GET);
+        generatePresignedUrlRequest.withExpiration(expiration);
+        generatePresignedUrlRequest.withResponseHeaders(responseHeaders);
+        
+        return amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+
+	}
+	
+	private AmazonS3 getS3ClientWithDownloadPolicy(String objectKey){
+
 		//アクセスするリソース(ダウンロードするS3オブジェクト)のARNを作成
 		String resourceArn = new StringBuilder()
 				.append(RESOURCE_ARN_PREFIX)
@@ -82,7 +118,7 @@ public class GalleryContentsDownloadHelper implements InitializingBean{
 		String iamPolicy = new Policy().withStatements(statement).toJson();
 		
 		// 作成したポリシーを指定したS3クライアントを作成する。
-		AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard()
+		return AmazonS3ClientBuilder.standard()
 				.withCredentials(new STSAssumeRoleSessionCredentialsProvider
 						.Builder(roleArn, roleSessionName)
 						.withRoleSessionDurationSeconds(
@@ -90,9 +126,6 @@ public class GalleryContentsDownloadHelper implements InitializingBean{
 						.withScopeDownPolicy(iamPolicy)
 						.build())
 				.build();
-		
-		Date expiration = Date.from(ZonedDateTime.now().plusSeconds(durationseconds).toInstant());
-		return amazonS3.generatePresignedUrl(bucketName, objectKey, expiration);
 	}
 
 	@Override
