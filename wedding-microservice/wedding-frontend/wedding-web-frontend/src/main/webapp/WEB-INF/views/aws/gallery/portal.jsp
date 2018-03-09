@@ -44,7 +44,6 @@
   <div id="flex-container">
     <div class="flex-item-2">
       <article>
-<!--  
         <div class="gallery-panel">
           <c:if test="${!empty galleryPortalResource.randomPhotographs}">
           <div class="slider-pro" id="my-slider">
@@ -109,9 +108,9 @@
           </video>
           <video src="/gallery/movie/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}"></video>
         </div>
--->
+
         <div class="contents-panel">
-          <h3>Photo & Movie Sharing</h3>
+          <h3>Image and Video Sharing</h3>
           <div class="left-position">
             <c:forEach items="${galleryPortalResource.folders}" var="folder" varStatus="status">
               <div id="folder-<c:out value='${folder.folderId}' />">
