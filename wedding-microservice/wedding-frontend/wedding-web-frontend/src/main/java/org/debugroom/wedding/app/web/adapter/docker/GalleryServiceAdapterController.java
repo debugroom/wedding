@@ -314,52 +314,7 @@ public class GalleryServiceAdapterController {
 		return new ResponseEntity<List<String>>(exception.getMessages(), 
 				HttpStatus.BAD_REQUEST);
 	}
-	
-	@RequestMapping(method=RequestMethod.GET, 
-			value="/gallery/movie/{movieId:[0-9]+}/{fileName:[.a-zA-Z0-9]+}")
-	public String getMovie(
-			@Validated Movie movie, @PathVariable String fileName, BindingResult bindingResult){
-		if(bindingResult.hasErrors()){
-			return "common/error";
-		}
-		String serviceName = "gallery-distribution";
-		return new StringBuilder().append("redirect:")
-				.append(RequestBuilder.buildUriComponents(serviceName, 
-						new StringBuilder()
-						.append(APP_NAME)
-						.append("/movie/preview/{movieId}/")
-						.append(fileName)
-						.toString(), provider)
-						.expand(movie.getMovieId()).toString())
-				.toString();
-	} 
-	
-	@RequestMapping(method=RequestMethod.GET, 
-			value="/gallery/movie-thumbnail/{movieId:[0-9]+}",
-			produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE})
-	@ResponseBody
-	public ResponseEntity<BufferedImage> getMovieThumbnail(
-			@Validated Movie movie, BindingResult bindingResult){
-		if(bindingResult.hasErrors()){
-			return ResponseEntity.badRequest().body(null);
-		}
-		String serviceName = "gallery";
-		RestTemplate restTemplate = RequestBuilder.getMDCLoggableRestTemplate();
-		Movie target = restTemplate.getForObject(
-				RequestBuilder.buildUriComponents(serviceName, 
-						new StringBuilder()
-						.append(APP_NAME)
-						.append("/movie/{movieId}")
-						.toString(), provider)
-				.expand(movie.getMovieId()).toUri(), Movie.class);
-		BufferedImage image = null;
-		try {
-			image = downloadHelper.getGalleryThumbnailImage(target);
-		} catch(BusinessException e){
-			return ResponseEntity.badRequest().body(null);
-		}
-		return ResponseEntity.ok().body(image);
-	}
+
 
 	private URI getFrontendServerUri(){
 		String serviceName = "frontend";
@@ -370,4 +325,5 @@ public class GalleryServiceAdapterController {
 								.build();
 		return uriComponents.toUri();
 	}
+
 }

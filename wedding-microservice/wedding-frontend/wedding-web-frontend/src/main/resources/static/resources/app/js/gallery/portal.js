@@ -22,7 +22,7 @@ jQuery("#new-folder").on("click", function(){
 	$("#submit-folder-button").on("click", createFolder);
 	
 });
-jQuery("[id^=delete-folder-icon-]").on("click", displayModalWindow);
+jQuery("[id^=delete-folder-icon-]").on("click", displayDeleteFolderModalWindow);
 jQuery("#video_player a").on("click", handler);
 
 function showFolderPanel(isNew, imageFolderIconUrl, viewersUrl, noViewersUrl, folderUrl){
@@ -192,7 +192,7 @@ function updateFolderIcon(data){
 				+ '<br/></div>'));
 		$("#folder-" + data.folder.folderId).append("<p>" + data.folder.folderName + "</p>");
 		$("#folder-icon-" + data.folder.folderId).on("click", getFolderDetail);
-		$("#delete-folder-icon-" + data.folder.folderId).on("click", displayModalWindow);
+		$("#delete-folder-icon-" + data.folder.folderId).on("click", displayDeleteFolderModalWindow);
 		clearFormPanel();
 }
 
@@ -427,6 +427,10 @@ function deleteContents(){
 		    	if(contentsPanel){
 		    		contentsPanel.remove();
 		    	}
+		    	var modalPanel = $("#delete-contents-modal-panel");
+		    	if(modalPanel){
+		    		clearDeleteContentsModalPanel();
+		    	}
 	    	},
 	    	function(data){
 	    		$(".errorMessage").remove();
@@ -435,6 +439,10 @@ function deleteContents(){
 	    					+ message
 	    					+ '</span>'));
 	    		});
+		    	var modalPanel = $("#delete-contents-modal-panel");
+		    	if(modalPanel){
+		    		clearDeleteContentsModalPanel();
+		    	}
 	    	}
 	    );
 	}	
@@ -478,7 +486,34 @@ function clearFormPanel(){
 	$("#folderFormPanel").remove();
 }
 
-function displayModalWindow(){
+function displayDeleteContentsModalWindow(){
+	var deleteContentsModalPanel = $("#delete-contents-modal-panel");
+	if(deleteContentsModalPanel != null){
+		deleteContentsModalPanel.remove();
+	}
+	var deleteIcon = $(this);
+	$("#new-folder").after($('<div id="delete-contents-modal-panel">'
+			            + 	'<p>コンテンツを削除してよろしいですか？</p>'
+						+   '<div class="alternative-button">'
+						+     '<button id="delete-contents-button" value="'+ deleteIcon.val() + '" class="alternative-first-button" type="button" >コンテンツを削除</button>'
+						+     '<button id="modalPanel-close-button" class="alternative-last-button" type="button" >キャンセル</button>'
+						+   '</div>'
+						+'</div>'));
+	$("#delete-contents-button").on("click", deleteContents);
+	$(this).blur();	
+	if($("#modal-overlay")[0]) $("#modal-overlay").remove() ;
+	$("body").append('<div id="modal-overlay"></div>');
+	$("#modal-overlay").fadeIn("slow");
+	centeringDeleteContentsModalSyncer() ;
+	$("#delete-contents-modal-panel").fadeIn("slow");
+	$("#modal-overlay, #modalPanel-close-button").on("click", clearDeleteContentsModalPanel);
+}
+
+function displayDeleteFolderModalWindow(){
+	var modalPanel = $("#modal-panel");
+	if(modalPanel != null){
+		modalPanel.remove();
+	}
 	var deleteIcon = $(this);
 	$("#new-folder").after($('<div id="modal-panel">'
 			            + 	'<p>フォルダを削除してよろしいですか？</p>'
@@ -497,11 +532,29 @@ function displayModalWindow(){
 	$("#modal-overlay, #modalPanel-close-button").on("click", clearModalPanel);
 }
 
+function clearDeleteContentsModalPanel(){
+	$("#delete-contents-modal-panel,#modal-overlay").fadeOut("slow",function(){
+		$("#modal-overlay").remove();
+		$("#delete-contents-modal-panel").remove();
+	});
+}
+
 function clearModalPanel(){
 	$("#modal-panel,#modal-overlay").fadeOut("slow",function(){
 		$("#modal-overlay").remove();
 		$("#modal-panel").remove();
 	});
+}
+
+function centeringDeleteContentsModalSyncer(){
+	var w = $(window).width();
+	var h = $(window).height();
+	var cw = $( "#delete-contents-modal-panel" ).outerWidth();
+	var ch = $( "#delete-contents-modal-panel" ).outerHeight();
+	var pxleft = ((w - cw) / 2 );
+	var pxtop  = ((h - ch) / 5 * 2);
+	$("#delete-contents-modal-panel").css({"left": pxleft + "px"});
+	$("#delete-contents-modal-panel").css({"top": pxtop + "px"});
 }
 
 function centeringModalSyncer(){

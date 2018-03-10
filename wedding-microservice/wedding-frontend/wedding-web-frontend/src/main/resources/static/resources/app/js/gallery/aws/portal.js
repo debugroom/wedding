@@ -119,7 +119,7 @@ function getFolderDetail(){
 				+ "/gallery/media"
 	 			+'" disabled="true">削除する</button></div>'));
 		$("#download-button").on("click", downloadContents);
-		$("#delete-button").on("click", deleteContents);
+		$("#delete-button").on("click", displayDeleteContentsModalWindow);
     });
 
 

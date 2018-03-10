@@ -90,6 +90,7 @@
             </figure>
           </div>
           </c:if>
+<!--  
           <video id="my-video" class="video-js" controls preload="auto" width="640" height="264" 
             poster="${pageContext.request.contextPath}/gallery/movie-thumbnail/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].thumbnailFilePath, '.')}" 
             data-setup='{ "controlBar": { "muteToggle": false } }'>
@@ -107,6 +108,7 @@
             </p>
           </video>
           <video src="/gallery/movie/${galleryPortalResource.randomMovies[0].movieId}/xxx.${fn:substringAfter(galleryPortalResource.randomMovies[0].filePath, '.')}"></video>
+-->
         </div>
 
         <div class="contents-panel">
