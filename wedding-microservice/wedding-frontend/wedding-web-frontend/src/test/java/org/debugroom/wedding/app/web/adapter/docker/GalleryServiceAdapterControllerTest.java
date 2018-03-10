@@ -35,24 +35,24 @@ import java.util.List;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.ResultActions.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = WebApp.class)
-@WebAppConfiguration
-@ActiveProfiles({"test", "jpa"})
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@SpringBootTest(classes = WebApp.class)
+//@WebAppConfiguration
+//@ActiveProfiles({"test", "jpa"})
 @Slf4j
 public class GalleryServiceAdapterControllerTest {
 
-	@Autowired
+//	@Autowired
 	WebApplicationContext context;
 	
 	MockMvc mockMvc;
 	
-	@Before
+//	@Before
 	public void setUpMockMvc(){
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 	}
 
-	@Test
+//	@Test
 	public void dummy(){}
 
 //	@Test
