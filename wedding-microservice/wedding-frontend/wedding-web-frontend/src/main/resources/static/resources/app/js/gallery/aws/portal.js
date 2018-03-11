@@ -102,44 +102,45 @@ function getFolderDetail(){
  		if(data.movies.length == 0){
 			$("#movieDownloadMessageDisplayPanel").remove();
  		}
-		const isIOS = /[ \(]iP/.test(navigator.userAgent);
-		if(isIOS){
-			$("#detailPanel").append($('<br/><span class="warningMessage">iOSではセキュリティ仕様により、ブラウザからの動画の保存、写真のマルチダウンロード保存ができません。データを保存する場合は、パソコンからご利用ください。</span><br/>'));
-		}
-		if(navigator.userAgent.indexOf('msie') != -1) {
-			$("#detailPanel").append($('<br/><span class="warningMessage">Internet Explorerでは、写真・動画のマルチダウンロード保存をサポートしていません。データを複数同時にダウンロードする場合は、Chrome、Firefox、Edgeをご利用ください。</span><br/>'));
-		}
-		$("#detailPanel").append($('<div class="alternative-button">' 
-				+ '<button id="download-button" class="alternative-first-button" value="' 
-				+ data.requestContextPath
-				+ "/gallery/download/"
-				+ '" disabled="true">ダウンロードする</button>'
-	 			+ '<button id="delete-button" class="alternative-last-button" value="'
-				+ data.requestContextPath
-				+ "/gallery/media"
-	 			+'" disabled="true">削除する</button></div>'));
-		$("#download-button").on("click", downloadContents);
-		$("#delete-button").on("click", displayDeleteContentsModalWindow);
+    });
+	const isIOS = /[ \(]iP/.test(navigator.userAgent);
+	if(isIOS){
+		$("#detailPanel").append($('<br/><span class="warningMessage">iOSではセキュリティ仕様により、ブラウザからの動画の保存、写真のマルチダウンロード保存ができません。データを保存する場合は、パソコンからご利用ください。</span><br/>'));
+	}
+	if(navigator.userAgent.indexOf('msie') != -1) {
+		$("#detailPanel").append($('<br/><span class="warningMessage">Internet Explorerでは、写真・動画のマルチダウンロード保存をサポートしていません。データを複数同時にダウンロードする場合は、Chrome、Firefox、Edgeをご利用ください。</span><br/>'));
+	}
+	$("#detailPanel").append($('<div class="alternative-button">' 
+			+ '<button id="download-button" class="alternative-first-button" value="' 
+			+ $(this).data("requestContextPath")
+			+ "/gallery/download/"
+			+ '" disabled="true">ダウンロードする</button>'
+ 			+ '<button id="delete-button" class="alternative-last-button" value="'
+			+ $(this).data("requestContextPath")
+			+ "/gallery/media"
+ 			+'" disabled="true">削除する</button></div>'));
+	$("#download-button").on("click", downloadContents);
+	$("#delete-button").on("click", displayDeleteContentsModalWindow);
 
-		$("#thumbnailPanel").append($('<div id="file-upload-button-image"><img id="file-upload-button" src="' 
-				+ data.requestContextPath
+	$("#thumbnailPanel").append($('<div id="file-upload-button-image"><img id="file-upload-button" src="' 
+			+ $(this).data("requestContextPath")
 				+ '/static/resources/app/img/upload.png'
 				+ '" />コンテンツをアップロード</div>'));
 		$("#file-upload-button").on("click",function(){
 			$('#file-upload-input').trigger("click");
 		});
 
-		$("#thumbnailPanel").append($('<form id="file-upload-form" action="" method="post" enctype="multipart/form-data"><input type="file" id="file-upload-input" name="uploadFiles" multiple ' 
+
+	$("#thumbnailPanel").append($('<form id="file-upload-form" action="" method="post" enctype="multipart/form-data"><input type="file" id="file-upload-input" name="uploadFiles" multiple ' 
 				+ ' data-folder-id="' 
 				+ $(this).data("folderId")
 				+ '" data-authorization-url="' 
-				+ data.requestContextPath
+				+ $(this).data("requestContextPath")
 				+ '/gallery/upload/authorization/'
 				+ $(this).data("folderId")
 				+ '" /></form>'));
-		$("#file-upload-form").on("click", uploadFiles);
+	$("#file-upload-form").on("click", uploadFiles);
 
-    });
 }
 
 function uploadFiles(){
