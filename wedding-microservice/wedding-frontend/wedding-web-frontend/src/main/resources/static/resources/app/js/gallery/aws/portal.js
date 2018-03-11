@@ -125,12 +125,11 @@ function getFolderDetail(){
 				+ data.requestContextPath
 				+ '/static/resources/app/img/upload.png'
 				+ '" />コンテンツをアップロード</div>'));
+		$("#file-upload-button").on("click",function(){
+			$('#file-upload-input').trigger("click");
+		});
     });
 
-
-	$("#file-upload-button").on("click",function(){
-		$('#file-upload-input').trigger("click");
-    });
 	$("#thumbnailPanel").append($('<form id="file-upload-form" action="" method="post" enctype="multipart/form-data"><input type="file" id="file-upload-input" name="uploadFiles" multiple ' 
 				+ ' data-folder-id="' 
 				+ $(this).data("folderId")
