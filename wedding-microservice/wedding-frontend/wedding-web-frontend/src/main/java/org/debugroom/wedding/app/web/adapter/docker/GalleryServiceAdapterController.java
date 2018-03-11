@@ -194,7 +194,7 @@ public class GalleryServiceAdapterController {
 						.append(APP_NAME)
 						.append("/folder/new")
 						.toString(), provider).toUri(), createFolderForm, Folder.class));
-		createFolderResult.setRequestContextPath(getFrontendServerUri().toString());
+		createFolderResult.setRequestContextPath(contextPath);
 		return ResponseEntity.status(HttpStatus.OK).body(createFolderResult);
 	}
 
@@ -229,7 +229,7 @@ public class GalleryServiceAdapterController {
 				.expand(updateFolderForm.getFolder().getFolderId()).toUri(),
 				HttpMethod.PUT, new HttpEntity<UpdateFolderForm>(updateFolderForm), 
 				Folder.class).getBody());
-		updateFolderResult.setRequestContextPath(getFrontendServerUri().toString());
+		updateFolderResult.setRequestContextPath(contextPath);
 		return ResponseEntity.status(HttpStatus.OK).body(updateFolderResult);
 	}
 
@@ -315,15 +315,5 @@ public class GalleryServiceAdapterController {
 				HttpStatus.BAD_REQUEST);
 	}
 
-
-	private URI getFrontendServerUri(){
-		String serviceName = "frontend";
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-		UriComponents uriComponents = uriComponentsBuilder.scheme(PROTOCOL)
-								.host(provider.getIpAddr(serviceName))
-								.port(provider.getPort(serviceName))
-								.build();
-		return uriComponents.toUri();
-	}
 
 }

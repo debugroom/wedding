@@ -120,12 +120,14 @@ function getFolderDetail(){
 	 			+'" disabled="true">削除する</button></div>'));
 		$("#download-button").on("click", downloadContents);
 		$("#delete-button").on("click", displayDeleteContentsModalWindow);
+
+		$("#thumbnailPanel").append($('<div id="file-upload-button-image"><img id="file-upload-button" src="' 
+				+ data.requestContextPath
+				+ '/static/resources/app/img/upload.png'
+				+ '" />コンテンツをアップロード</div>'));
     });
 
 
-	$("#thumbnailPanel").append($('<div id="file-upload-button-image"><img id="file-upload-button" src="' 
-				+ '/static/resources/app/img/upload.png'
-				+ '" />コンテンツをアップロード</div>'));
 	$("#file-upload-button").on("click",function(){
 		$('#file-upload-input').trigger("click");
     });
