@@ -128,17 +128,18 @@ function getFolderDetail(){
 		$("#file-upload-button").on("click",function(){
 			$('#file-upload-input').trigger("click");
 		});
-    });
 
-	$("#thumbnailPanel").append($('<form id="file-upload-form" action="" method="post" enctype="multipart/form-data"><input type="file" id="file-upload-input" name="uploadFiles" multiple ' 
+		$("#thumbnailPanel").append($('<form id="file-upload-form" action="" method="post" enctype="multipart/form-data"><input type="file" id="file-upload-input" name="uploadFiles" multiple ' 
 				+ ' data-folder-id="' 
 				+ $(this).data("folderId")
 				+ '" data-authorization-url="' 
+				+ data.requestContextPath
 				+ '/gallery/upload/authorization/'
 				+ $(this).data("folderId")
 				+ '" /></form>'));
-	$("#file-upload-form").on("click", uploadFiles);
+		$("#file-upload-form").on("click", uploadFiles);
 
+    });
 }
 
 function uploadFiles(){
