@@ -166,6 +166,8 @@ function updateFolderIcon(data){
 				+ data.folder.folderId
 				+ '" data-folder-id="' 
 				+ data.folder.folderId
+				+ '" data-request-context-path="' 
+				+ data.requestContextPath
 				+ '" data-folder-name="' 
 				+ data.folder.folderName
 				+ '" data-folder-related-photographs-url="' 
