@@ -105,7 +105,8 @@ public class CreateThumbnailFunction implements
 					ObjectMetadata objectMetadata = new ObjectMetadata();
 					objectMetadata.setContentLength(outputStream.size());
 					
-					String newKey = createNewThumbnailObjectKey(s3Object.getKey());
+					String newKey = createNewThumbnailObjectKey(s3Object.getKey(),
+							s3Object.getObjectMetadata().getUserMetaDataOf("user-id"));
 					amazonS3.putObject(s3Object.getBucketName(), newKey, inputStream, objectMetadata);
 					CreateThumbnailNotification createThumbnailNotification = 
 							CreateThumbnailNotification.builder()
@@ -117,7 +118,7 @@ public class CreateThumbnailFunction implements
 		            queueMessagingTemplate.convertAndSend("CreateThumbnailNotify", 
 		            		mapper.writeValueAsString(createThumbnailNotification));
 				log.info(new StringBuilder()
-						.append(" Thumbnail")
+						.append(" Thumbnail ")
 						.append(newKey)
 						.append(" created.")
 						.toString());
@@ -153,11 +154,12 @@ public class CreateThumbnailFunction implements
 				.toString());
 	}
 
-	private String createNewThumbnailObjectKey(String keyName){
-		String newTempKeyPath = StringUtils.substringBeforeLast(keyName, "/");
+	private String createNewThumbnailObjectKey(String keyName, String userId){
+		String newTempKeyPath = StringUtils.substringBeforeLast(
+				StringUtils.substringBeforeLast(keyName, "/"), "/");
 		String newKeyPath = new StringBuilder()
 				.append(StringUtils.substringBeforeLast(newTempKeyPath, "/"))
-				.append("/thumbnail").toString();
+				.append("/thumbnail/").append(userId).toString();
 		String newTempObjectKey = StringUtils.substringAfterLast(keyName, "/");
 		String newObjectKeyName = new StringBuilder()
 				.append(StringUtils.substringBeforeLast(newTempObjectKey, "."))

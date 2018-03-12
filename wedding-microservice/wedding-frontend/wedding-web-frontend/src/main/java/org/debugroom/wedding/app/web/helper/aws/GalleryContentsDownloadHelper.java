@@ -34,8 +34,10 @@ public class GalleryContentsDownloadHelper implements InitializingBean{
 	private static final String RESOURCE_ARN_PREFIX = "arn:aws:s3:::";
 	private static final int STS_MIN_DURATION_MINUTES = 15;
 
-	@Value("${bucket.name}")
-	private String bucketName;
+//	@Value("${bucket.name}")
+//	private String bucketName;
+	@Value("${gallery.bucket.name}")
+	private String galleryBucketName;
 	@Value("${gallery.root.directory}")
 	private String galleryRootDirectory;
 	@Value("${cloud.aws.credentials.accessKey}")
@@ -73,7 +75,8 @@ public class GalleryContentsDownloadHelper implements InitializingBean{
 				.toString();
 		AmazonS3 amazonS3 = getS3ClientWithDownloadPolicy(objectKey);
 		Date expiration = Date.from(ZonedDateTime.now().plusSeconds(durationseconds).toInstant());
-		return amazonS3.generatePresignedUrl(bucketName, objectKey, expiration);
+//		return amazonS3.generatePresignedUrl(bucketName, objectKey, expiration);
+		return amazonS3.generatePresignedUrl(galleryBucketName, objectKey, expiration);
 	}
 	
 	public URL getDownloadPresignedUrl(String filePath){
@@ -93,7 +96,8 @@ public class GalleryContentsDownloadHelper implements InitializingBean{
         		.toString());
         
         GeneratePresignedUrlRequest generatePresignedUrlRequest = 
-        		new GeneratePresignedUrlRequest(bucketName, objectKey, HttpMethod.GET);
+//        		new GeneratePresignedUrlRequest(bucketName, objectKey, HttpMethod.GET);
+        		new GeneratePresignedUrlRequest(galleryBucketName, objectKey, HttpMethod.GET);
         generatePresignedUrlRequest.withExpiration(expiration);
         generatePresignedUrlRequest.withResponseHeaders(responseHeaders);
         
@@ -106,7 +110,8 @@ public class GalleryContentsDownloadHelper implements InitializingBean{
 		//アクセスするリソース(ダウンロードするS3オブジェクト)のARNを作成
 		String resourceArn = new StringBuilder()
 				.append(RESOURCE_ARN_PREFIX)
-				.append(bucketName)
+//				.append(bucketName)
+				.append(galleryBucketName)
 				.append("/")
 				.append(objectKey)
 				.toString();

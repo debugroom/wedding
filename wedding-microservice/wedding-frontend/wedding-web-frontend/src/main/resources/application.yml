@@ -17,8 +17,10 @@ info:
   root:
     directory: wedding/info
 gallery:
-  root:
+  portal:
     directory: wedding/gallery
+  bucket:
+    name: debugroom-wedding-gallery
   image:
     original:
       directory: image/original

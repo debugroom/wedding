@@ -54,8 +54,11 @@ public class GalleryServiceAdapterAwsController {
 	@Value("${gallery.distribution.server}")
 	private String distributionServerUrl;
 
-	@Value("${gallery.root.directory}")
-	private String galleryRootPath;
+//	@Value("${gallery.root.directory}")
+//	private String galleryRootPath;
+	@Value("${gallery.portal.directory}")
+	private String galleryPortalPath;
+	
 	
 	@Value("${server.contextPath}")
 	private String contextPath;
@@ -80,7 +83,7 @@ public class GalleryServiceAdapterAwsController {
 			@AuthenticationPrincipal CustomUserDetails customUserDetails){
 		model.addAttribute("awsResource", AwsResource.builder()
 				.distributionServerUrl(distributionServerUrl)
-				.galleryRootPath(galleryRootPath)
+				.galleryRootPath(galleryPortalPath)
 				.build());
 		return new StringBuilder(PATH_PREFIX)
 				.append(parentController.gallery(userId, model, customUserDetails))

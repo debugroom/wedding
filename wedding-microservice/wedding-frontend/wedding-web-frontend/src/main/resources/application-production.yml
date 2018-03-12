@@ -21,7 +21,7 @@ info:
     directory: wedding/information
 gallery:
   root:
-    directory: wedding/gallery
+    directory: production
   distribution:
     server: http://data.debugroom.org.s3.amazonaws.com
 cloud:

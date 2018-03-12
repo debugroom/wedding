@@ -9,6 +9,7 @@ function getFolderDetail(){
 	if(detailPanel != null){
 		detailPanel.remove();
 	}
+	const isIOS = /[ \(]iP/.test(navigator.userAgent);
  	$(".contents-panel").append($('<div id="detailPanel" class="right-position"><h4>フォルダ：'
 								+ $(this).data("folderName") + '</h4>'
 								+ '現在このフォルダは、<a id="hyper-link-get-users" data-get-users-url="' 
@@ -103,7 +104,6 @@ function getFolderDetail(){
 			$("#movieDownloadMessageDisplayPanel").remove();
  		}
     });
-	const isIOS = /[ \(]iP/.test(navigator.userAgent);
 	if(isIOS){
 		$("#detailPanel").append($('<br/><span class="warningMessage">iOSではセキュリティ仕様により、ブラウザからの動画の保存、写真のマルチダウンロード保存ができません。データを保存する場合は、パソコンからご利用ください。</span><br/>'));
 	}

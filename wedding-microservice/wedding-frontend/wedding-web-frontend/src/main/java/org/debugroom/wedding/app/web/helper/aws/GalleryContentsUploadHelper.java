@@ -73,8 +73,10 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 	private String roleName;
 	@Value("${gallery.aws.upload.role.session.name}")
 	private String roleSessionName;
-	@Value("${bucket.name}")
-	private String bucketName;
+//	@Value("${bucket.name}")
+//	private String bucketName;
+    @Value("${gallery.bucket.name}")
+	private String galleryBucketName;
 	@Value("${cloud.aws.credentials.accessKey}")
 	private String accessKey;
 	@Value("${cloud.aws.credentials.secretKey}")
@@ -105,6 +107,7 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 	ResourcePatternResolver resourcePatternResolver;
 	
 	public String createImageDirectUploadDirectories(String userId){
+        /*
 		String s3UploadBucket = new StringBuilder()
 				.append(S3_BUCKET_PREFIX)
 				.append(bucketName)
@@ -124,9 +127,22 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 				.append("/")
 				.append(galleryImageThumbnailDirectory)
 				.toString();
+        */
+		String s3UploadBucket = new StringBuilder()
+				.append(S3_BUCKET_PREFIX)
+				.append(galleryBucketName).append("/")
+				.toString();
+		String uploadDirectory = new StringBuilder()
+				.append(galleryRootDirectory).append("/")
+				.append(galleryImageOriginalDirectory).append("/")
+				.append(userId)
+				.toString();
+		String thumbnailDirectory = new StringBuilder()
+				.append(galleryRootDirectory).append("/")
+				.append(galleryImageThumbnailDirectory).append("/")
+				.toString();
 		if(!existsDirectory(new StringBuilder()
-				.append(s3UploadBucket).append(uploadRootDirectory).toString())){
-			createDirectory(uploadRootDirectory);
+				.append(s3UploadBucket).append(uploadDirectory).toString())){
 			createDirectory(uploadDirectory);
 			createDirectory(thumbnailDirectory);
 		}
@@ -134,6 +150,7 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 	}
 	
 	public String createMovieDirectUploadDirectories(String userId){
+		/*
 		String s3UploadBucket = new StringBuilder()
 				.append(S3_BUCKET_PREFIX)
 				.append(bucketName)
@@ -153,9 +170,23 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 				.append("/")
 				.append(galleryMovieThumbnailDirectory)
 				.toString();
+		 */
+		String s3UploadBucket = new StringBuilder()
+				.append(S3_BUCKET_PREFIX)
+				.append(galleryBucketName).append("/")
+				.toString();
+		String uploadDirectory = new StringBuilder()
+				.append(galleryRootDirectory).append("/")
+				.append(galleryMovieOriginalDirectory).append("/")
+				.append(userId)
+				.toString();
+		String thumbnailDirectory = new StringBuilder()
+				.append(galleryRootDirectory).append("/")
+				.append(galleryMovieThumbnailDirectory).append("/")
+				.append(userId)
+				.toString();
 		if(!existsDirectory(new StringBuilder()
-				.append(s3UploadBucket).append(uploadRootDirectory).toString())){
-			createDirectory(uploadRootDirectory);
+				.append(s3UploadBucket).append(uploadDirectory).toString())){
 			createDirectory(uploadDirectory);
 			createDirectory(thumbnailDirectory);
 		}
@@ -166,7 +197,12 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 		ObjectMetadata metadata = new ObjectMetadata();
 		InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
 		try{
+			/*
 			PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,
+				new StringBuilder().append(directoryPath).append("/").toString(),
+				emptyContent, metadata);
+			 */
+			PutObjectRequest putObjectRequest = new PutObjectRequest(galleryBucketName,
 				new StringBuilder().append(directoryPath).append("/").toString(),
 				emptyContent, metadata);
 			amazonS3.putObject(putObjectRequest);
@@ -227,7 +263,8 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 		PostPolicy postPolicy = PostPolicy.builder()
 				.expiration(nowUTC.plusSeconds(durationSeconds).toString()) //アップロード有効期限
 				.conditions(new String[][]{
-					{"eq", "$bucket", bucketName},                         // バケット名が完全一致
+//					{"eq", "$bucket", bucketName},                         // バケット名が完全一致
+					{"eq", "$bucket", galleryBucketName},                         // バケット名が完全一致
 					{"starts-with", "$key", objectKey},                    // オブジェクトキー名が前方一致
 					{"eq", "$acl", ACCESS_CONTROL_LEVEL},                  // ACLが完全一致
 					{"eq", "$x-amz-meta-folder-id", folderId},             // カスタムパラメータが完全一致
@@ -278,7 +315,8 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 		//アクセスするリソース(アップロード先のS3のディレクトリ)のARNを作成
 		String resourceArn = new StringBuilder()
 				.append(RESOURCE_ARN_PREFIX)
-				.append(bucketName)
+//				.append(bucketName)
+				.append(galleryBucketName)
 				.append("/")
 				.append(objectKey)
 				.append("*")
@@ -375,7 +413,8 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 	private String createUploadUrl(String regionName, String directory){
 		return new StringBuilder()
 				.append("https://")
-				.append(bucketName)
+//				.append(bucketName)
+				.append(galleryBucketName)
 				.append(".")
 				.append("s3-")
 				.append(regionName)
@@ -477,24 +516,24 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 
 	private String createPhotoFilePath(String userId, String fileName){
 		return new StringBuilder()
-				.append(userId).append("/")
 				.append(galleryImageOriginalDirectory).append("/")
+				.append(userId).append("/")
 				.append(fileName)
 				.toString();
 	}
 	
 	private String createMovieFilePath(String userId, String fileName){
 		return new StringBuilder()
-				.append(userId).append("/")
 				.append(galleryMovieOriginalDirectory).append("/")
+				.append(userId).append("/")
 				.append(fileName)
 				.toString();
 	}
 	
 	private String createPhotoThumbnailPath(String userId, String fileName){
 		return new StringBuilder()
-				.append(userId).append("/")
 				.append(galleryImageThumbnailDirectory).append("/")
+				.append(userId).append("/")
 				.append(StringUtils.substringBeforeLast(fileName, "."))
 				.append(".jpg")
 				.toString();
@@ -502,8 +541,8 @@ public class GalleryContentsUploadHelper implements InitializingBean{
 	
 	private String createMovieThumbnailPath(String userId, String fileName){
 		return new StringBuilder()
-				.append(userId).append("/")
 				.append(galleryMovieThumbnailDirectory).append("/")
+				.append(userId).append("/")
 				.append(StringUtils.substringBeforeLast(fileName, "."))
 				.append(".jpg")
 				.toString();
