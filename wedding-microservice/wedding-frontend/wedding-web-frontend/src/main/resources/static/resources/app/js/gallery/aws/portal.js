@@ -160,7 +160,7 @@ function uploadFiles(){
 			$.ajax({
 				url: $("#file-upload-input").data("authorizationUrl"),
 				type: "GET" ,
-				async: false,
+				async: true,
 			}).done(function(result, textStatus, jqXHR){
 				$("#pre-message").remove();
 				var isImage = false;

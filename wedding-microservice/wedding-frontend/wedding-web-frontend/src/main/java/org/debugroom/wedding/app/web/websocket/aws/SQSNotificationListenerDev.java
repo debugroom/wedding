@@ -5,6 +5,15 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.debugroom.framework.common.exception.BusinessException;
+import org.debugroom.wedding.app.model.aws.gallery.CreateThumbnailNotification;
+import org.debugroom.wedding.app.model.aws.gallery.Media;
+import org.debugroom.wedding.app.model.aws.gallery.UploadFileResult;
+import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
+import org.debugroom.wedding.app.web.helper.aws.GalleryContentsDownloadHelper;
+import org.debugroom.wedding.app.web.helper.aws.GalleryContentsUploadHelper;
+import org.debugroom.wedding.app.web.util.RequestBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
@@ -17,22 +26,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.lang3.StringUtils;
-import org.debugroom.framework.common.exception.BusinessException;
-import org.debugroom.wedding.app.model.aws.gallery.CreateThumbnailNotification;
-import org.debugroom.wedding.app.model.aws.gallery.UploadFileResult;
-import org.debugroom.wedding.app.model.aws.gallery.Media;
-import org.debugroom.wedding.app.web.adapter.docker.provider.ConnectPathProvider;
-import org.debugroom.wedding.app.web.helper.aws.GalleryContentsDownloadHelper;
-import org.debugroom.wedding.app.web.helper.aws.GalleryContentsUploadHelper;
-import org.debugroom.wedding.app.web.util.RequestBuilder;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile("production")
+@Profile("dev")
 @Component
-public class SQSNotificationListener {
+public class SQSNotificationListenerDev {
 
 	private static final String APP_NAME = "api/v1";
 
@@ -54,9 +53,10 @@ public class SQSNotificationListener {
 	@Inject
 	ObjectMapper objectMapper;
 	
-	@SqsListener(value = "CreateThumbnailNotify", 
+	@SqsListener(value = "CreateThumbnailNotify_Dev",
 			deletionPolicy=SqsMessageDeletionPolicy.ON_SUCCESS)
-	public void createThumbnailNotification(String message) throws BusinessException, JsonParseException, JsonMappingException, IOException{
+	public void createThumbnailNotification(String message) 
+			throws JsonParseException, JsonMappingException, IOException, BusinessException{
 		CreateThumbnailNotification createThumbnailNotification = 
 				objectMapper.readValue(message, CreateThumbnailNotification.class);
 		Media media = uploadHelper.createMedia(StringUtils.substringAfterLast(

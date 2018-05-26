@@ -44,6 +44,9 @@ public class CreateThumbnailFunction implements
 	private int galleryImageThumbnailHeight;
 	@Value("${gallery.movie.thumbnail.frame.start}")
 	private int galleryMovieThumbnailFrameStart;
+	
+	@Value("${gallery.create.thumbnail.sqs.notification.queue.name:CreateThumbnailNotify}")
+	private String galleryCreateThumbnailSqsNotificationQueueName;
 
 	@Inject
 	ObjectMapper mapper;
@@ -115,7 +118,7 @@ public class CreateThumbnailFunction implements
 							.originalObjectKey(keyName)
 							.thumbnailObjectKey(newKey)
 							.build();
-		            queueMessagingTemplate.convertAndSend("CreateThumbnailNotify", 
+		            queueMessagingTemplate.convertAndSend(galleryCreateThumbnailSqsNotificationQueueName, 
 		            		mapper.writeValueAsString(createThumbnailNotification));
 				log.info(new StringBuilder()
 						.append(" Thumbnail ")

@@ -22,3 +22,9 @@ gallery:
     server: http://data.debugroom.org.s3.amazonaws.com
   bucket:
     name: debugroom-wedding-gallery
+  create:
+    thumbnail:
+      sqs:
+        notification:
+          queue:
+            name: CreateThumbnailNotify_Dev
