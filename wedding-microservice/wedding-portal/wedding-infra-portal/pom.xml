@@ -4,11 +4,11 @@
     <groupId>org.debugroom</groupId>
     <artifactId>wedding-boot-parent</artifactId>
     <relativePath>../../wedding-boot-parent</relativePath>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1.1.RELEASE</version>
   </parent>
   <artifactId>wedding-infra-portal</artifactId>
   <name>wedding-infra-portal</name>
-  
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

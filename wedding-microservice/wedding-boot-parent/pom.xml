@@ -3,8 +3,8 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.2.RELEASE</version>
-<!--  
+    <version>1.5.12.RELEASE</version>
+<!--
     <version>1.4.0.RELEASE</version>
 -->
   </parent>
@@ -12,8 +12,8 @@
   <artifactId>wedding-boot-parent</artifactId>
   <packaging>pom</packaging>
   <name>wedding-boot-parent</name>
-  <version>1.0-SNAPSHOT</version>
-  
+  <version>1.1.1.RELEASE</version>
+
   <properties>
     <java.version>1.8</java.version>
     <javax.inject_javax.inject_version>1</javax.inject_javax.inject_version>
@@ -151,7 +151,7 @@
     </dependencies>
   </dependencyManagement>
 
-    
+
   <build>
     <plugins>
       <plugin>

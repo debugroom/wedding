@@ -14,9 +14,9 @@ RUN yum install -y apache-maven
 ENV JAVA_HOME /etc/alternatives/jre
 
 RUN useradd -s /sbin/nologin tomcat
-RUN wget http://ftp.jaist.ac.jp/pub/apache/tomcat/tomcat-8/v8.5.27/bin/apache-tomcat-8.5.27.tar.gz -O /var/local/apache-tomcat-8.5.27.tar.gz  
-RUN tar xvzf /var/local/apache-tomcat-8.5.27.tar.gz -C /var/local
-RUN ln -s /var/local/apache-tomcat-8.5.27 /var/local/apache-tomcat
+RUN wget http://ftp.jaist.ac.jp/pub/apache/tomcat/tomcat-8/v8.5.31/bin/apache-tomcat-8.5.31.tar.gz -O /var/local/apache-tomcat-8.5.31.tar.gz
+RUN tar xvzf /var/local/apache-tomcat-8.5.31.tar.gz -C /var/local
+RUN ln -s /var/local/apache-tomcat-8.5.31 /var/local/apache-tomcat
 RUN chown -R tomcat:tomcat /var/local/apache-tomcat
 
 RUN git clone -b feature/framework-spring https://github.com/debugroom/framework.git /var/local/framework
@@ -62,4 +62,4 @@ RUN cp /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-fron
 RUN cp /etc/localtime /etc/localtime.org
 RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-# CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/target/wedding-web-frontend-1.0-SNAPSHOT.jar
+# CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/target/wedding-web-frontend-1.1.1.RELEASE.jar

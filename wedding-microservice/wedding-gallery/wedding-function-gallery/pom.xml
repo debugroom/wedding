@@ -4,11 +4,11 @@
     <groupId>org.debugroom</groupId>
     <artifactId>wedding-boot-parent</artifactId>
     <relativePath>../../wedding-boot-parent</relativePath>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1.1.RELEASE</version>
   </parent>
   <artifactId>wedding-function-gallery</artifactId>
   <name>wedding-function-gallery</name>
-  
+
   <properties>
     <wrapper.version>1.0.9.RELEASE</wrapper.version>
     <com.amazonaws_aws-lambda-java-events_version>2.0.2</com.amazonaws_aws-lambda-java-events_version>
@@ -21,8 +21,8 @@
     <org.bytedeco_javacv_version>1.4</org.bytedeco_javacv_version>
     <org.bytedeco.javacpp-presets_opencv_version>3.4.0-1.4</org.bytedeco.javacpp-presets_opencv_version>
   </properties>
-  
-  <dependencies> 
+
+  <dependencies>
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-aws</artifactId>
@@ -151,7 +151,7 @@
             <family>unix</family>
             <arch>amd64</arch>
           </os>
-          <activeByDefault>true</activeByDefault>    
+          <activeByDefault>true</activeByDefault>
         </activation>
         <properties>
           <classifier>linux-x86_64</classifier>
@@ -182,7 +182,7 @@
         </properties>
       </profile>
     </profiles>
-    
+
   <pluginRepositories>
     <pluginRepository>
       <id>spring-snapshots</id>
@@ -236,5 +236,5 @@
       </plugin>
     </plugins>
   </build>
-  
+
 </project>
