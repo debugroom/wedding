@@ -62,4 +62,4 @@ RUN cp /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-fron
 RUN cp /etc/localtime /etc/localtime.org
 RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-# CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/target/wedding-web-frontend-1.1.1.RELEASE.jar
+# CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding-microservice/wedding-frontend/wedding-web-frontend/target/wedding-web-frontend-1.2.0.RELEASE.jar

@@ -3,12 +3,13 @@
   <parent>
     <groupId>org.debugroom</groupId>
     <artifactId>wedding-microservice</artifactId>
-    <version>1.1.1.RELEASE</version>
+    <version>1.2.0.RELEASE</version>
   </parent>
   <artifactId>wedding-frontend</artifactId>
   <packaging>pom</packaging>
   <name>wedding-frontend</name>
   <modules>
     <module>wedding-web-frontend</module>
+      <module>wedding-web-frontend-sorry</module>
   </modules>
 </project>

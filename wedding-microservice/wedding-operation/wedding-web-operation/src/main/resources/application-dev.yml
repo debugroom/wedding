@@ -1,2 +1,5 @@
 server:
   port: 8089
+cassandra:
+  contactpoints: 192.168.1.3
+  port: 9042

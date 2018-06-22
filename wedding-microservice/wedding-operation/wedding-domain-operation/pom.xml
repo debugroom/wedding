@@ -4,7 +4,7 @@
     <groupId>org.debugroom</groupId>
     <artifactId>wedding-boot-parent</artifactId>
     <relativePath>../../wedding-boot-parent</relativePath>
-    <version>1.1.1.RELEASE</version>
+    <version>1.2.0.RELEASE</version>
   </parent>
   <artifactId>wedding-domain-operation</artifactId>
   <name>wedding-domain-operation</name>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>wedding-infra-operation</artifactId>
-      <version>1.1.1.RELEASE</version>
+      <version>1.2.0.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

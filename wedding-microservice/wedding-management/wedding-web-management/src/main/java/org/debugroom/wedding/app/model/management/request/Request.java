@@ -1,5 +1,6 @@
 package org.debugroom.wedding.app.model.management.request;
 
+import java.io.Serializable;
 import java.util.List;
 import java.sql.Timestamp;
 
@@ -10,7 +11,9 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 @Data
-public class Request {
+public class Request implements Serializable {
+
+	public Request(){}
 
 	private String requestId;
 	private String title;

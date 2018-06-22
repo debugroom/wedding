@@ -18,6 +18,6 @@ public class AnswerRequest implements Serializable{
 	
 	private String userId;
 	private String requestId;
-	private boolean isApproved;
+	private boolean approved;
 
 }

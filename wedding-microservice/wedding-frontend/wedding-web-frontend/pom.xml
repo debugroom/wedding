@@ -4,7 +4,7 @@
     <groupId>org.debugroom</groupId>
     <artifactId>wedding-boot-parent</artifactId>
     <relativePath>../../wedding-boot-parent</relativePath>
-    <version>1.1.1.RELEASE</version>
+    <version>1.2.0.RELEASE</version>
   </parent>
   <artifactId>wedding-web-frontend</artifactId>
   <name>wedding-web-frontend</name>
@@ -24,6 +24,25 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+      <version>4.2.1.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>4.2.1.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+      <version>4.2.1.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
     </dependency>
 <!--
     <dependency>
@@ -53,6 +72,12 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-context</artifactId>
       <version>${org.springframework.cloud_spring-cloud-context_version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-crypto</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>

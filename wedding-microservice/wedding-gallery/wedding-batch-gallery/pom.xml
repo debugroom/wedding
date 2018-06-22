@@ -4,7 +4,7 @@
     <groupId>org.debugroom</groupId>
     <artifactId>wedding-boot-parent</artifactId>
     <relativePath>../../wedding-boot-parent</relativePath>
-    <version>1.1.1.RELEASE</version>
+    <version>1.2.0.RELEASE</version>
   </parent>
   <artifactId>wedding-batch-gallery</artifactId>
   <name>wedding-batch-gallery</name>
@@ -13,12 +13,12 @@
      <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>wedding-batch-common</artifactId>
-      <version>1.1.1.RELEASE</version>
+      <version>1.2.0.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>wedding-domain-gallery</artifactId>
-      <version>1.1.1.RELEASE</version>
+      <version>1.2.0.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>

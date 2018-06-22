@@ -40,4 +40,4 @@ RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 EXPOSE 8080
 
-CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding-microservice/wedding-gallery/wedding-web-gallery/target/wedding-web-gallery-1.1.1.RELEASE.jar
+CMD java -jar -Dspring.profiles.active=production,jpa /var/local/wedding/wedding-microservice/wedding-gallery/wedding-web-gallery/target/wedding-web-gallery-1.2.0.RELEASE.jar
