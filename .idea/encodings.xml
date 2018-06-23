@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-batch-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-boot-parent" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-domain-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-frontend/wedding-web-frontend" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-frontend/wedding-web-frontend-sorry" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-gallery/wedding-batch-gallery" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-gallery/wedding-distribution-gallery" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-gallery/wedding-domain-gallery" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-gallery/wedding-function-gallery" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-gallery/wedding-infra-gallery" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-gallery/wedding-web-gallery" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-infra-cassandra" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-infra-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-management/wedding-domain-management" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-management/wedding-infra-management" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-management/wedding-web-management" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-message/wedding-domain-message" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-message/wedding-infra-message" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-message/wedding-web-message" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-operation/wedding-batch-operation" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-operation/wedding-domain-operation" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-operation/wedding-infra-operation" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-operation/wedding-web-operation" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-portal/wedding-domain-portal" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-portal/wedding-infra-portal" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-portal/wedding-web-portal" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-profile/wedding-domain-profile" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-profile/wedding-infra-profile" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-profile/wedding-web-profile" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-microservice/wedding-web-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-monolithic/wedding-batch" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-monolithic/wedding-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-monolithic/wedding-domain" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-monolithic/wedding-env" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-monolithic/wedding-infra-jpa" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/wedding-monolithic/wedding-web-springmvc" charset="UTF-8" />
+  </component>
+</project>

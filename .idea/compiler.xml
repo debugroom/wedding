@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="wedding-batch" />
+        <module name="wedding-batch-common" />
+        <module name="wedding-batch-gallery" />
+        <module name="wedding-batch-operation" />
+        <module name="wedding-common" />
+        <module name="wedding-distribution-gallery" />
+        <module name="wedding-domain" />
+        <module name="wedding-domain-common" />
+        <module name="wedding-domain-gallery" />
+        <module name="wedding-domain-management" />
+        <module name="wedding-domain-message" />
+        <module name="wedding-domain-operation" />
+        <module name="wedding-domain-portal" />
+        <module name="wedding-domain-profile" />
+        <module name="wedding-env" />
+        <module name="wedding-function-gallery" />
+        <module name="wedding-infra-cassandra" />
+        <module name="wedding-infra-common" />
+        <module name="wedding-infra-gallery" />
+        <module name="wedding-infra-jpa" />
+        <module name="wedding-infra-management" />
+        <module name="wedding-infra-message" />
+        <module name="wedding-infra-operation" />
+        <module name="wedding-infra-portal" />
+        <module name="wedding-infra-profile" />
+        <module name="wedding-web-common" />
+        <module name="wedding-web-frontend" />
+        <module name="wedding-web-frontend-sorry" />
+        <module name="wedding-web-gallery" />
+        <module name="wedding-web-management" />
+        <module name="wedding-web-message" />
+        <module name="wedding-web-operation" />
+        <module name="wedding-web-portal" />
+        <module name="wedding-web-profile" />
+        <module name="wedding-web-springmvc" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
